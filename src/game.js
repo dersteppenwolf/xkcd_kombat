@@ -314,10 +314,12 @@ class Fighter {
         ctx.lineTo(baseX - 15 + Math.sin(legAngle * Math.PI / 180) * 12, baseY + 35);
         ctx.stroke();
 
-        ctx.beginPath();
-        ctx.moveTo(baseX, baseY - 20);
-        ctx.lineTo(baseX + 15 - Math.sin(legAngle * Math.PI / 180) * 12, baseY + 35);
-        ctx.stroke();
+        if (this.state !== 'kick') {
+            ctx.beginPath();
+            ctx.moveTo(baseX, baseY - 20);
+            ctx.lineTo(baseX + 15 - Math.sin(legAngle * Math.PI / 180) * 12, baseY + 35);
+            ctx.stroke();
+        }
 
         ctx.beginPath();
         ctx.moveTo(baseX, baseY - 55);
@@ -337,9 +339,6 @@ class Fighter {
             ctx.lineTo(baseX + 45, baseY - 48);
         } else if (this.state === 'kick') {
             ctx.quadraticCurveTo(baseX + 15, baseY - 35, baseX + 22, baseY - 20);
-            ctx.strokeStyle = '#111';
-            ctx.moveTo(baseX, baseY - 20);
-            ctx.lineTo(baseX + 45, baseY - 5);
         } else if (this.state === 'block') {
             ctx.lineTo(baseX + 15, baseY - 65);
             ctx.lineTo(baseX + 15, baseY - 35);
@@ -348,6 +347,33 @@ class Fighter {
         }
 
         ctx.stroke();
+
+        if (this.state === 'kick') {
+            const footX = baseX + 54;
+            const footY = baseY - 3;
+
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.22)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(baseX + 36, baseY - 6, 25, -0.45, 0.45);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#111';
+            ctx.lineWidth = 5.5;
+            ctx.beginPath();
+            ctx.moveTo(baseX, baseY - 20);
+            ctx.lineTo(baseX + 32, baseY - 10);
+            ctx.lineTo(footX, footY);
+            ctx.stroke();
+
+            ctx.fillStyle = '#fff';
+            ctx.strokeStyle = '#111';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.ellipse(footX + 5, footY + 1, 13, 7, 0.18, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+        }
 
         ctx.fillStyle = '#fff';
         ctx.strokeStyle = '#111';
