@@ -87,4 +87,4 @@ Revision aplicada:
 
 - Implementado localmente.
 - Validacion automatica ejecutada: `51 passed`, `0 failed`.
-- Pendiente de commit al momento de esta actualizacion.
+- Cerrado en commit `1404d51 Enrich game over summary`.
