@@ -294,6 +294,47 @@ class Fighter {
         }
     }
 
+    getBodyBox() {
+        return {
+            x: this.x - 25,
+            y: this.y - 100,
+            width: 50,
+            height: 135
+        };
+    }
+
+    getAttackBox(type) {
+        const attack = ATTACKS[type];
+        if (!attack) return null;
+
+        if (type === 'punch') {
+            return {
+                x: this.facingRight ? this.x + 20 : this.x - 20 - attack.range,
+                y: this.y - 66,
+                width: attack.range,
+                height: 36
+            };
+        }
+
+        if (type === 'kick') {
+            return {
+                x: this.facingRight ? this.x + 18 : this.x - 18 - attack.range,
+                y: this.y - 32,
+                width: attack.range,
+                height: 42
+            };
+        }
+
+        return null;
+    }
+
+    intersects(a, b) {
+        return a.x < b.x + b.width &&
+            a.x + a.width > b.x &&
+            a.y < b.y + b.height &&
+            a.y + a.height > b.y;
+    }
+
     attack(type, opponent) {
         if (this.attackCooldown > 0 || this.state === 'block') return;
 
@@ -304,10 +345,10 @@ class Fighter {
         this.attackCooldown = attack.cooldown;
         playPunchSound();
 
-        const dist = Math.abs(this.x - opponent.x);
-        const facingOpponent = (this.facingRight && opponent.x > this.x) || (!this.facingRight && opponent.x < this.x);
+        const attackBox = this.getAttackBox(type);
+        const opponentBox = opponent.getBodyBox();
 
-        if (dist < attack.range && facingOpponent) {
+        if (attackBox && this.intersects(attackBox, opponentBox)) {
             opponent.takeHit(attack.damage, this);
         }
     }

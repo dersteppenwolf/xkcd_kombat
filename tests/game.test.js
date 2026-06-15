@@ -199,6 +199,19 @@ test('K triggers kick damage when opponent is in range', () => {
     assert.equal(opponent.health, 86);
 });
 
+test('hitboxes prevent damage when opponent body is outside attack box', () => {
+    const { api } = loadGame();
+    const player = new api.Fighter(100, true);
+    const opponent = new api.Fighter(170, false);
+    opponent.y = 160;
+
+    player.updatePlayerControls({ j: true }, opponent);
+
+    assert.equal(player.state, 'punch');
+    assert.equal(opponent.health, 100);
+    assert.equal(opponent.hitStun, 0);
+});
+
 test('blocked hits keep health and create lighter impact feedback', () => {
     const { api } = loadGame();
     const attacker = new api.Fighter(100, true);

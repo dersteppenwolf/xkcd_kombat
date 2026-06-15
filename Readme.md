@@ -31,6 +31,7 @@ Estado actual:
 - Controles de teclado y controles tactiles durante la partida.
 - Pausa con `P`, `Esc` o boton `PAUSA` durante la partida.
 - Balance base ajustado para diferenciar velocidad, daño, alcance y bloqueo.
+- Deteccion de golpes con hitboxes logicas de cuerpo y ataque.
 - Canvas responsive con soporte para `devicePixelRatio`.
 - Feedback de golpes con sacudida, hit-stop y particulas.
 - Pruebas unitarias basicas con `node:test`.
@@ -254,6 +255,7 @@ Actualmente cubren:
 - Escalado responsive del canvas con `resizeCanvas()`.
 - Ataque de punetazo con `J` y aplicacion de daño.
 - Ataque de patada con `K` y aplicacion de daño.
+- Hitboxes que evitan daño cuando el cuerpo queda fuera del area de ataque.
 - Bloqueo, daño residual y feedback de impacto reducido.
 - Transicion de estado entre `menu` y `playing`.
 - Apertura y cierre de la pantalla de ayuda desde el menu.
@@ -283,6 +285,7 @@ Limitaciones de las pruebas:
 - Seleccion de dificultad para la CPU.
 - Inicio de partida desde boton.
 - Pausa con `P`, `Esc`, boton `PAUSA` y boton `RESUMIR`.
+- Hitboxes logicas para cuerpo, punetazo y patada.
 - Balance de combate con punetazo rapido, patada de mayor recuperacion y daño residual al bloquear.
 - Regreso al menu desde pantalla de fin de juego.
 - Reinicio de partida.
@@ -306,7 +309,6 @@ Limitaciones de las pruebas:
 
 ## Limitaciones Conocidas
 
-- La deteccion de golpes usa distancia simple, no hitboxes detalladas.
 - La IA es probabilistica y no aprende del jugador.
 - Las pruebas unitarias no reemplazan validacion visual en navegador.
 
@@ -323,6 +325,7 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | Pausa | Implementada con `P`, `Esc`, boton `PAUSA`, overlay y boton `RESUMIR`. |
 | Seleccion de dificultad | Implementada con niveles `FACIL`, `NORMAL` y `DIFICIL` que ajustan la IA. |
 | Ajuste de balance | Implementado con valores centralizados de daño, rango, cooldown y bloqueo. |
+| Hitboxes reales | Implementadas para cuerpo, punetazo y patada en coordenadas logicas. |
 | Navegacion post-partida | Implementados botones `REINICIAR` y `MENU` en la pantalla de fin de juego. |
 | Feedback de golpes | Implementado con shake del canvas, hit-stop breve y particulas/lineas de impacto. |
 | Mejor escalado del canvas | Implementado con resize responsive y backing store ajustado por `devicePixelRatio`. |
@@ -331,7 +334,7 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 
 | Mejora | Objetivo | Beneficio |
 | --- | --- | --- |
-| Hitboxes reales | Reemplazar la deteccion por distancia con cajas de cuerpo, punetazo, patada y bloqueo. | Combate mas justo y predecible. |
+| Indicador de estado | Mostrar mensajes como `FIGHT!`, `K.O.`, `BLOCK` o `ROUND`. | Mejora claridad durante transiciones y momentos importantes. |
 
 ### Prioridad Media
 
@@ -341,7 +344,6 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | Temporizador | Agregar limite de tiempo por round. | Evita partidas demasiado largas y permite ganar por vida restante. |
 | IA mejorada | Hacer que la CPU ataque solo en rango, bloquee ataques y retroceda con baja vida. | Rival mas creible y menos aleatorio. |
 | Controles moviles responsivos | Ajustar tamanos y posicion de botones segun orientacion y pantalla. | Mejor jugabilidad tactil. |
-| Indicador de estado | Mostrar mensajes como `FIGHT!`, `K.O.`, `BLOCK` o `ROUND`. | Mejora claridad durante transiciones y momentos importantes. |
 | Animacion de vida | Hacer que las barras de vida bajen con una transicion breve. | Da mejor feedback visual al recibir golpes. |
 | Orientacion movil | Detectar pantalla vertical y sugerir girar el dispositivo. | Mejora la experiencia tactil en telefonos. |
 
@@ -359,9 +361,8 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 
 ### Orden Recomendado De Implementacion
 
-1. Hitboxes reales.
-2. Indicador de estado.
-3. Sistema de rondas.
-4. Temporizador.
+1. Indicador de estado.
+2. Sistema de rondas.
+3. Temporizador.
 
 Este orden prioriza mejoras visibles para el jugador sin reescribir completamente la arquitectura actual.
