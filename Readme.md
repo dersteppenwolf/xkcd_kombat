@@ -2,33 +2,50 @@
 
 Juego web arcade de pelea estilo stickman/xkcd, implementado con HTML, CSS y JavaScript puro, con renderizado sobre Canvas.
 
-## Descripcion
+## Tabla De Contenido
 
-`xkcd KOMBAT - Arcade VS AI` es un prototipo de combate 1 vs 1 donde el jugador humano se enfrenta a una CPU con comportamiento basico de IA.
+- [Estado Del Proyecto](#estado-del-proyecto)
+- [Comandos Rapidos](#comandos-rapidos)
+- [Prerrequisitos](#prerrequisitos)
+- [Como Ejecutar](#como-ejecutar)
+- [Validacion](#validacion)
+- [Controles](#controles)
+- [Arquitectura](#arquitectura)
+- [Pruebas](#pruebas)
+- [Filosofia De Desarrollo](#filosofia-de-desarrollo)
+- [Limitaciones Conocidas](#limitaciones-conocidas)
+- [Backlog](#backlog)
 
-Estado actual: el juego inicia en un menu principal, permite comenzar una partida, muestra pantalla de fin de juego al derrotar a un luchador y permite reiniciar o volver al menu.
+## Estado Del Proyecto
 
-El juego incluye:
+`xkcd KOMBAT - Arcade VS AI` es un prototipo funcional de combate 1 vs 1 donde el jugador humano se enfrenta a una CPU con comportamiento basico de IA.
 
-- Menu principal con resumen de controles.
-- Personajes tipo stickman dibujados en Canvas.
-- Movimiento lateral, salto, bloqueo, punetazo y patada.
-- IA basada en distancia al jugador.
-- Barras de vida.
-- Textos flotantes de impacto.
-- Feedback visual de golpes con sacudida, hit-stop y particulas.
-- Sonidos generados con Web Audio API.
-- Controles de teclado y controles tactiles para dispositivos moviles.
+Estado actual:
 
-## Flujo Del Juego
+- Juego web estatico sin dependencias externas.
+- Menu principal implementado.
+- Combate humano contra CPU implementado.
+- Pantalla de fin de juego con opciones `REINICIAR` y `MENU`.
+- Controles de teclado y controles tactiles durante la partida.
+- Canvas responsive con soporte para `devicePixelRatio`.
+- Feedback de golpes con sacudida, hit-stop y particulas.
+- Pruebas unitarias basicas con `node:test`.
 
-1. Al abrir `src/index.html`, aparece el menu principal.
-2. El menu muestra el titulo, una descripcion corta y el resumen de controles.
-3. El boton `INICIAR JUEGO` crea una nueva partida y oculta el menu.
-4. Durante la partida, el jugador controla al luchador humano y la CPU controla al rival.
-5. Cuando un luchador llega a `0%` de vida, aparece la pantalla de fin de juego.
-6. El boton `REINICIAR` empieza una partida nueva inmediatamente.
-7. El boton `MENU` vuelve al menu principal.
+## Comandos Rapidos
+
+Desde `C:\tmp\game`:
+
+```powershell
+python -m http.server 8000
+node --check src\game.js
+node --test tests\game.test.js
+```
+
+Abrir el juego servido localmente:
+
+```text
+http://localhost:8000/src/
+```
 
 ## Prerrequisitos
 
@@ -37,17 +54,7 @@ El juego incluye:
 - Python opcional para servir el proyecto con `python -m http.server 8000`.
 - No se requiere `npm install`, `package.json`, bundler ni servidor backend.
 
-## Filosofia De Desarrollo
-
-- Mantener el proyecto como juego web estatico, simple y facil de ejecutar.
-- Usar APIs nativas del navegador y de Node.js siempre que sea posible.
-- No importar librerias externas ni agregar dependencias salvo que una decision explicita de arquitectura lo justifique.
-- Si se propone una dependencia externa, primero debe documentarse el motivo, el impacto en ejecucion local y el cambio de flujo de validacion.
-- Priorizar cambios pequenos y verificables sobre reestructuraciones grandes.
-
 ## Como Ejecutar
-
-No requiere instalacion ni dependencias externas.
 
 ### Opcion Simple
 
@@ -97,29 +104,21 @@ Luego abre en el navegador:
 http://localhost:8000/src/
 ```
 
-## Validacion Local
+## Validacion
 
-Para validar la sintaxis del JavaScript con Node.js:
+### Validacion Automatica
+
+Para validar la sintaxis del JavaScript:
 
 ```powershell
 node --check src\game.js
 ```
 
-Para ejecutar las pruebas unitarias con el runner nativo de Node.js:
+Para ejecutar pruebas unitarias:
 
 ```powershell
 node --test tests\game.test.js
 ```
-
-Las pruebas no requieren `npm install`, `package.json` ni dependencias externas. El archivo `tests/game.test.js` usa `node:test`, `node:assert` y mocks minimos de DOM, canvas y audio para cargar `src/game.js` en Node.
-
-Actualmente las pruebas cubren:
-
-- Escalado responsive del canvas con `resizeCanvas()`.
-- Ataque de punetazo con `J` y aplicacion de daño.
-- Ataque de patada con `K` y aplicacion de daño.
-- Bloqueo, vida conservada y feedback de impacto reducido.
-- Transicion de estado entre `menu` y `playing`.
 
 Flujo recomendado antes de cerrar cambios de codigo:
 
@@ -128,7 +127,9 @@ node --check src\game.js
 node --test tests\game.test.js
 ```
 
-Para validar el comportamiento en navegador:
+### Smoke Test Manual
+
+Validar en navegador antes de considerar listo un cambio visual o de jugabilidad:
 
 - Debe aparecer el menu principal al cargar.
 - El boton `INICIAR JUEGO` debe comenzar la partida.
@@ -140,7 +141,7 @@ Para validar el comportamiento en navegador:
 - Al llegar una vida a cero debe aparecer la pantalla de fin de juego.
 - El boton `REINICIAR` debe iniciar una nueva partida.
 - El boton `MENU` debe volver al menu principal.
-- En dispositivos tactiles o emulacion movil deben mostrarse los controles en pantalla.
+- En dispositivos tactiles o emulacion movil deben mostrarse los controles en pantalla durante la partida.
 
 ## Controles
 
@@ -168,10 +169,14 @@ En dispositivos tactiles se muestran botones en pantalla durante la partida para
 - Punetazo
 - Patada
 
-## Estructura Del Proyecto
+## Arquitectura
+
+### Estructura Del Proyecto
 
 ```text
 .
+├── .gitignore
+├── AGENTS.md
 ├── Readme.md
 ├── tests/
 │   └── game.test.js
@@ -181,15 +186,33 @@ En dispositivos tactiles se muestran botones en pantalla durante la partida para
     └── game.js
 ```
 
-## Archivos Principales
+### Archivos Principales
 
-La aplicacion esta separada en tres archivos dentro de `src/`:
+- `src/index.html`: estructura de la pagina, menu principal, canvas, controles y pantalla de fin de juego.
+- `src/styles.css`: layout, estilos del canvas, controles tactiles y modales.
+- `src/game.js`: logica del juego, fisica, IA, audio, controles, renderizado y escalado responsive.
+- `tests/game.test.js`: pruebas unitarias con mocks de DOM/canvas/audio.
+- `AGENTS.md`: instrucciones compactas para futuras sesiones de OpenCode.
 
-- `index.html`: estructura de la pagina, menu principal, canvas, controles y pantalla de fin de juego.
-- `styles.css`: layout, estilos del canvas, controles tactiles y modal de fin de juego.
-- `game.js`: logica del juego, fisica, IA, audio, controles y renderizado.
+### Flujo Del Juego
 
-## Logica Principal
+1. Al abrir `src/index.html`, aparece el menu principal.
+2. El menu muestra el titulo, una descripcion corta y el resumen de controles.
+3. El boton `INICIAR JUEGO` crea una nueva partida y oculta el menu.
+4. Durante la partida, el jugador controla al luchador humano y la CPU controla al rival.
+5. Cuando un luchador llega a `0%` de vida, aparece la pantalla de fin de juego.
+6. El boton `REINICIAR` empieza una partida nueva inmediatamente.
+7. El boton `MENU` vuelve al menu principal.
+
+### Estados Del Juego
+
+| Estado | Comportamiento |
+| --- | --- |
+| `menu` | Muestra el menu principal y detiene la simulacion. |
+| `playing` | Actualiza fisica, controles, IA, golpes, efectos y render. |
+| `gameOver` | Detiene la simulacion y muestra opciones de reinicio o regreso al menu. |
+
+### Logica Principal
 
 El juego define dos luchadores:
 
@@ -204,11 +227,35 @@ La IA decide acciones segun la distancia:
 - Distancia media: acercarse, retroceder, saltar o bloquear.
 - Distancia corta: atacar, bloquear o retroceder.
 
-El estado general del juego se controla con `gameState`:
+El canvas usa coordenadas logicas fijas de `1000x500`. La funcion `resizeCanvas()` adapta el tamaño visible y el backing store segun el viewport y `devicePixelRatio`, pero la simulacion y los futuros hitboxes deben mantenerse en coordenadas logicas.
 
-- `menu`: muestra el menu principal y detiene la simulacion.
-- `playing`: actualiza fisica, controles, IA, golpes y render.
-- `gameOver`: detiene la simulacion y muestra opciones de reinicio o regreso al menu.
+## Pruebas
+
+Las pruebas no requieren `npm install`, `package.json` ni dependencias externas. El archivo `tests/game.test.js` usa `node:test`, `node:assert` y mocks minimos de DOM, canvas y audio para cargar `src/game.js` en Node.
+
+Actualmente cubren:
+
+- Escalado responsive del canvas con `resizeCanvas()`.
+- Ataque de punetazo con `J` y aplicacion de daño.
+- Ataque de patada con `K` y aplicacion de daño.
+- Bloqueo, vida conservada y feedback de impacto reducido.
+- Transicion de estado entre `menu` y `playing`.
+
+Limitaciones de las pruebas:
+
+- No validan interaccion real en navegador.
+- No verifican visualmente el Canvas.
+- No reemplazan el smoke test manual para cambios visuales o de experiencia.
+
+## Filosofia De Desarrollo
+
+- Mantener el proyecto como juego web estatico, simple y facil de ejecutar.
+- Usar APIs nativas del navegador y de Node.js siempre que sea posible.
+- No importar librerias externas ni agregar dependencias salvo que una decision explicita de arquitectura lo justifique.
+- Si se propone una dependencia externa, primero debe documentarse el motivo, el impacto en ejecucion local y el cambio de flujo de validacion.
+- Mantener los textos de UI en español salvo decision explicita.
+- Priorizar cambios pequeños y verificables sobre reestructuraciones grandes.
+- Actualizar este README cuando cambien comandos, controles, estados de juego, pruebas o funcionalidades implementadas.
 
 ## Funcionalidades Implementadas
 
@@ -240,8 +287,9 @@ El estado general del juego se controla con `gameState`:
 - La IA es probabilistica y no aprende del jugador.
 - La simulacion sigue usando coordenadas logicas fijas de `1000x500`.
 - No hay pausa ni seleccion de dificultad.
+- Las pruebas unitarias no reemplazan validacion visual en navegador.
 
-## Mejoras Sugeridas
+## Backlog
 
 Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un juego mas completo.
 
