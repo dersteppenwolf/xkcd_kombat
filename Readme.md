@@ -32,6 +32,7 @@ Estado actual:
 - Temporizador de 60 segundos por round implementado.
 - IA con respuestas contextuales ante ataques, baja vida y distancia real de golpe.
 - Combos simples `J, J`, `J, K` y `K, K` implementados.
+- Feedback visual de combos con pista de ventana, texto y halo/trail implementado.
 - Agacharse implementado con `C`, flecha abajo y boton tactil `CROUCH`.
 - Movimiento alternativo con flechas implementado.
 - Ataque especial con energia llena implementado en `L`.
@@ -172,6 +173,7 @@ Validar en navegador antes de considerar listo un cambio visual o de jugabilidad
 - Los controles de teclado deben responder: `A`, `D`, `W`, flechas, `C`, `S`, `J`, `K`, `P` y `Esc`.
 - `C` o flecha abajo deben agachar al jugador; `S` debe seguir bloqueando.
 - Los combos `J, J`, `J, K` y `K, K` deben aplicar ataques de mayor impacto.
+- Los combos deben mostrar pista/feedback visual sin tapar barras, timer ni mensajes centrales.
 - Con energia llena, `L` debe lanzar el ataque especial.
 - Cambiar la arena en el menu debe cambiar el fondo del combate.
 - Al terminar partidas deben actualizarse las estadisticas locales.
@@ -364,6 +366,7 @@ Limitaciones de las pruebas:
 - Indicador central de estado para `FIGHT!`, `BLOCK` y `K.O.`.
 - IA mejorada para bloquear ataques cercanos, retroceder con baja vida y atacar solo si la hitbox conecta.
 - Combos simples `J, J`, `J, K` y `K, K`.
+- Feedback visual de combos con pista breve, texto propio y halo/trail.
 - Agacharse con hitbox baja para esquivar golpes altos.
 - Movimiento alternativo con flechas.
 - Ataque especial con barra de energia y tecla `L`.
@@ -396,7 +399,7 @@ Limitaciones de las pruebas:
 ## Limitaciones Conocidas
 
 - La IA usa reglas y probabilidades; no aprende del jugador.
-- Las animaciones de combos y especial reutilizan poses base; la diferencia principal esta en daño, rango, energia y feedback.
+- Las animaciones de combos y especial reutilizan poses base; los combos se diferencian con texto, halo/trail, daño, rango y recuperacion.
 - No existe modo de depuracion visual para hitboxes, energia, estado de IA o datos de round.
 - No hay modo entrenamiento para probar rangos, combos o balance sin presion de la CPU.
 - El audio sigue siendo basico y no diferencia claramente cada tipo de accion.
@@ -451,6 +454,7 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | Animacion de vida | Implementada con transicion visual de barras de vida hacia el valor real. |
 | Orientacion movil | Implementada con aviso para girar el telefono en vertical durante la partida. |
 | Combos simples | Implementados con `J, J`, `J, K` y `K, K`. |
+| Visualizacion de combos | Implementada con pista de ventana, textos `COMBO x2`, `PUNCH+KICK`, `BACK KICK` y halo/trail breve. |
 | Agacharse | Implementado con `C`, flecha abajo y boton tactil `CROUCH`; reduce la hitbox vertical. |
 | Movimiento con flechas | Implementado con flechas izquierda, derecha y arriba como alternativa a `A`, `D` y `W`. |
 | Ataque especial | Implementado con energia llena, tecla `L` y boton tactil `SPECIAL`. |

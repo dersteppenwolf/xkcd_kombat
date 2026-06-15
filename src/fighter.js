@@ -20,6 +20,10 @@ class Fighter {
         this.aiAction = 'idle';
         this.comboBuffer = [];
         this.comboTimer = 0;
+        this.comboHintText = '';
+        this.comboHintTimer = 0;
+        this.comboFlashTimer = 0;
+        this.lastAttackType = '';
         this.prevPunchPressed = false;
         this.prevKickPressed = false;
         this.prevSpecialPressed = false;
@@ -42,6 +46,15 @@ class Fighter {
         if (this.comboTimer > 0) {
             this.comboTimer--;
             if (this.comboTimer === 0) this.comboBuffer = [];
+        }
+
+        if (this.comboHintTimer > 0) {
+            this.comboHintTimer--;
+            if (this.comboHintTimer === 0) this.comboHintText = '';
+        }
+
+        if (this.comboFlashTimer > 0) {
+            this.comboFlashTimer--;
         }
 
         this.velX = 0;
@@ -111,16 +124,49 @@ class Fighter {
 
         if (combo === 'punch,punch') {
             this.comboBuffer = [];
+            this.clearComboHint();
             this.attack('comboPunch', opponent);
+            this.showComboFeedback('comboPunch');
         } else if (combo === 'punch,kick') {
             this.comboBuffer = [];
+            this.clearComboHint();
             this.attack('comboKick', opponent);
+            this.showComboFeedback('comboKick');
         } else if (combo === 'kick,kick') {
             this.comboBuffer = [];
+            this.clearComboHint();
             this.attack('backKick', opponent);
+            this.showComboFeedback('backKick');
         } else {
+            this.showComboHint(input);
             this.attack(input, opponent);
         }
+    }
+
+    showComboHint(input) {
+        this.comboHintText = input === 'punch' ? 'J...' : 'K...';
+        this.comboHintTimer = Math.min(COMBO_WINDOW_FRAMES, 24);
+    }
+
+    clearComboHint() {
+        this.comboHintText = '';
+        this.comboHintTimer = 0;
+    }
+
+    showComboFeedback(type) {
+        const labels = {
+            comboPunch: 'COMBO x2',
+            comboKick: 'PUNCH+KICK',
+            backKick: 'BACK KICK'
+        };
+        const colors = {
+            comboPunch: '#d22',
+            comboKick: '#c70',
+            backKick: '#06f'
+        };
+
+        this.comboFlashTimer = 18;
+        floatingTexts.push(new FloatingText(this.x, this.y - 122, labels[type], colors[type]));
     }
 
     updateAI(opponent) {
@@ -263,6 +309,7 @@ class Fighter {
             this.energy -= SPECIAL_ENERGY_COST;
         }
 
+        this.lastAttackType = type;
         this.state = attack.animation || type;
         this.attackCooldown = attack.cooldown;
         playPunchSound();
@@ -406,6 +453,12 @@ class Fighter {
                 ctx.beginPath();
                 ctx.arc(fistX + 8, fistY, 24, 0, Math.PI * 2);
                 ctx.stroke();
+            } else if (this.comboFlashTimer > 0 && this.lastAttackType === 'comboPunch') {
+                ctx.strokeStyle = 'rgba(220, 40, 40, 0.65)';
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.arc(fistX + 6, fistY, 22, -0.5, Math.PI * 1.5);
+                ctx.stroke();
             }
         }
 
@@ -434,6 +487,24 @@ class Fighter {
             ctx.ellipse(footX + 5, footY + 1, 13, 7, 0.18, 0, Math.PI * 2);
             ctx.fill();
             ctx.stroke();
+
+            if (this.comboFlashTimer > 0 && (this.lastAttackType === 'comboKick' || this.lastAttackType === 'backKick')) {
+                ctx.strokeStyle = this.lastAttackType === 'backKick' ? 'rgba(0, 90, 255, 0.7)' : 'rgba(230, 130, 0, 0.7)';
+                ctx.lineWidth = this.lastAttackType === 'backKick' ? 7 : 5;
+                ctx.beginPath();
+                ctx.arc(baseX + 35, baseY - 8, this.lastAttackType === 'backKick' ? 34 : 27, -0.65, 0.55);
+                ctx.stroke();
+            }
+        }
+
+        if (this.comboHintText) {
+            ctx.font = 'bold 18px "Comic Sans MS"';
+            ctx.textAlign = 'center';
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#000';
+            ctx.strokeText(this.comboHintText, baseX, headY - 30);
+            ctx.fillStyle = '#fff';
+            ctx.fillText(this.comboHintText, baseX, headY - 30);
         }
 
         ctx.fillStyle = '#fff';

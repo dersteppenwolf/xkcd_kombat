@@ -236,6 +236,50 @@ test('simple combos increase damage and cooldown', () => {
     assert.equal(opponent.health, 80);
 });
 
+test('first combo input shows a brief combo hint without combo flash', () => {
+    const { api } = loadGame();
+    const player = new api.Fighter(100, true);
+    const opponent = new api.Fighter(170, false);
+
+    player.updatePlayerControls({ j: true }, opponent);
+
+    assert.equal(player.comboHintText, 'J...');
+    assert.equal(player.comboHintTimer, 24);
+    assert.equal(player.comboFlashTimer, 0);
+    assert.equal(api.getState().floatingTexts.some((text) => text.text === 'COMBO x2'), false);
+});
+
+test('J,J combo creates combo-specific visual feedback', () => {
+    const { api } = loadGame();
+    const player = new api.Fighter(100, true);
+    const opponent = new api.Fighter(170, false);
+
+    player.updatePlayerControls({ j: true }, opponent);
+    player.updatePlayerControls({}, opponent);
+    player.attackCooldown = 0;
+    player.updatePlayerControls({ j: true }, opponent);
+
+    assert.equal(player.lastAttackType, 'comboPunch');
+    assert.equal(player.comboFlashTimer, 18);
+    assert.equal(player.comboHintText, '');
+    assert(api.getState().floatingTexts.some((text) => text.text === 'COMBO x2'));
+});
+
+test('J,K combo creates punch kick visual feedback', () => {
+    const { api } = loadGame();
+    const player = new api.Fighter(100, true);
+    const opponent = new api.Fighter(220, false);
+
+    player.updatePlayerControls({ j: true }, opponent);
+    player.updatePlayerControls({}, opponent);
+    player.attackCooldown = 0;
+    player.updatePlayerControls({ k: true }, opponent);
+
+    assert.equal(player.lastAttackType, 'comboKick');
+    assert.equal(player.comboFlashTimer, 18);
+    assert(api.getState().floatingTexts.some((text) => text.text === 'PUNCH+KICK'));
+});
+
 test('K,K triggers back kick combo damage and cooldown', () => {
     const { api } = loadGame();
     const player = new api.Fighter(100, true);
@@ -249,6 +293,9 @@ test('K,K triggers back kick combo damage and cooldown', () => {
     assert.equal(player.state, 'kick');
     assert.equal(player.attackCooldown, 36);
     assert.equal(opponent.health, 64);
+    assert.equal(player.lastAttackType, 'backKick');
+    assert.equal(player.comboFlashTimer, 18);
+    assert(api.getState().floatingTexts.some((text) => text.text === 'BACK KICK'));
 });
 
 test('arrow keys move and jump like WASD controls', () => {
