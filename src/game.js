@@ -48,11 +48,28 @@ function setRoundTimeMs(value) {
 
 function setArena(value) {
     selectedArena = ARENAS[value] ? value : 'notebook';
+    renderArenaPreview();
 }
 
 function getArenaLabel() {
     const arena = getArenaConfig();
     return t(arena.labelKey || arena.label);
+}
+
+function getArenaPreviewTextKey() {
+    const previewKeys = {
+        notebook: 'arenaPreviewNotebook',
+        cafeteria: 'arenaPreviewCafeteria',
+        lab: 'arenaPreviewLab',
+        meeting: 'arenaPreviewMeeting',
+        remoteMeeting: 'arenaPreviewRemoteMeeting',
+        terminal: 'arenaPreviewTerminal',
+        mathClass: 'arenaPreviewMathClass',
+        serverDown: 'arenaPreviewServerDown',
+        geekConvention: 'arenaPreviewGeekConvention'
+    };
+
+    return previewKeys[selectedArena] || previewKeys.notebook;
 }
 
 function getDifficultyLabel() {
@@ -154,6 +171,17 @@ function renderStats() {
     statsSummary.textContent = t('stats', stats);
 }
 
+function renderArenaPreview() {
+    const preview = document.getElementById('arena-preview');
+    const title = document.getElementById('arena-preview-title');
+    const text = document.getElementById('arena-preview-text');
+    if (!preview || !title || !text) return;
+
+    preview.className = `arena-preview arena-preview--${selectedArena}`;
+    title.textContent = getArenaLabel();
+    text.textContent = t(getArenaPreviewTextKey());
+}
+
 function renderLanguagePreference() {
     const select = document.getElementById('language-select');
     if (select) select.value = getLanguage();
@@ -209,6 +237,7 @@ function renderLanguage() {
     setElementAria('btn-special', 'specialButtonLabel');
     renderLanguagePreference();
     renderStats();
+    renderArenaPreview();
     renderPauseSummary();
 
     if (gameState === 'gameOver') renderGameOverText();

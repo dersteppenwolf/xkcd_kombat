@@ -90,7 +90,16 @@ const I18N = {
         arenaTerminal: 'TERMINAL',
         arenaMathClass: 'CLASE DE MATEMATICAS',
         arenaServerDown: 'SERVIDOR CAIDO',
-        arenaGeekConvention: 'CONVENCION GEEK'
+        arenaGeekConvention: 'CONVENCION GEEK',
+        arenaPreviewNotebook: 'Bocetos, notas y garabatos antes del primer golpe.',
+        arenaPreviewCafeteria: 'Cafe, mesa larga y vapor para pelear con energia.',
+        arenaPreviewLab: 'Paneles, formulas y una muestra marcada como NaN.',
+        arenaPreviewMeeting: 'Oficina, post-its y una reunion que pudo ser email.',
+        arenaPreviewRemoteMeeting: 'Ventanas, mute, lag y reconexion emocional.',
+        arenaPreviewTerminal: 'Consola verde, comandos peligrosos y cero piedad.',
+        arenaPreviewMathClass: 'Pizarra, limites absurdos y teoremas stickman.',
+        arenaPreviewServerDown: 'Rack roto, error 500 y luces rojas de panico.',
+        arenaPreviewGeekConvention: 'Stands, stickers y una fila que nunca termina.'
     },
     en: {
         htmlLang: 'en',
@@ -179,7 +188,16 @@ const I18N = {
         arenaTerminal: 'TERMINAL',
         arenaMathClass: 'MATH CLASS',
         arenaServerDown: 'SERVER DOWN',
-        arenaGeekConvention: 'GEEK CONVENTION'
+        arenaGeekConvention: 'GEEK CONVENTION',
+        arenaPreviewNotebook: 'Sketches, notes, and doodles before the first hit.',
+        arenaPreviewCafeteria: 'Coffee, a long table, and steam-powered fighting.',
+        arenaPreviewLab: 'Panels, formulas, and one sample labeled NaN.',
+        arenaPreviewMeeting: 'Office, sticky notes, and a meeting that could be email.',
+        arenaPreviewRemoteMeeting: 'Windows, mute, lag, and emotional reconnecting.',
+        arenaPreviewTerminal: 'Green console, dangerous commands, and no mercy.',
+        arenaPreviewMathClass: 'Blackboard, absurd limits, and stickman theorems.',
+        arenaPreviewServerDown: 'Broken rack, error 500, and panic red lights.',
+        arenaPreviewGeekConvention: 'Booths, stickers, and a queue that never ends.'
     }
 };
 

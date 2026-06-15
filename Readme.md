@@ -171,7 +171,7 @@ Las arenas son visuales. No modifican dano, velocidad, IA, hitboxes ni reglas de
 - Pantalla de ayuda.
 - Selector de idioma con persistencia.
 - Selector de dificultad.
-- Selector de arena.
+- Selector de arena con preview visual y descripcion.
 - Opcion `Reducir movimiento` persistida en `xkcdKombatReducedMotion`.
 - Pausa con resumen de round, marcador, tiempo, dificultad, arena y controles.
 - Pantalla de fin de juego con medalla post-partida, `REINICIAR` / `RESTART` y `MENU`.
@@ -431,11 +431,10 @@ Limitaciones de las pruebas:
 
 Priorizacion orientada a atraer y retener usuarios: primero mejoras visibles en los primeros segundos, luego motivacion para rejugar y finalmente profundidad o mantenimiento.
 
-Siguiente mejora recomendada: `Preview de arena en menu`, porque aumenta el atractivo visual del primer contacto sin tocar reglas de combate ni balance.
+Siguiente mejora recomendada: `Intro VS arcade`, porque da anticipacion antes de cada combate y aprovecha la seleccion de dificultad/arena ya visible.
 
 | Prioridad | Mejora | Motivo | Tipo |
 | --- | --- | --- | --- |
-| Alta | Preview de arena en menu | Permite ver la seleccion antes de iniciar partida y hace el menu mas atractivo. | UX / visual |
 | Alta | Intro `VS` arcade | Da contexto y anticipacion antes de cada combate con `P1`, `AI`, dificultad y arena. | Presentacion |
 | Alta | Feedback visual mas fuerte para el especial | Hace que gastar energia llena se sienta importante con flash, rastro y texto `SPECIAL!`. | Visual / combate |
 | Alta | Indicador de especial listo sobre el personaje | Evita que el jugador tenga que mirar solo el HUD y aumenta la emocion de usar `L`. | Visual / UX |
@@ -468,5 +467,6 @@ Siguiente mejora recomendada: `Preview de arena en menu`, porque aumenta el atra
 | Accesibilidad inicial | Foco visible, ARIA y reducir movimiento. |
 | Mobile | Controles tactiles, safe areas y aviso de orientacion. |
 | Arenas | Nueve fondos tematicos sin efectos jugables. |
+| Preview de arena | Menu inicial con mini-preview, nombre y descripcion por arena. |
 | i18n | Espanol/ingles con autodeteccion y persistencia. |
 | Arquitectura tecnica | IA/render/i18n separados y tests con `node:test`. |

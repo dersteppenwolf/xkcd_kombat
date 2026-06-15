@@ -175,6 +175,7 @@ function loadGame(options = {}) {
             setArena,
             getArenaConfig,
             getArenaLabel,
+            renderArenaPreview,
             drawBackground,
             setReducedMotion,
             renderLanguage,
@@ -219,6 +220,9 @@ function loadGame(options = {}) {
                 startButtonText: document.getElementById('start-button').textContent,
                 helpButtonText: document.getElementById('help-button').textContent,
                 statsSummaryText: document.getElementById('stats-summary').textContent,
+                arenaPreviewClass: document.getElementById('arena-preview').className,
+                arenaPreviewTitle: document.getElementById('arena-preview-title').textContent,
+                arenaPreviewText: document.getElementById('arena-preview-text').textContent,
                 languageSelectValue: document.getElementById('language-select').value,
                 pauseButtonDisplay: document.getElementById('pause-button').style.display,
                 reducedMotionToggleChecked: document.getElementById('reduce-motion-toggle').checked,
@@ -798,6 +802,27 @@ test('arena selection supports themed arenas and falls back to notebook', () => 
     api.setArena('missing');
     assert.equal(api.getState().selectedArena, 'notebook');
     assert.equal(api.getArenaLabel(), 'CUADERNO');
+});
+
+test('arena preview updates with selection and language', () => {
+    const { api } = loadGame();
+
+    api.renderArenaPreview();
+    let state = api.getState();
+    assert.equal(state.arenaPreviewClass, 'arena-preview arena-preview--notebook');
+    assert.equal(state.arenaPreviewTitle, 'CUADERNO');
+    assert.match(state.arenaPreviewText, /Bocetos/);
+
+    api.setArena('terminal');
+    state = api.getState();
+    assert.equal(state.arenaPreviewClass, 'arena-preview arena-preview--terminal');
+    assert.equal(state.arenaPreviewTitle, 'TERMINAL');
+    assert.match(state.arenaPreviewText, /Consola verde/);
+
+    api.setLanguage('en');
+    state = api.getState();
+    assert.equal(state.arenaPreviewTitle, 'TERMINAL');
+    assert.match(state.arenaPreviewText, /Green console/);
 });
 
 test('new arena backgrounds render themed canvas primitives', () => {
