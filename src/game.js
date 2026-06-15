@@ -4,6 +4,11 @@ const WIDTH = 1000;
 const HEIGHT = 500;
 const GROUND_Y = 380;
 const MAX_DEVICE_PIXEL_RATIO = 2;
+const ATTACKS = {
+    punch: { damage: 8, range: 95, cooldown: 12 },
+    kick: { damage: 14, range: 135, cooldown: 24 }
+};
+const BLOCK_DAMAGE_MULTIPLIER = 0.2;
 const DIFFICULTIES = {
     easy: {
         decisionMin: 22,
@@ -292,16 +297,18 @@ class Fighter {
     attack(type, opponent) {
         if (this.attackCooldown > 0 || this.state === 'block') return;
 
+        const attack = ATTACKS[type];
+        if (!attack) return;
+
         this.state = type;
-        this.attackCooldown = type === 'punch' ? 15 : 22;
+        this.attackCooldown = attack.cooldown;
         playPunchSound();
 
         const dist = Math.abs(this.x - opponent.x);
-        const range = type === 'punch' ? 100 : 140;
         const facingOpponent = (this.facingRight && opponent.x > this.x) || (!this.facingRight && opponent.x < this.x);
 
-        if (dist < range && facingOpponent) {
-            opponent.takeHit(type === 'punch' ? 10 : 16, this);
+        if (dist < attack.range && facingOpponent) {
+            opponent.takeHit(attack.damage, this);
         }
     }
 
@@ -309,8 +316,9 @@ class Fighter {
         const impactDirection = attacker.facingRight ? 1 : -1;
 
         if (this.state === 'block') {
-            damage = Math.floor(damage * 0.15);
-            const bTexts = ['¡BLOCK!', '*ping*', '0% Damage'];
+            damage = Math.floor(damage * BLOCK_DAMAGE_MULTIPLIER);
+            this.health = Math.max(0, this.health - damage);
+            const bTexts = ['¡BLOCK!', '*ping*', 'CHIP'];
             floatingTexts.push(new FloatingText(this.x, this.y - 80, bTexts[Math.floor(Math.random() * bTexts.length)], '#33f'));
             triggerImpactFeedback(this.x, this.y - 50, impactDirection, true);
             playHitSound();

@@ -182,8 +182,8 @@ test('J triggers punch damage when opponent is in range', () => {
     player.updatePlayerControls({ j: true }, opponent);
 
     assert.equal(player.state, 'punch');
-    assert.equal(player.attackCooldown, 15);
-    assert.equal(opponent.health, 90);
+    assert.equal(player.attackCooldown, 12);
+    assert.equal(opponent.health, 92);
     assert.equal(opponent.hitStun, 20);
 });
 
@@ -195,8 +195,8 @@ test('K triggers kick damage when opponent is in range', () => {
     player.updatePlayerControls({ k: true }, opponent);
 
     assert.equal(player.state, 'kick');
-    assert.equal(player.attackCooldown, 22);
-    assert.equal(opponent.health, 84);
+    assert.equal(player.attackCooldown, 24);
+    assert.equal(opponent.health, 86);
 });
 
 test('blocked hits keep health and create lighter impact feedback', () => {
@@ -208,7 +208,7 @@ test('blocked hits keep health and create lighter impact feedback', () => {
     defender.takeHit(16, attacker);
 
     const state = api.getState();
-    assert.equal(defender.health, 100);
+    assert.equal(defender.health, 97);
     assert.equal(state.hitStopFrames, 2);
     assert.equal(state.screenShake, 4);
     assert.equal(state.impactParticles.length, 7);
