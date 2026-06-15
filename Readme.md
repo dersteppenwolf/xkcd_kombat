@@ -14,6 +14,7 @@ Juego web arcade de pelea estilo stickman/xkcd, implementado con HTML, CSS y Jav
 - [Pruebas](#pruebas)
 - [Filosofia De Desarrollo](#filosofia-de-desarrollo)
 - [Limitaciones Conocidas](#limitaciones-conocidas)
+- [Analisis Actual](#analisis-actual)
 - [Backlog](#backlog)
 
 ## Estado Del Proyecto
@@ -378,7 +379,38 @@ Limitaciones de las pruebas:
 ## Limitaciones Conocidas
 
 - La IA usa reglas y probabilidades; no aprende del jugador.
+- Las animaciones de combos y especial reutilizan poses base; la diferencia principal esta en daño, rango, energia y feedback.
+- No existe modo de depuracion visual para hitboxes, energia, estado de IA o datos de round.
+- No hay modo entrenamiento para probar rangos, combos o balance sin presion de la CPU.
+- El audio sigue siendo basico y no diferencia claramente cada tipo de accion.
 - Las pruebas unitarias no reemplazan validacion visual en navegador.
+
+## Analisis Actual
+
+El juego ya supero la etapa de prototipo minimo: tiene flujo arcade completo, rondas, temporizador, dificultad, arenas, combos, especial, estadisticas locales y pruebas automatizadas. La prioridad ahora no deberia ser agregar mas sistemas grandes, sino mejorar claridad, expresividad y herramientas de ajuste.
+
+Fortalezas actuales:
+
+- El nucleo de juego es completo: menu, ayuda, partida, pausa, rounds, temporizador y game over.
+- El combate ya usa hitboxes logicas, por lo que se puede balancear con mas precision.
+- La arquitectura esta separada en archivos por responsabilidad y sigue sin dependencias externas.
+- Las pruebas cubren reglas de combate, estados, temporizador, dificultad, arenas, estadisticas y UI basica simulada.
+- El README y `AGENTS.md` documentan comandos, filosofia y smoke test manual.
+
+Riesgos actuales:
+
+- Sin depuracion visual, ajustar hitboxes y combos depende de prueba manual a ojo.
+- Los efectos sonoros no comunican suficientemente bien que tipo de accion ocurrio.
+- El ataque especial existe, pero podria sentirse poco distintivo si no tiene mas feedback audiovisual.
+- Las estadisticas locales existen, pero no hay forma visible de reiniciarlas desde la UI.
+- La IA es mas creible que antes, pero todavia puede sentirse repetitiva porque no tiene personalidades ni memoria.
+
+Siguiente enfoque recomendado:
+
+- Priorizar herramientas de desarrollo visibles solo bajo toggle, como hitboxes y estado IA.
+- Mejorar feedback audiovisual antes de sumar mas mecanicas.
+- Agregar modo entrenamiento para validar balance y combos rapidamente.
+- Luego ampliar variedad: personalidades de IA, arenas con detalles propios y accesibilidad.
 
 ## Backlog
 
@@ -409,18 +441,38 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | Feedback de golpes | Implementado con shake del canvas, hit-stop breve y particulas/lineas de impacto. |
 | Mejor escalado del canvas | Implementado con resize responsive y backing store ajustado por `devicePixelRatio`. |
 
+### Prioridad Alta
+
+| Mejora | Objetivo | Beneficio |
+| --- | --- | --- |
+| Depuracion visual opcional | Agregar un modo para dibujar hitboxes y puntos de impacto. | Acelera el desarrollo de combate sin afectar el modo normal. |
+| Sonidos diferenciados | Usar sonidos distintos para punetazo, patada, bloqueo, especial, round y victoria. | Mejora claridad audiovisual. |
+| Modo entrenamiento | Permitir probar golpes contra una CPU inmovil o con vida infinita. | Facilita ajustar controles, rangos y balance. |
+
+### Prioridad Media
+
+| Mejora | Objetivo | Beneficio |
+| --- | --- | --- |
+| Pantalla de resultado detallada | Mostrar ganador, dificultad, arena, marcador, tiempo restante y estadisticas actualizadas. | Cierra mejor la experiencia arcade. |
+| Reinicio de estadisticas | Agregar boton para borrar victorias, derrotas y rachas guardadas. | Da control al jugador sobre datos locales. |
+| Accesibilidad de menus | Mejorar foco visible, `aria-label` en botones tactiles y navegacion por teclado. | Hace el juego mas usable sin cambiar mecanicas. |
+| Personalidades de IA | Agregar estilos agresivo, defensivo y balanceado ademas de dificultad. | Aumenta rejugabilidad y variedad del rival. |
+| Feedback del especial | Agregar texto, particulas y sonido propios al especial. | Hace que gastar energia se sienta mas satisfactorio. |
+
 ### Prioridad Baja
 
 | Mejora | Objetivo | Beneficio |
 | --- | --- | --- |
-| Sonidos diferenciados | Usar sonidos distintos para punetazo, patada, bloqueo y victoria. | Mejora claridad audiovisual. |
-| Modo entrenamiento | Permitir probar golpes contra una CPU inmovil o con vida infinita. | Facilita ajustar controles, rangos y balance. |
-| Depuracion visual opcional | Agregar un modo para dibujar hitboxes y puntos de impacto. | Acelera el desarrollo de combate sin afectar el modo normal. |
+| Detalles por arena | Agregar elementos visuales propios por escenario sin assets externos. | Da mas identidad a cada arena. |
+| Combos adicionales | Agregar variantes como `K, J`, ataque aereo o combo con especial. | Amplia profundidad sin rehacer el sistema. |
+| Balance avanzado | Ajustar energia, daño y cooldown por dificultad o arena. | Permite mayor control del ritmo de combate. |
 
 ### Orden Recomendado De Implementacion
 
-1. Sonidos diferenciados.
-2. Modo entrenamiento.
-3. Depuracion visual opcional.
+1. Depuracion visual opcional.
+2. Sonidos diferenciados.
+3. Modo entrenamiento.
+4. Pantalla de resultado detallada.
+5. Reinicio de estadisticas.
 
 Este orden prioriza mejoras visibles para el jugador sin reescribir completamente la arquitectura actual.
