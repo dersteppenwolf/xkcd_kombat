@@ -157,6 +157,7 @@ function loadGame() {
                 helpScreenDisplay: document.getElementById('help-screen').style.display,
                 pauseScreenDisplay: document.getElementById('pause-screen').style.display,
                 pauseButtonDisplay: document.getElementById('pause-button').style.display,
+                orientationWarningDisplay: document.getElementById('orientation-warning').style.display,
                 transform: ctx.lastTransform
             })
         };
@@ -313,6 +314,49 @@ test('difficulty selection changes CPU movement tuning', () => {
     api.setDifficulty('invalid');
 
     assert.equal(api.getState().selectedDifficulty, 'normal');
+});
+
+test('improved CPU blocks incoming close attacks', () => {
+    const { api } = loadGame();
+    const cpu = new api.Fighter(180, false);
+    const opponent = new api.Fighter(100, true);
+    opponent.state = 'punch';
+
+    cpu.updateAI(opponent);
+
+    assert.equal(cpu.state, 'block');
+    assert.equal(cpu.aiAction, 'block');
+});
+
+test('health display animates toward real health', () => {
+    const { api } = loadGame();
+
+    api.initGame();
+    api.getState().player1.health = 60;
+    api.update();
+
+    const displayHealth = api.getState().player1.displayHealth;
+    assert(displayHealth < 100);
+    assert(displayHealth > 60);
+});
+
+test('orientation warning appears only for portrait touch play', () => {
+    const { api, context } = loadGame();
+
+    context.navigator.maxTouchPoints = 1;
+    context.window.innerWidth = 390;
+    context.window.innerHeight = 780;
+
+    api.initGame();
+    api.resizeCanvas();
+
+    assert.equal(api.getState().orientationWarningDisplay, 'block');
+
+    context.window.innerWidth = 780;
+    context.window.innerHeight = 390;
+    api.resizeCanvas();
+
+    assert.equal(api.getState().orientationWarningDisplay, 'none');
 });
 
 test('status indicator announces fight and block states', () => {

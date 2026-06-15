@@ -212,6 +212,22 @@ canvas {
     border-radius: 4px;
 }
 
+#orientation-warning {
+    display: none;
+    position: absolute;
+    top: 54px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 190;
+    max-width: calc(100vw - 32px);
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 3px solid #000;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+}
+
 #controls {
     position: absolute;
     bottom: 0;
@@ -328,4 +344,73 @@ canvas {
 
 #game-over button + button {
     margin-left: 8px;
+}
+
+@media (max-width: 760px) {
+    #instructions {
+        top: 6px;
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    #pause-button {
+        top: 42px;
+        right: 8px;
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    #controls {
+        height: 31vh;
+    }
+
+    .control-zone {
+        bottom: max(8px, env(safe-area-inset-bottom));
+        width: clamp(150px, 42vw, 220px);
+        height: clamp(104px, 24vw, 140px);
+    }
+
+    #left-side {
+        left: 8px;
+    }
+
+    #right-side {
+        right: 8px;
+    }
+
+    #btn-left,
+    #btn-right,
+    #btn-jump {
+        width: clamp(48px, 13vw, 65px);
+        height: clamp(48px, 13vw, 65px);
+        font-size: 12px;
+    }
+
+    #btn-left { left: 0; top: 42px; }
+    #btn-right { left: clamp(92px, 25vw, 130px); top: 42px; }
+    #btn-jump { left: clamp(46px, 12.5vw, 65px); top: 0; }
+
+    #btn-block {
+        width: clamp(62px, 17vw, 75px);
+        height: clamp(42px, 11vw, 50px);
+        left: clamp(42px, 12vw, 60px);
+        top: clamp(78px, 20vw, 85px);
+    }
+
+    #btn-punch,
+    #btn-kick {
+        width: clamp(62px, 17vw, 85px);
+        height: clamp(62px, 17vw, 85px);
+        top: 32px;
+        font-size: 12px;
+    }
+
+    #btn-punch { right: clamp(78px, 21vw, 110px); }
+    #btn-kick { right: 0; }
+}
+
+@media (orientation: portrait) and (max-width: 760px) {
+    canvas {
+        margin-top: 30px;
+    }
 }

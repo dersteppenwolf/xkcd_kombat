@@ -29,10 +29,13 @@ Estado actual:
 - Combate humano contra CPU implementado.
 - Sistema de rondas al mejor de 3 implementado.
 - Temporizador de 60 segundos por round implementado.
+- IA con respuestas contextuales ante ataques, baja vida y distancia real de golpe.
 - Pantalla de fin de juego con opciones `REINICIAR` y `MENU`.
 - Controles de teclado y controles tactiles durante la partida.
+- Controles moviles responsivos y aviso de orientacion vertical.
 - Pausa con `P`, `Esc` o boton `PAUSA` durante la partida.
 - Balance base ajustado para diferenciar velocidad, daño, alcance y bloqueo.
+- Barras de vida con transicion visual al recibir daño.
 - Deteccion de golpes con hitboxes logicas de cuerpo y ataque.
 - Indicador central para eventos como `FIGHT!`, `BLOCK` y `K.O.`.
 - Canvas responsive con soporte para `devicePixelRatio`.
@@ -163,6 +166,8 @@ Validar en navegador antes de considerar listo un cambio visual o de jugabilidad
 - `P`, `Esc` o `PAUSA` deben pausar la partida; `RESUMIR` debe continuar.
 - El temporizador debe bajar durante `playing` y detenerse en pausa.
 - Los golpes deben reducir la barra de vida del rival.
+- Las barras de vida deben mostrar una transicion breve al bajar.
+- En telefono vertical debe aparecer una sugerencia para girar el dispositivo.
 - Al llegar una vida a cero debe avanzar el marcador de rounds.
 - Al ganar 2 rounds debe aparecer la pantalla de fin de juego.
 - El boton `REINICIAR` debe iniciar una nueva partida.
@@ -295,6 +300,9 @@ Actualmente cubren:
 - Seleccion de dificultad y cambio de parametros de movimiento de la CPU.
 - Avance de rounds y finalizacion de partida al ganar 2 rounds.
 - Temporizador de round, victoria por vida restante y empate sin puntuacion.
+- IA defensiva ante ataques cercanos.
+- Animacion visual de barras de vida.
+- Aviso de orientacion movil en telefonos verticales.
 
 Limitaciones de las pruebas:
 
@@ -323,6 +331,10 @@ Limitaciones de las pruebas:
 - Temporizador de 60 segundos por round.
 - Hitboxes logicas para cuerpo, punetazo y patada.
 - Indicador central de estado para `FIGHT!`, `BLOCK` y `K.O.`.
+- IA mejorada para bloquear ataques cercanos, retroceder con baja vida y atacar solo si la hitbox conecta.
+- Controles moviles responsivos.
+- Aviso de orientacion movil en pantalla vertical.
+- Barras de vida animadas.
 - Balance de combate con punetazo rapido, patada de mayor recuperacion y daño residual al bloquear.
 - Regreso al menu desde pantalla de fin de juego.
 - Reinicio de partida.
@@ -346,7 +358,7 @@ Limitaciones de las pruebas:
 
 ## Limitaciones Conocidas
 
-- La IA es probabilistica y no aprende del jugador.
+- La IA usa reglas y probabilidades; no aprende del jugador.
 - Las pruebas unitarias no reemplazan validacion visual en navegador.
 
 ## Backlog
@@ -366,18 +378,13 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | Indicador de estado | Implementado con mensajes centrales `FIGHT!`, `BLOCK` y `K.O.`. |
 | Sistema de rondas | Implementado al mejor de 3 con marcador e inicio automatico del siguiente round. |
 | Temporizador | Implementado con 60 segundos por round, victoria por vida restante y empate sin punto. |
+| IA mejorada | Implementada con bloqueo ante ataques cercanos, retirada con baja vida y ataques condicionados por hitbox. |
+| Controles moviles responsivos | Implementados con tamaños adaptativos para pantallas pequeñas. |
+| Animacion de vida | Implementada con transicion visual de barras de vida hacia el valor real. |
+| Orientacion movil | Implementada con aviso para girar el telefono en vertical durante la partida. |
 | Navegacion post-partida | Implementados botones `REINICIAR` y `MENU` en la pantalla de fin de juego. |
 | Feedback de golpes | Implementado con shake del canvas, hit-stop breve y particulas/lineas de impacto. |
 | Mejor escalado del canvas | Implementado con resize responsive y backing store ajustado por `devicePixelRatio`. |
-
-### Prioridad Media
-
-| Mejora | Objetivo | Beneficio |
-| --- | --- | --- |
-| IA mejorada | Hacer que la CPU ataque solo en rango, bloquee ataques y retroceda con baja vida. | Rival mas creible y menos aleatorio. |
-| Controles moviles responsivos | Ajustar tamanos y posicion de botones segun orientacion y pantalla. | Mejor jugabilidad tactil. |
-| Animacion de vida | Hacer que las barras de vida bajen con una transicion breve. | Da mejor feedback visual al recibir golpes. |
-| Orientacion movil | Detectar pantalla vertical y sugerir girar el dispositivo. | Mejora la experiencia tactil en telefonos. |
 
 ### Prioridad Baja
 
@@ -393,9 +400,9 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 
 ### Orden Recomendado De Implementacion
 
-1. IA mejorada.
-2. Controles moviles responsivos.
-3. Animacion de vida.
-4. Orientacion movil.
+1. Combos simples.
+2. Ataque especial.
+3. Arenas diferentes.
+4. Estadisticas locales.
 
 Este orden prioriza mejoras visibles para el jugador sin reescribir completamente la arquitectura actual.

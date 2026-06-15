@@ -6,6 +6,7 @@ class Fighter {
         this.height = 110;
         this.isPlayer1 = isPlayer1;
         this.health = 100;
+        this.displayHealth = 100;
         this.velX = 0;
         this.velY = 0;
         this.facingRight = isPlayer1;
@@ -74,13 +75,20 @@ class Fighter {
     updateAI(opponent) {
         const dist = Math.abs(this.x - opponent.x);
         const difficulty = getDifficultyConfig();
+        const opponentAttacking = opponent.state === 'punch' || opponent.state === 'kick';
+        const canPunch = this.canHitOpponent('punch', opponent);
+        const canKick = this.canHitOpponent('kick', opponent);
         this.aiDecisionTimer--;
 
         if (this.aiDecisionTimer <= 0) {
             this.aiDecisionTimer = difficulty.decisionMin + Math.floor(Math.random() * difficulty.decisionSpread);
             const rand = Math.random();
 
-            if (dist > 250) {
+            if (opponentAttacking && dist < 170 && this.onGround) {
+                this.aiAction = 'block';
+            } else if (this.health <= 30 && dist < 190) {
+                this.aiAction = rand < 0.7 ? 'retreat' : 'block';
+            } else if (dist > 250) {
                 this.aiAction = rand < difficulty.approachLong ? 'approach' : 'idle';
             } else if (dist > 110) {
                 if (rand < difficulty.approachMid) this.aiAction = 'approach';
@@ -88,10 +96,10 @@ class Fighter {
                 else if (rand < difficulty.jumpMid && this.onGround) this.aiAction = 'jump';
                 else this.aiAction = 'block';
             } else {
-                if (rand < difficulty.punchClose) this.aiAction = 'punch';
-                else if (rand < difficulty.kickClose) this.aiAction = 'kick';
+                if (canPunch && rand < difficulty.punchClose) this.aiAction = 'punch';
+                else if (canKick && rand < difficulty.kickClose) this.aiAction = 'kick';
                 else if (rand < difficulty.blockClose) this.aiAction = 'block';
-                else this.aiAction = 'retreat';
+                else this.aiAction = canPunch || canKick ? 'retreat' : 'approach';
             }
         }
 
@@ -170,6 +178,11 @@ class Fighter {
             a.x + a.width > b.x &&
             a.y < b.y + b.height &&
             a.y + a.height > b.y;
+    }
+
+    canHitOpponent(type, opponent) {
+        const attackBox = this.getAttackBox(type);
+        return !!attackBox && this.intersects(attackBox, opponent.getBodyBox());
     }
 
     attack(type, opponent) {

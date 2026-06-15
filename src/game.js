@@ -51,6 +51,15 @@ function resizeCanvas() {
     }
 
     ctx.setTransform(backingWidth / WIDTH, 0, 0, backingHeight / HEIGHT, 0, 0);
+    updateOrientationWarning();
+}
+
+function updateOrientationWarning() {
+    const warning = document.getElementById('orientation-warning');
+    const isTouch = mobileControlsEnabled || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isPortraitPhone = isTouch && window.innerHeight > window.innerWidth && window.innerWidth <= 760;
+
+    warning.style.display = isPortraitPhone && gameState === 'playing' ? 'block' : 'none';
 }
 
 function startRound() {
@@ -231,6 +240,7 @@ function updateStatusMessage() {
 
 function updateEffects() {
     updateStatusMessage();
+    updateHealthAnimations();
 
     for (let i = floatingTexts.length - 1; i >= 0; i--) {
         floatingTexts[i].update();
@@ -241,6 +251,19 @@ function updateEffects() {
         impactParticles[i].update();
         if (impactParticles[i].life <= 0) impactParticles.splice(i, 1);
     }
+}
+
+function updateHealthAnimations() {
+    [player1, player2].forEach((player) => {
+        if (!player) return;
+
+        const diff = player.health - player.displayHealth;
+        if (Math.abs(diff) < 0.2) {
+            player.displayHealth = player.health;
+        } else {
+            player.displayHealth += diff * 0.16;
+        }
+    });
 }
 
 function triggerImpactFeedback(x, y, direction, blocked = false) {
@@ -282,11 +305,15 @@ function drawHealthBars() {
 
     ctx.fillStyle = '#000';
     ctx.fillRect(50, 30, 304, 26);
+    ctx.fillStyle = '#aaa';
+    if (player1.displayHealth > 0) ctx.fillRect(52, 32, player1.displayHealth * 3, 22);
     ctx.fillStyle = player1.health > 30 ? '#222' : '#c00';
     if (player1.health > 0) ctx.fillRect(52, 32, player1.health * 3, 22);
 
     ctx.fillStyle = '#000';
     ctx.fillRect(WIDTH - 354, 30, 304, 26);
+    ctx.fillStyle = '#aaa';
+    if (player2.displayHealth > 0) ctx.fillRect(WIDTH - 52 - (player2.displayHealth * 3), 32, player2.displayHealth * 3, 22);
     ctx.fillStyle = player2.health > 30 ? '#222' : '#c00';
     if (player2.health > 0) ctx.fillRect(WIDTH - 52 - (player2.health * 3), 32, player2.health * 3, 22);
 
@@ -347,6 +374,7 @@ function draw() {
 function updateControlsVisibility() {
     document.getElementById('controls').style.display = mobileControlsEnabled && gameState === 'playing' ? 'block' : 'none';
     document.getElementById('pause-button').style.display = gameState === 'playing' ? 'block' : 'none';
+    updateOrientationWarning();
 }
 
 function gameLoop() {
