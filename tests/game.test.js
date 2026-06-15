@@ -599,7 +599,7 @@ test('reduced motion limits shake hit-stop and impact particles', () => {
     const state = api.getState();
     assert.equal(state.reducedMotionEnabled, true);
     assert.equal(state.reducedMotionToggleChecked, true);
-    assert.equal(context.window.localStorage.getItem('xkcdKombatReducedMotion'), 'true');
+    assert.equal(context.window.localStorage.getItem('glitchDuelReducedMotion'), 'true');
     assert.equal(state.screenShake, 0);
     assert.equal(state.hitStopFrames, 0);
     assert.equal(state.impactParticles.length, 5);
@@ -740,10 +740,19 @@ test('language preference detects browser language and persists manual changes',
     api.setLanguage('es');
     assert.equal(api.getLanguage(), 'es');
     assert.equal(api.getState().startButtonText, 'INICIAR JUEGO');
-    assert.equal(context.window.localStorage.getItem('xkcdKombatLanguage'), 'es');
+    assert.equal(context.window.localStorage.getItem('glitchDuelLanguage'), 'es');
 });
 
 test('saved language preference wins over browser detection', () => {
+    const { api } = loadGame({ languages: ['en-US'], storage: { glitchDuelLanguage: 'es' } });
+
+    api.renderLanguage();
+
+    assert.equal(api.getLanguage(), 'es');
+    assert.equal(api.getState().languageSelectValue, 'es');
+});
+
+test('legacy language preference is still read', () => {
     const { api } = loadGame({ languages: ['en-US'], storage: { xkcdKombatLanguage: 'es' } });
 
     api.renderLanguage();
@@ -921,7 +930,7 @@ test('arena animations advance through draw and respect reduced motion', () => {
 });
 
 test('local stats track wins, losses, and best streak', () => {
-    const { api } = loadGame();
+    const { api, context } = loadGame();
 
     api.recordMatchResult(true);
     api.recordMatchResult(true);
@@ -932,6 +941,23 @@ test('local stats track wins, losses, and best streak', () => {
     assert.equal(stats.losses, 1);
     assert.equal(stats.currentStreak, 0);
     assert.equal(stats.bestStreak, 2);
+    assert.equal(JSON.parse(context.window.localStorage.getItem('glitchDuelStats')).bestStreak, 2);
+});
+
+test('legacy motion and stats preferences are still read', () => {
+    const { api } = loadGame({
+        storage: {
+            xkcdKombatReducedMotion: 'true',
+            xkcdKombatStats: JSON.stringify({ wins: 3, losses: 1, currentStreak: 2, bestStreak: 3 })
+        }
+    });
+
+    const state = api.getState();
+    assert.equal(state.reducedMotionEnabled, true);
+    assert.equal(state.stats.wins, 3);
+    assert.equal(state.stats.losses, 1);
+    assert.equal(state.stats.currentStreak, 2);
+    assert.equal(state.stats.bestStreak, 3);
 });
 
 test('improved CPU blocks incoming close attacks', () => {
@@ -994,7 +1020,7 @@ test('status indicator announces fight and block states', () => {
     assert.equal(state.statusTimer, 28);
 });
 
-test('status messages render as comic panels', () => {
+test('status messages render as arcade panels', () => {
     const { api } = loadGame();
 
     api.initGame();

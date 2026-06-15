@@ -1,6 +1,6 @@
 # Exec Plans
 
-Este archivo define el estandar para planear cambios no triviales en `xkcd KOMBAT`.
+Este archivo define el estandar para planear cambios no triviales en `GLITCH DUEL`.
 
 Un exec plan debe ser suficientemente concreto para que otra sesion pueda ejecutarlo sin redescubrir contexto, pero no debe convertirse en una especificacion larga o teorica.
 

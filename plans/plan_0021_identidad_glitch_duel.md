@@ -142,7 +142,11 @@ Revision aplicada:
 ## Estado De Ejecucion
 
 - Plan creado.
-- Implementacion pendiente.
-- Validacion automatica pendiente.
-- Smoke visual pendiente.
-- Commit pendiente de pedido explicito.
+- Implementacion completada: marca visible migrada a `GLITCH DUEL`, textos i18n actualizados y decoracion `xkcd theorem` reemplazada.
+- Persistencia completada: claves nuevas `glitchDuelLanguage`, `glitchDuelReducedMotion` y `glitchDuelStats` con fallback legacy desde `xkcdKombat*`.
+- Tests actualizados: persistencia nueva y lectura legacy cubiertas en `tests/game.test.js`.
+- Documentacion completada: `Readme.md`, `PLANS.md` y `AGENTS.md` actualizados.
+- Validacion automatica completada: `git diff --check`, `node --check` para scripts de `src` y `node --test tests\game.test.js` pasaron.
+- Busquedas completadas: no quedan referencias activas a `xkcd KOMBAT` ni `stickman/xkcd` en `src/`, `Readme.md`, `PLANS.md` o `AGENTS.md`; `xkcdKombat*` queda solo como legacy/documentacion de migracion.
+- Smoke visual manual pendiente: no se abrio navegador en esta sesion.
+- Commit solicitado por el usuario al cierre de la implementacion.

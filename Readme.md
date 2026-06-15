@@ -1,6 +1,6 @@
-# xkcd KOMBAT
+# GLITCH DUEL
 
-Juego web arcade de pelea estilo stickman/xkcd, hecho con HTML, CSS y JavaScript puro sobre Canvas. El jugador humano pelea contra una CPU en rondas al mejor de 3, con combos, bloqueo, ataque especial, arenas tematicas, controles tactiles e interfaz en espanol/ingles.
+Juego web arcade de pelea line-art, hecho con HTML, CSS y JavaScript puro sobre Canvas. El jugador humano pelea contra una CPU en rondas al mejor de 3, con combos, bloqueo, ataque especial, arenas tematicas, controles tactiles e interfaz en espanol/ingles.
 
 Jugar en linea: [https://dersteppenwolf.github.io/xkcd_kombat/](https://dersteppenwolf.github.io/xkcd_kombat/)
 
@@ -133,7 +133,8 @@ Comportamiento:
 - Si el navegador empieza por `es`, usa espanol.
 - Si empieza por `en`, usa ingles.
 - Otros idiomas caen a espanol.
-- El selector `Idioma / Language` guarda la preferencia en `localStorage` con la clave `xkcdKombatLanguage`.
+- El selector `Idioma / Language` guarda la preferencia en `localStorage` con la clave `glitchDuelLanguage`.
+- Si existe una preferencia anterior en `xkcdKombatLanguage`, se lee como fallback y las nuevas escrituras usan `glitchDuelLanguage`.
 
 No todos los textos decorativos de arenas o chistes tecnicos se traducen; algunos se conservan como parte del estilo visual.
 
@@ -175,10 +176,10 @@ Las arenas son visuales. No modifican dano, velocidad, IA, hitboxes ni reglas de
 - Selector de dificultad.
 - Selector de arena con preview visual y descripcion.
 - Intro `VS` arcade con dificultad y arena antes de cada round.
-- Opcion `Reducir movimiento` persistida en `xkcdKombatReducedMotion`.
+- Opcion `Reducir movimiento` persistida en `glitchDuelReducedMotion`, con lectura fallback desde `xkcdKombatReducedMotion`.
 - Pausa con resumen de round, marcador, tiempo, dificultad, arena y controles.
 - Pantalla de fin de juego con resumen final, medalla post-partida, `REINICIAR` / `RESTART` y `MENU`.
-- Estadisticas locales con victorias, derrotas, racha actual y mejor racha.
+- Estadisticas locales con victorias, derrotas, racha actual y mejor racha, persistidas en `glitchDuelStats` con lectura fallback desde `xkcdKombatStats`.
 - Foco visible y etiquetas ARIA en controles principales.
 - Controles tactiles responsivos y aviso de orientacion vertical.
 
@@ -193,7 +194,7 @@ Las arenas son visuales. No modifican dano, velocidad, IA, hitboxes ni reglas de
 - HUD e impactos asociados al color del personaje para leer quien ataca.
 - Poses de victoria y derrota al cerrar rounds o partidas.
 - Medallas post-partida como `Bug Exterminator`, `Firewall Humano`, `Combo Goblin` y `404 Survivor`.
-- Mensajes `ROUND`, `FIGHT!`, `TIME!`, `K.O.` y bloqueo con panel estilo comic.
+- Mensajes `ROUND`, `FIGHT!`, `TIME!`, `K.O.` y bloqueo con panel arcade.
 - Flash, rastro y texto `SPECIAL!` al gastar la barra de energia.
 - Feedback de combos con texto, halo/trail y pista de ventana.
 - Sacudida, hit-stop estilizado y particulas en impactos.
@@ -404,7 +405,7 @@ Las pruebas cubren, entre otros puntos:
 - Idioma detectado, cambio manual y persistencia.
 - Pausa, ayuda, stats, rounds, timer y game over.
 - Identidad visual de humano/CPU.
-- Resumen final enriquecido, medallas post-partida, sonidos UI y mensajes estilo comic.
+- Resumen final enriquecido, medallas post-partida, sonidos UI y mensajes estilo arcade.
 
 Limitaciones de las pruebas:
 
@@ -446,7 +447,7 @@ Siguiente mejora recomendada: `Trailer GIF o captura animada en README`, porque 
 | Alta | Depuracion visual opcional | Acelera ajuste de hitboxes, estados, cooldowns y decisiones de IA. | Herramienta dev |
 | Media | Misiones rapidas diarias/locales | Propone retos como ganar sin especial, conectar 3 combos o bloquear 5 golpes. | Retencion |
 | Media | Logros locales | Da objetivos persistentes sin servidor: primera victoria, rey del bloqueo, exterminador de bugs. | Progresion |
-| Media | Selector de tema visual del HUD | Permite elegir estilo comic, consola o cuaderno sin alterar gameplay. | Personalizacion |
+| Media | Selector de tema visual del HUD | Permite elegir estilo arcade, consola o cuaderno sin alterar gameplay. | Personalizacion |
 | Media | Persistir dificultad y arena | Reduce friccion al volver al juego y conserva preferencias habituales. | Persistencia |
 | Media | Reset visible de estadisticas | Da control sobre datos locales sin depender de limpiar `localStorage`. | UX / datos |
 | Media | Personalidades de IA | Aumenta variedad sin cambiar controles: agresiva, defensiva, saltarina o aleatoria. | Gameplay / IA |

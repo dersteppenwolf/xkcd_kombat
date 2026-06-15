@@ -1,18 +1,19 @@
 const DEFAULT_LANGUAGE = 'es';
-const LANGUAGE_STORAGE_KEY = 'xkcdKombatLanguage';
+const LANGUAGE_STORAGE_KEY = 'glitchDuelLanguage';
+const LEGACY_LANGUAGE_STORAGE_KEY = 'xkcdKombatLanguage';
 const SUPPORTED_LANGUAGES = ['es', 'en'];
 
 const I18N = {
     es: {
         htmlLang: 'es',
         languageName: 'Espanol',
-        instructions: 'xkcd KOMBAT - Modo Solo (Humano vs Maquina)',
+        instructions: 'GLITCH DUEL - Modo Solo (Humano vs Maquina)',
         orientationWarning: 'GIRA EL DISPOSITIVO PARA JUGAR MEJOR',
-        canvasLabel: 'Arena de combate xkcd KOMBAT',
+        canvasLabel: 'Arena de combate GLITCH DUEL',
         pauseButton: 'PAUSA',
         pauseButtonLabel: 'Pausar partida',
         menuKicker: 'Arcade VS AI',
-        menuIntro: 'Derrota a la maquina en un duelo stickman de punetazos, patadas y bugs.',
+        menuIntro: 'Duelo arcade de trazos contra la maquina: punetazos, patadas y bugs.',
         start: 'INICIAR JUEGO',
         help: 'AYUDA',
         language: 'Idioma',
@@ -105,20 +106,20 @@ const I18N = {
         arenaPreviewLab: 'Paneles, formulas y una muestra marcada como NaN.',
         arenaPreviewMeeting: 'Oficina, post-its y una reunion que pudo ser email.',
         arenaPreviewRemoteMeeting: 'Ventanas, mute, lag y reconexion emocional.',
-        arenaPreviewMathClass: 'Pizarra, limites absurdos y teoremas stickman.',
+        arenaPreviewMathClass: 'Pizarra, limites absurdos y bugs demostrables.',
         arenaPreviewServerDown: 'Rack roto, error 500 y luces rojas de panico.',
         arenaPreviewGeekConvention: 'Stands, stickers y una fila que nunca termina.'
     },
     en: {
         htmlLang: 'en',
         languageName: 'English',
-        instructions: 'xkcd KOMBAT - Solo Mode (Human vs Machine)',
+        instructions: 'GLITCH DUEL - Solo Mode (Human vs Machine)',
         orientationWarning: 'ROTATE YOUR DEVICE FOR A BETTER FIGHT',
-        canvasLabel: 'xkcd KOMBAT combat arena',
+        canvasLabel: 'GLITCH DUEL combat arena',
         pauseButton: 'PAUSE',
         pauseButtonLabel: 'Pause match',
         menuKicker: 'Arcade VS AI',
-        menuIntro: 'Defeat the machine in a stickman duel of punches, kicks, and bugs.',
+        menuIntro: 'Line-art arcade fighter vs the machine: punches, kicks, and bugs.',
         start: 'START GAME',
         help: 'HELP',
         language: 'Language',
@@ -211,7 +212,7 @@ const I18N = {
         arenaPreviewLab: 'Panels, formulas, and one sample labeled NaN.',
         arenaPreviewMeeting: 'Office, sticky notes, and a meeting that could be email.',
         arenaPreviewRemoteMeeting: 'Windows, mute, lag, and emotional reconnecting.',
-        arenaPreviewMathClass: 'Blackboard, absurd limits, and stickman theorems.',
+        arenaPreviewMathClass: 'Blackboard, absurd limits, and provable bugs.',
         arenaPreviewServerDown: 'Broken rack, error 500, and panic red lights.',
         arenaPreviewGeekConvention: 'Booths, stickers, and a queue that never ends.'
     }
@@ -237,7 +238,7 @@ function detectBrowserLanguage() {
 
 function loadLanguagePreference() {
     try {
-        const saved = window.localStorage && window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+        const saved = window.localStorage && (window.localStorage.getItem(LANGUAGE_STORAGE_KEY) || window.localStorage.getItem(LEGACY_LANGUAGE_STORAGE_KEY));
         if (isSupportedLanguage(saved)) return saved;
     } catch (_) {
         // localStorage can be unavailable in private browsing or tests.

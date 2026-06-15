@@ -1,3 +1,8 @@
+const REDUCED_MOTION_STORAGE_KEY = 'glitchDuelReducedMotion';
+const LEGACY_REDUCED_MOTION_STORAGE_KEY = 'xkcdKombatReducedMotion';
+const STATS_STORAGE_KEY = 'glitchDuelStats';
+const LEGACY_STATS_STORAGE_KEY = 'xkcdKombatStats';
+
 let player1;
 let player2;
 let floatingTexts = [];
@@ -115,7 +120,7 @@ function getPostMatchPhrase(playerWon) {
 
 function loadReducedMotionPreference() {
     try {
-        return window.localStorage && window.localStorage.getItem('xkcdKombatReducedMotion') === 'true';
+        return window.localStorage && (window.localStorage.getItem(REDUCED_MOTION_STORAGE_KEY) || window.localStorage.getItem(LEGACY_REDUCED_MOTION_STORAGE_KEY)) === 'true';
     } catch (_) {
         return false;
     }
@@ -123,7 +128,7 @@ function loadReducedMotionPreference() {
 
 function saveReducedMotionPreference() {
     try {
-        if (window.localStorage) window.localStorage.setItem('xkcdKombatReducedMotion', String(reducedMotionEnabled));
+        if (window.localStorage) window.localStorage.setItem(REDUCED_MOTION_STORAGE_KEY, String(reducedMotionEnabled));
     } catch (_) {
         // localStorage can be unavailable in private browsing or tests.
     }
@@ -148,7 +153,7 @@ function loadStats() {
     const defaults = { wins: 0, losses: 0, currentStreak: 0, bestStreak: 0 };
 
     try {
-        const raw = window.localStorage && window.localStorage.getItem('xkcdKombatStats');
+        const raw = window.localStorage && (window.localStorage.getItem(STATS_STORAGE_KEY) || window.localStorage.getItem(LEGACY_STATS_STORAGE_KEY));
         return raw ? { ...defaults, ...JSON.parse(raw) } : defaults;
     } catch (_) {
         return defaults;
@@ -157,7 +162,7 @@ function loadStats() {
 
 function saveStats() {
     try {
-        if (window.localStorage) window.localStorage.setItem('xkcdKombatStats', JSON.stringify(stats));
+        if (window.localStorage) window.localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(stats));
     } catch (_) {
         // localStorage can be unavailable in private browsing or tests.
     }
@@ -813,7 +818,7 @@ function drawMathClassDetails(arena) {
     ctx.fillText('CPU != friend', 560, 128);
     ctx.font = `18px ${GAME_FONT_FAMILY}`;
     ctx.fillText('lim combo -> K.O.', 190, 190);
-    ctx.fillText('xkcd theorem: stickmen win', 520, 220);
+    ctx.fillText('bug theorem: hit first', 520, 220);
 }
 
 function drawServerDownDetails(arena) {
