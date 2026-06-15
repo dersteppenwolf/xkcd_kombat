@@ -107,6 +107,13 @@ function getPostMatchMedal(playerWon) {
     return { title: t('medalBug'), detail: t('medalBugDetail') };
 }
 
+function getPostMatchPhrase(playerWon) {
+    if (playerWon && matchStats.playerSpecials > 0) return t('finalPhraseSpecial');
+    if (playerWon && matchStats.playerBlocks >= 2) return t('finalPhraseFirewall');
+    if (playerWon) return t('finalPhraseWin');
+    return t('finalPhraseLoss');
+}
+
 function loadReducedMotionPreference() {
     try {
         return window.localStorage && window.localStorage.getItem('xkcdKombatReducedMotion') === 'true';
@@ -256,7 +263,8 @@ function renderGameOverText() {
 
     const playerWon = playerRounds >= ROUNDS_TO_WIN;
     const medal = getPostMatchMedal(playerWon);
-    winText.innerHTML = `${playerWon ? t('playerWins') : t('cpuWins')}<div class="post-match-medal"><span>${medal.title}</span><small>${medal.detail}</small></div>`;
+    const phrase = getPostMatchPhrase(playerWon);
+    winText.innerHTML = `${playerWon ? t('playerWins') : t('cpuWins')}<div class="post-match-medal"><span>${medal.title}</span><small>${medal.detail}</small></div><div class="post-match-summary"><div>${t('finalScore')}: ${playerRounds}-${cpuRounds}</div><div>${t('finalDifficulty')}: ${getDifficultyLabel()}</div><div>${t('finalArena')}: ${getArenaLabel()}</div><div>${t('finalStreak')}: ${stats.currentStreak} | ${t('finalBest')}: ${stats.bestStreak}</div><p>${phrase}</p></div>`;
 }
 
 function renderPauseSummary() {

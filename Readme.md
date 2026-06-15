@@ -178,7 +178,7 @@ Las arenas son visuales. No modifican dano, velocidad, IA, hitboxes ni reglas de
 - Intro `VS` arcade con dificultad y arena antes de cada round.
 - Opcion `Reducir movimiento` persistida en `xkcdKombatReducedMotion`.
 - Pausa con resumen de round, marcador, tiempo, dificultad, arena y controles.
-- Pantalla de fin de juego con medalla post-partida, `REINICIAR` / `RESTART` y `MENU`.
+- Pantalla de fin de juego con resumen final, medalla post-partida, `REINICIAR` / `RESTART` y `MENU`.
 - Estadisticas locales con victorias, derrotas, racha actual y mejor racha.
 - Foco visible y etiquetas ARIA en controles principales.
 - Controles tactiles responsivos y aviso de orientacion vertical.
@@ -404,7 +404,7 @@ Las pruebas cubren, entre otros puntos:
 - Idioma detectado, cambio manual y persistencia.
 - Pausa, ayuda, stats, rounds, timer y game over.
 - Identidad visual de humano/CPU.
-- Medallas post-partida, sonidos UI y mensajes estilo comic.
+- Resumen final enriquecido, medallas post-partida, sonidos UI y mensajes estilo comic.
 
 Limitaciones de las pruebas:
 
@@ -437,11 +437,10 @@ Limitaciones de las pruebas:
 
 Priorizacion orientada a atraer y retener usuarios: primero mejoras visibles en los primeros segundos, luego motivacion para rejugar y finalmente profundidad o mantenimiento.
 
-Siguiente mejora recomendada: `Pantalla final enriquecida`, porque mejora el cierre de cada partida y refuerza la motivacion para rejugar.
+Siguiente mejora recomendada: `Trailer GIF o captura animada en README`, porque comunica el atractivo del juego antes de abrirlo.
 
 | Prioridad | Mejora | Motivo | Tipo |
 | --- | --- | --- | --- |
-| Alta | Pantalla final enriquecida | Muestra marcador, dificultad, arena, racha, medalla y frase humoristica para dar mejor cierre. | UX / progresion |
 | Alta | Trailer GIF o captura animada en README | Comunica el atractivo del juego antes de abrirlo y mejora la pagina del repositorio. | Documentacion / marketing |
 | Alta | Modo entrenamiento | Facilita practicar rangos, combos, bloqueo y especial sin presion del timer. | Gameplay |
 | Alta | Depuracion visual opcional | Acelera ajuste de hitboxes, estados, cooldowns y decisiones de IA. | Herramienta dev |
@@ -469,6 +468,7 @@ Siguiente mejora recomendada: `Pantalla final enriquecida`, porque mejora el cie
 | Combos y especial | `J,J`, `J,K`, `K,K` y `L` con energia llena. |
 | Feedback del especial | Flash, rastro y texto `SPECIAL!` al usar la barra completa. |
 | Indicador de especial listo | Texto y aura sobre el personaje al llenar energia. |
+| Pantalla final enriquecida | Marcador, dificultad, arena, racha, medalla y frase humoristica al terminar partida. |
 | Accesibilidad inicial | Foco visible, ARIA y reducir movimiento. |
 | Mobile | Controles tactiles, safe areas y aviso de orientacion. |
 | Arenas | Nueve fondos tematicos sin efectos jugables. |

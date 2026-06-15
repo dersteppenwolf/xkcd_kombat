@@ -1033,6 +1033,11 @@ test('round system advances rounds and ends match at two wins', () => {
     assert.equal(state.player1.state, 'victory');
     assert.equal(state.player2.state, 'defeat');
     assert.match(state.winnerTextHtml, /Bug Exterminator/);
+    assert.match(state.winnerTextHtml, /Marcador: 2-0/);
+    assert.match(state.winnerTextHtml, /Dificultad: NORMAL/);
+    assert.match(state.winnerTextHtml, /Arena: CUADERNO/);
+    assert.match(state.winnerTextHtml, /Racha: 1 \| Mejor: 1/);
+    assert.match(state.winnerTextHtml, /Bug eliminado/);
 });
 
 test('post-match medals use simple match stats', () => {
