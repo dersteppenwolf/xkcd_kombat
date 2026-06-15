@@ -25,3 +25,9 @@
 - If proposing an external dependency, document why it is needed and how it changes local run/test commands before adding it.
 - Keep UI text Spanish unless the user asks otherwise.
 - Update `Readme.md` when changing run instructions, controls, game states, or implemented backlog items.
+
+## ExecPlans
+- Follow `PLANS.md` for any substantial implementation plan.
+- Store plans in `plans/` using `plans/plan_<nnnn>_<objetivo>.md`, with zero-padded incremental numbers.
+- Validate proposed ExecPlans with the `karpathy-guidelines` skill before finalizing them.
+- Keep plans current when scope, validation, or implementation details change.
