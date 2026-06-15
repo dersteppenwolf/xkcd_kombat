@@ -5,6 +5,9 @@ class Fighter {
         this.width = 60;
         this.height = 110;
         this.isPlayer1 = isPlayer1;
+        this.label = isPlayer1 ? 'HUMANO' : 'CPU';
+        this.accentColor = isPlayer1 ? '#1f6feb' : '#d22';
+        this.visualRole = isPlayer1 ? 'human' : 'cpu';
         this.health = 100;
         this.displayHealth = 100;
         this.energy = 0;

@@ -30,6 +30,7 @@ Estado actual:
 - Pantalla de ayuda accesible desde el menu principal.
 - Seleccion de dificultad `FACIL`, `NORMAL` y `DIFICIL` desde el menu principal.
 - Combate humano contra CPU implementado.
+- Diferenciacion visual entre humano y CPU con etiquetas, acentos y detalles propios.
 - Sistema de rondas al mejor de 3 implementado.
 - Temporizador de 60 segundos por round implementado.
 - IA con respuestas contextuales ante ataques, baja vida y distancia real de golpe.
@@ -210,6 +211,7 @@ Validar en navegador antes de considerar listo un cambio visual o de jugabilidad
 - El canvas debe cargar correctamente.
 - El canvas debe mantenerse proporcionado al redimensionar la ventana.
 - Deben aparecer dos personajes stickman.
+- El humano debe mostrar etiqueta `HUMANO`, acentos azules y banda; la CPU debe mostrar etiqueta `CPU`, acentos rojos, visor y antena.
 - Los controles de teclado deben responder: `A`, `D`, `W`, flechas, `C`, `S`, `J`, `K`, `P` y `Esc`.
 - `C` o flecha abajo deben agachar al jugador; `S` debe seguir bloqueando.
 - Los combos `J, J`, `J, K` y `K, K` deben aplicar ataques de mayor impacto.
@@ -462,6 +464,7 @@ Limitaciones de las pruebas:
 - Regreso al menu desde pantalla de fin de juego.
 - Reinicio de partida.
 - Combate humano contra CPU.
+- Diferenciacion visual de humano y CPU con etiquetas, colores de acento, banda, visor y antena.
 - Controles de teclado.
 - Controles tactiles durante la partida.
 - Renderizado Canvas.
@@ -621,6 +624,7 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | UX y accesibilidad | Implementado foco visible, ARIA, pausa informativa, controles tactiles ajustados y reduccion de movimiento. |
 | Mejoras tecnicas | Implementadas con IA/render separados, timer por delta time, fixtures de pruebas y smoke tecnico documentado. |
 | Layout del menu principal | Implementado con distribucion mas clara para selectores, ayuda, controles, reduccion de movimiento y estadisticas. |
+| Diferenciacion de personajes | Implementada con etiquetas `HUMANO`/`CPU`, acentos azules/rojos y detalles de banda, visor y antena. |
 
 ### Prioridad Alta
 

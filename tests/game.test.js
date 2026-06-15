@@ -7,6 +7,7 @@ const vm = require('node:vm');
 function createMockContext() {
     const ctx = {
         calls: [],
+        textCalls: [],
         lastTransform: null,
         save() { this.calls.push('save'); },
         restore() { this.calls.push('restore'); },
@@ -19,11 +20,12 @@ function createMockContext() {
         fill() { this.calls.push('fill'); },
         stroke() { this.calls.push('stroke'); },
         fillRect() { this.calls.push('fillRect'); },
+        strokeRect() { this.calls.push('strokeRect'); },
         clearRect() { this.calls.push('clearRect'); },
         translate() { this.calls.push('translate'); },
         scale() { this.calls.push('scale'); },
-        strokeText() { this.calls.push('strokeText'); },
-        fillText() { this.calls.push('fillText'); },
+        strokeText(text) { this.calls.push('strokeText'); this.textCalls.push(text); },
+        fillText(text) { this.calls.push('fillText'); this.textCalls.push(text); },
         setTransform(a, b, c, d, e, f) {
             this.calls.push('setTransform');
             this.lastTransform = [a, b, c, d, e, f];
@@ -179,6 +181,7 @@ function loadGame() {
                 reducedMotionToggleChecked: document.getElementById('reduce-motion-toggle').checked,
                 orientationWarningDisplay: document.getElementById('orientation-warning').style.display,
                 ctxCalls: [...ctx.calls],
+                textCalls: [...ctx.textCalls],
                 transform: ctx.lastTransform
             })
         };
@@ -461,6 +464,26 @@ test('fighter draw delegates to extracted render helpers', () => {
     assert(calls.includes('arc'));
     assert(calls.includes('stroke'));
     assert(calls.includes('restore'));
+});
+
+test('fighters expose distinct visual identities and render labels', () => {
+    const { api } = loadGame();
+    const player = new api.Fighter(120, true);
+    const cpu = new api.Fighter(240, false);
+
+    assert.equal(player.label, 'HUMANO');
+    assert.equal(player.visualRole, 'human');
+    assert.equal(cpu.label, 'CPU');
+    assert.equal(cpu.visualRole, 'cpu');
+    assert.notEqual(player.accentColor, cpu.accentColor);
+
+    player.draw();
+    cpu.draw();
+
+    const state = api.getState();
+    assert(state.textCalls.includes('HUMANO'));
+    assert(state.textCalls.includes('CPU'));
+    assert(state.ctxCalls.includes('strokeRect'));
 });
 
 test('game state gates simulation until a match starts', () => {

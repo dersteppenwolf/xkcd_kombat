@@ -2,6 +2,10 @@ function drawFighter(fighter) {
     ctx.save();
     const baseX = fighter.x;
     const baseY = fighter.y;
+    const accentColor = fighter.accentColor || (fighter.isPlayer1 ? '#1f6feb' : '#d22');
+    const label = fighter.label || (fighter.isPlayer1 ? 'HUMANO' : 'CPU');
+
+    drawFighterIdentityMarker(baseX, baseY, label, accentColor);
 
     if (!fighter.facingRight) {
         ctx.scale(-1, 1);
@@ -15,6 +19,12 @@ function drawFighter(fighter) {
     const torsoTopY = isCrouching ? baseY - 34 : baseY - 55;
     const shoulderY = isCrouching ? baseY - 28 : baseY - 48;
     const headY = isCrouching ? baseY - 54 : baseY - 75 + headBob;
+
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(baseX, baseY + 38, 30, 7, 0, 0, Math.PI * 2);
+    ctx.stroke();
 
     ctx.strokeStyle = '#111';
     ctx.lineWidth = 5;
@@ -74,7 +84,7 @@ function drawFighter(fighter) {
         ctx.lineTo(baseX + 42, fistY + 10);
         ctx.stroke();
 
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = accentColor;
         ctx.strokeStyle = '#111';
         ctx.lineWidth = 4;
         ctx.beginPath();
@@ -92,7 +102,7 @@ function drawFighter(fighter) {
         ctx.stroke();
 
         if (fighter.state === 'special') {
-            ctx.strokeStyle = 'rgba(0, 120, 255, 0.55)';
+            ctx.strokeStyle = accentColor;
             ctx.lineWidth = 5;
             ctx.beginPath();
             ctx.arc(fistX + 8, fistY, 24, 0, Math.PI * 2);
@@ -124,7 +134,7 @@ function drawFighter(fighter) {
         ctx.lineTo(footX, footY);
         ctx.stroke();
 
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = accentColor;
         ctx.strokeStyle = '#111';
         ctx.lineWidth = 4;
         ctx.beginPath();
@@ -159,10 +169,7 @@ function drawFighter(fighter) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = '#111';
-    ctx.beginPath();
-    ctx.arc(baseX + 6, headY - 3, 3, 0, Math.PI * 2);
-    ctx.fill();
+    drawFighterFaceAndDetail(fighter, baseX, baseY, headY, accentColor);
 
     if (fighter.state === 'block') {
         ctx.fillStyle = 'rgba(100, 150, 255, 0.25)';
@@ -175,4 +182,58 @@ function drawFighter(fighter) {
     }
 
     ctx.restore();
+}
+
+function drawFighterIdentityMarker(baseX, baseY, label, accentColor) {
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(baseX, baseY - 136, 38, 13, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = 'bold 13px "Comic Sans MS"';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = accentColor;
+    ctx.fillText(label, baseX, baseY - 132);
+}
+
+function drawFighterFaceAndDetail(fighter, baseX, baseY, headY, accentColor) {
+    if (fighter.visualRole === 'cpu') {
+        ctx.fillStyle = accentColor;
+        ctx.fillRect(baseX - 12, headY - 8, 24, 9);
+        ctx.strokeStyle = '#111';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(baseX - 12, headY - 8, 24, 9);
+
+        ctx.strokeStyle = '#111';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(baseX, headY - 20);
+        ctx.lineTo(baseX + 10, headY - 34);
+        ctx.stroke();
+
+        ctx.fillStyle = accentColor;
+        ctx.beginPath();
+        ctx.arc(baseX + 11, headY - 35, 4, 0, Math.PI * 2);
+        ctx.fill();
+        return;
+    }
+
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(baseX, headY - 2, 20, Math.PI * 1.08, Math.PI * 1.9);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(baseX + 15, headY - 16);
+    ctx.lineTo(baseX + 29, headY - 24);
+    ctx.stroke();
+
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.arc(baseX + 6, headY - 3, 3, 0, Math.PI * 2);
+    ctx.fill();
 }
