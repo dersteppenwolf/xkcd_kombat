@@ -30,6 +30,13 @@ El juego incluye:
 6. El boton `REINICIAR` empieza una partida nueva inmediatamente.
 7. El boton `MENU` vuelve al menu principal.
 
+## Prerrequisitos
+
+- Navegador moderno con soporte para HTML5 Canvas y Web Audio API.
+- Node.js para ejecutar validacion de sintaxis y pruebas unitarias.
+- Python opcional para servir el proyecto con `python -m http.server 8000`.
+- No se requiere `npm install`, `package.json`, bundler ni servidor backend.
+
 ## Como Ejecutar
 
 No requiere instalacion ni dependencias externas.
@@ -93,6 +100,23 @@ node --check src\game.js
 Para ejecutar las pruebas unitarias con el runner nativo de Node.js:
 
 ```powershell
+node --test tests\game.test.js
+```
+
+Las pruebas no requieren `npm install`, `package.json` ni dependencias externas. El archivo `tests/game.test.js` usa `node:test`, `node:assert` y mocks minimos de DOM, canvas y audio para cargar `src/game.js` en Node.
+
+Actualmente las pruebas cubren:
+
+- Escalado responsive del canvas con `resizeCanvas()`.
+- Ataque de punetazo con `J` y aplicacion de daño.
+- Ataque de patada con `K` y aplicacion de daño.
+- Bloqueo, vida conservada y feedback de impacto reducido.
+- Transicion de estado entre `menu` y `playing`.
+
+Flujo recomendado antes de cerrar cambios de codigo:
+
+```powershell
+node --check src\game.js
 node --test tests\game.test.js
 ```
 
