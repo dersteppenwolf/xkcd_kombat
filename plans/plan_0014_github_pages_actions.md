@@ -4,7 +4,7 @@
 
 Publicar el juego en GitHub Pages usando GitHub Actions, sirviendo el contenido de `src/` como raiz del sitio.
 
-La experiencia cambia en que el juego puede probarse en linea con una URL limpia como `https://dersteppenwolf.github.io/xkcd_kombat/`. Queda fuera del alcance mover archivos, agregar build tooling, agregar dependencias, cambiar el entrypoint local o configurar manualmente el repositorio desde la interfaz web de GitHub.
+La experiencia cambia en que el juego puede probarse en linea con una URL limpia como `https://dersteppenwolf.github.io/glitch_duel/`. Queda fuera del alcance mover archivos, agregar build tooling, agregar dependencias, cambiar el entrypoint local o configurar manualmente el repositorio desde la interfaz web de GitHub.
 
 ## Contexto Actual
 
@@ -12,7 +12,7 @@ La experiencia cambia en que el juego puede probarse en linea con una URL limpia
 - El entrypoint local es `src/index.html`.
 - Los assets/scripts referenciados desde `src/index.html` son relativos y viven en la misma carpeta `src/`.
 - No existe `.github/workflows/` actualmente.
-- La alternativa sin cambios seria usar `https://dersteppenwolf.github.io/xkcd_kombat/src/`, pero la opcion elegida busca servir `src/` como raiz.
+- La alternativa sin cambios seria usar `https://dersteppenwolf.github.io/glitch_duel/src/`, pero la opcion elegida busca servir `src/` como raiz.
 - Hay cambios locales previos no commiteados de pulido arcade; esta configuracion debe convivir con ellos sin revertirlos.
 
 ## Diseño Propuesto
@@ -61,7 +61,7 @@ Validacion manual despues de push:
 
 - En GitHub, confirmar que `Settings > Pages > Build and deployment > Source` usa `GitHub Actions`.
 - Confirmar que el workflow `Deploy GitHub Pages` termina exitosamente.
-- Abrir `https://dersteppenwolf.github.io/xkcd_kombat/`.
+- Abrir `https://dersteppenwolf.github.io/glitch_duel/`.
 - Confirmar que carga el menu, los scripts, estilos, audio tras interaccion y canvas.
 
 ## Documentacion

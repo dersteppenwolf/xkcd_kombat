@@ -2,9 +2,9 @@
 
 Juego web arcade de pelea line-art, hecho con HTML, CSS y JavaScript puro sobre Canvas. El jugador humano pelea contra una CPU en rondas al mejor de 3, con combos, bloqueo, ataque especial, arenas tematicas, controles tactiles e interfaz en espanol/ingles.
 
-Jugar en linea: [https://dersteppenwolf.github.io/xkcd_kombat/](https://dersteppenwolf.github.io/xkcd_kombat/)
+Jugar en linea: [https://dersteppenwolf.github.io/glitch_duel/](https://dersteppenwolf.github.io/glitch_duel/)
 
-Codigo fuente: [https://github.com/dersteppenwolf/xkcd_kombat](https://github.com/dersteppenwolf/xkcd_kombat)
+Codigo fuente: [https://github.com/dersteppenwolf/glitch_duel](https://github.com/dersteppenwolf/glitch_duel)
 
 Nota: esta aplicacion ha sido generada y evolucionada utilizando asistencia de OpenCode y GPT-5.5.
 
@@ -16,7 +16,7 @@ Nota: esta aplicacion ha sido generada y evolucionada utilizando asistencia de O
 | Stack | HTML, CSS, JavaScript puro y Canvas. |
 | Dependencias | Ninguna para jugar, validar o desplegar. |
 | Entrada local | `src/index.html`. |
-| URL publica | `https://dersteppenwolf.github.io/xkcd_kombat/`. |
+| URL publica | `https://dersteppenwolf.github.io/glitch_duel/`. |
 | Deploy | GitHub Pages con Actions publicando `src/`. |
 | Tests | `node --test tests\game.test.js`. |
 | Estado | Jugable, publicado y con backlog priorizado. |
@@ -59,7 +59,7 @@ Nota: esta aplicacion ha sido generada y evolucionada utilizando asistencia de O
 
 Para jugar sin instalar nada, abrir la version publicada:
 
-[https://dersteppenwolf.github.io/xkcd_kombat/](https://dersteppenwolf.github.io/xkcd_kombat/)
+[https://dersteppenwolf.github.io/glitch_duel/](https://dersteppenwolf.github.io/glitch_duel/)
 
 Para ejecutar localmente, usar servidor estatico desde la raiz del proyecto.
 
@@ -261,7 +261,7 @@ El repo incluye GitHub Pages con Actions en `.github/workflows/pages.yml`.
 El workflow publica la carpeta `src/` como raiz del sitio, por lo que la URL esperada es:
 
 ```text
-https://dersteppenwolf.github.io/xkcd_kombat/
+https://dersteppenwolf.github.io/glitch_duel/
 ```
 
 Configuracion requerida en GitHub:
