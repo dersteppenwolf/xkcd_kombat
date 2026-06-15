@@ -50,6 +50,8 @@ Estado actual:
 - Indicador central para eventos como `FIGHT!`, `BLOCK` y `K.O.`.
 - Canvas responsive con soporte para `devicePixelRatio`.
 - Feedback de golpes con sacudida, hit-stop y particulas.
+- IA y render de luchadores separados en archivos dedicados.
+- Temporizador de round basado en delta time real de `requestAnimationFrame`.
 - Pruebas unitarias basicas con `node:test`.
 
 ## Comandos Rapidos
@@ -61,6 +63,8 @@ python -m http.server 8000
 node --check src\config.js
 node --check src\audio.js
 node --check src\effects.js
+node --check src\ai.js
+node --check src\fighter_render.js
 node --check src\fighter.js
 node --check src\game.js
 node --test tests\game.test.js
@@ -139,6 +143,8 @@ Para validar la sintaxis de los archivos JavaScript principales:
 node --check src\config.js
 node --check src\audio.js
 node --check src\effects.js
+node --check src\ai.js
+node --check src\fighter_render.js
 node --check src\fighter.js
 node --check src\game.js
 ```
@@ -155,6 +161,8 @@ Flujo recomendado antes de cerrar cambios de codigo:
 node --check src\config.js
 node --check src\audio.js
 node --check src\effects.js
+node --check src\ai.js
+node --check src\fighter_render.js
 node --check src\fighter.js
 node --check src\game.js
 node --test tests\game.test.js
@@ -166,6 +174,7 @@ Validar en navegador antes de considerar listo un cambio visual o de jugabilidad
 
 - Debe aparecer el menu principal al cargar.
 - El boton `INICIAR JUEGO` debe comenzar la partida.
+- El texto del menu debe verse balanceado y sin amontonarse en desktop o movil.
 - El boton `AYUDA` debe mostrar controles, objetivo y consejos sin iniciar partida.
 - El boton `VOLVER` debe regresar desde ayuda al menu principal.
 - Cambiar la dificultad en el menu debe afectar el comportamiento de la CPU.
@@ -183,6 +192,7 @@ Validar en navegador antes de considerar listo un cambio visual o de jugabilidad
 - Al terminar partidas deben actualizarse las estadisticas locales.
 - `P`, `Esc` o `PAUSA` deben pausar la partida, mostrar resumen de round/marcador/tiempo/dificultad/arena, y `RESUMIR` debe continuar.
 - El temporizador debe bajar durante `playing` y detenerse en pausa.
+- El temporizador debe avanzar en segundos reales incluso si baja el frame rate.
 - Los golpes deben reducir la barra de vida del rival.
 - Las barras de vida deben mostrar una transicion breve al bajar.
 - En telefono vertical debe aparecer una sugerencia para girar el dispositivo.
@@ -249,6 +259,8 @@ En dispositivos tactiles se muestran botones en pantalla durante la partida para
     ├── config.js
     ├── audio.js
     ├── effects.js
+    ├── ai.js
+    ├── fighter_render.js
     ├── fighter.js
     ├── index.html
     ├── styles.css
@@ -262,8 +274,10 @@ En dispositivos tactiles se muestran botones en pantalla durante la partida para
 - `src/config.js`: constantes globales, canvas, dimensiones logicas, ataques y dificultad.
 - `src/audio.js`: inicializacion de Web Audio y sonidos generados por codigo.
 - `src/effects.js`: textos flotantes y particulas de impacto.
-- `src/fighter.js`: clase `Fighter`, fisica individual, IA, ataques, hitboxes y dibujo del luchador.
-- `src/game.js`: estado global, rondas, pausa, render principal, eventos de UI y loop del juego.
+- `src/ai.js`: decision de acciones de la CPU segun dificultad, distancia, vida y contexto de ataque.
+- `src/fighter_render.js`: dibujo del luchador y feedback visual asociado al estado del personaje.
+- `src/fighter.js`: clase `Fighter`, fisica individual, controles, ataques, combos, hitboxes, daño y energia.
+- `src/game.js`: estado global, rondas, pausa, temporizador por delta time, render principal, eventos de UI y loop del juego.
 - `tests/game.test.js`: pruebas unitarias con mocks de DOM/canvas/audio.
 - `AGENTS.md`: instrucciones compactas para futuras sesiones de OpenCode.
 
@@ -340,6 +354,10 @@ Actualmente cubren:
 - IA defensiva ante ataques cercanos.
 - Animacion visual de barras de vida.
 - Aviso de orientacion movil en telefonos verticales.
+- Decision de IA separada con escenarios deterministas.
+- Delegacion de render del luchador hacia `drawFighter(...)`.
+- Temporizador de round basado en delta time.
+- Preferencia persistente de reducir movimiento y pausa informativa.
 
 Limitaciones de las pruebas:
 
@@ -392,6 +410,9 @@ Limitaciones de las pruebas:
 - Renderizado Canvas.
 - Escalado responsive del canvas con soporte para `devicePixelRatio`.
 - Sacudida de pantalla, hit-stop y particulas al impactar o bloquear golpes.
+- IA y render de luchador separados de la clase principal de combate.
+- Temporizador de round en tiempo real con delta time.
+- Helpers de pruebas para iniciar partida, cargar energia, avanzar frames y tocar controles.
 - Audio basico generado por Web Audio API.
 - Pruebas unitarias con `node:test` y mocks de DOM/canvas/audio.
 
@@ -420,8 +441,9 @@ El juego ya supero la etapa de prototipo minimo: tiene flujo arcade completo, ro
 Estado tecnico actual:
 
 - `src/config.js` concentra constantes de combate, dificultad y arenas, lo que facilita balancear sin tocar el loop principal.
-- `src/fighter.js` contiene la mayor parte de la complejidad: controles del jugador, IA, combos, hitboxes, daño, energia, estados y dibujo del personaje.
-- `src/game.js` concentra estado global, flujo de pantallas, rounds, temporizador, render del HUD, efectos y eventos de entrada.
+- `src/fighter.js` contiene controles del jugador, combos, hitboxes, daño, energia y estado del personaje.
+- `src/ai.js` separa la decision de CPU y `src/fighter_render.js` separa el dibujo del luchador.
+- `src/game.js` concentra estado global, flujo de pantallas, rounds, temporizador por delta time, render del HUD, efectos y eventos de entrada.
 - `src/styles.css` ya resuelve menus, overlays y controles moviles, pero el diseño tactil todavia depende de posiciones absolutas.
 - `tests/game.test.js` cubre reglas principales con mocks de DOM/canvas/audio, aunque no reemplaza pruebas reales en navegador.
 
@@ -440,10 +462,10 @@ Riesgos actuales:
 - El ataque especial existe, pero podria sentirse poco distintivo si no tiene mas feedback audiovisual.
 - Las estadisticas locales existen, pero no hay forma visible de reiniciarlas desde la UI.
 - La IA es mas creible que antes, pero todavia puede sentirse repetitiva porque no tiene personalidades ni memoria.
-- `src/fighter.js` crecio como punto central de mecanicas; nuevas acciones pueden volverlo dificil de mantener si no se separan helpers de dibujo, IA o combate.
-- El loop asume 60 FPS para temporizador, combos y cooldowns; en equipos lentos o pestanas en segundo plano la duracion real puede variar.
+- `src/fighter.js` sigue concentrando combate y controles; nuevas mecanicas grandes deberian evitar volver a mezclar render o decision de IA en esa clase.
+- Combos, cooldowns, hit-stun y timers visuales siguen usando frames; en equipos lentos pueden variar aunque el timer de round ya use delta time.
 - No hay persistencia de preferencias de dificultad o arena; cada carga vuelve a los valores por defecto del HTML.
-- La UI tactil funciona, pero faltan estados de foco/etiquetas ARIA y validacion manual en varios tamaños de pantalla.
+- La UI tactil funciona, pero sigue requiriendo validacion manual en varios tamaños de pantalla.
 
 Siguiente enfoque recomendado:
 
@@ -480,11 +502,11 @@ Estas sugerencias parten del estado actual del codigo y estan ordenadas por impa
 
 | Mejora | Que cambiar | Por que conviene |
 | --- | --- | --- |
-| Separar dibujo del luchador | Mover helpers de render de `Fighter.draw()` a funciones pequeñas o a un archivo cercano. | `src/fighter.js` queda mas facil de modificar sin tocar logica de combate. |
-| Separar IA | Extraer decisiones de CPU a funciones puras que reciban distancia, vida, energia y dificultad. | Permite probar la IA con menos mocks y agregar personalidades con menor riesgo. |
-| Temporizador basado en delta time | Medir tiempo real con `requestAnimationFrame(timestamp)` para round timer y, si aplica, cooldowns. | Hace la duracion mas estable cuando el frame rate no es exactamente 60 FPS. |
-| Fixtures de pruebas | Crear helpers de test para ubicar jugadores, cargar energia y avanzar frames. | Reduce duplicacion en `tests/game.test.js` a medida que crezcan los casos. |
-| Prueba smoke ligera en navegador | Documentar o automatizar una prueba manual guiada por escenario antes de releases. | Cubre lo que Node no puede validar visualmente. |
+| Separar dibujo del luchador | Implementado con `src/fighter_render.js` y `Fighter.draw()` como fachada. | `src/fighter.js` queda mas facil de modificar sin tocar logica de combate. |
+| Separar IA | Implementado con `chooseAIAction(...)` en `src/ai.js`. | Permite probar la IA con menos mocks y agregar personalidades con menor riesgo. |
+| Temporizador basado en delta time | Implementado para el round timer con `requestAnimationFrame(timestamp)`. | Hace la duracion mas estable cuando el frame rate no es exactamente 60 FPS. |
+| Fixtures de pruebas | Implementados helpers locales para iniciar partida, cargar energia y avanzar frames. | Reduce duplicacion en `tests/game.test.js` a medida que crezcan los casos. |
+| Prueba smoke ligera en navegador | Documentada como recorrido tecnico corto. | Cubre lo que Node no puede validar visualmente. |
 
 ### Mejoras De UX Y Accesibilidad
 
@@ -503,7 +525,7 @@ Estas sugerencias parten del estado actual del codigo y estan ordenadas por impa
 3. Reset de estadisticas y persistencia de preferencias.
 4. Modo entrenamiento.
 5. Resultado detallado con telemetria local de combate.
-6. Refactor pequeño de dibujo/IA solo cuando una mejora nueva toque esas areas.
+6. Mantener IA/render separados cuando futuras mejoras toquen esas areas.
 
 ## Backlog
 
@@ -537,6 +559,7 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | Feedback de golpes | Implementado con shake del canvas, hit-stop breve y particulas/lineas de impacto. |
 | Mejor escalado del canvas | Implementado con resize responsive y backing store ajustado por `devicePixelRatio`. |
 | UX y accesibilidad | Implementado foco visible, ARIA, pausa informativa, controles tactiles ajustados y reduccion de movimiento. |
+| Mejoras tecnicas | Implementadas con IA/render separados, timer por delta time, fixtures de pruebas y smoke tecnico documentado. |
 
 ### Prioridad Alta
 
@@ -552,7 +575,7 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | --- | --- | --- |
 | Pantalla de resultado detallada | Mostrar ganador, dificultad, arena, marcador, tiempo restante y estadisticas actualizadas. | Cierra mejor la experiencia arcade. |
 | Reinicio de estadisticas | Agregar boton para borrar victorias, derrotas y rachas guardadas. | Da control al jugador sobre datos locales. |
-| Accesibilidad de menus | Mejorar foco visible, `aria-label` en botones tactiles y navegacion por teclado. | Hace el juego mas usable sin cambiar mecanicas. |
+| Persistencia de preferencias | Guardar dificultad y arena seleccionadas entre sesiones. | Reduce friccion al volver al juego. |
 | Personalidades de IA | Agregar estilos agresivo, defensivo y balanceado ademas de dificultad. | Aumenta rejugabilidad y variedad del rival. |
 | Feedback del especial | Agregar texto, particulas y sonido propios al especial. | Hace que gastar energia se sienta mas satisfactorio. |
 

@@ -19,35 +19,37 @@
             <div class="menu-card">
                 <div class="menu-kicker">Arcade VS AI</div>
                 <h1 id="main-title">xkcd KOMBAT</h1>
-                <p>Derrota a la maquina en un duelo stickman de punetazos, patadas y bugs.</p>
+                <p class="menu-intro">Derrota a la maquina en un duelo stickman de punetazos, patadas y bugs.</p>
 
                 <div class="menu-actions">
                     <button id="start-button" type="button">INICIAR JUEGO</button>
                     <button id="help-button" type="button">AYUDA</button>
                 </div>
 
-                <label class="difficulty-picker" for="difficulty-select">
-                    Dificultad
-                    <select id="difficulty-select">
-                        <option value="easy">FACIL</option>
-                        <option value="normal" selected>NORMAL</option>
-                        <option value="hard">DIFICIL</option>
-                    </select>
-                </label>
+                <div class="menu-settings" aria-label="Opciones de partida">
+                    <label class="difficulty-picker" for="difficulty-select">
+                        <span>Dificultad</span>
+                        <select id="difficulty-select">
+                            <option value="easy">FACIL</option>
+                            <option value="normal" selected>NORMAL</option>
+                            <option value="hard">DIFICIL</option>
+                        </select>
+                    </label>
 
-                <label class="difficulty-picker" for="arena-select">
-                    Arena
-                    <select id="arena-select">
-                        <option value="notebook" selected>CUADERNO</option>
-                        <option value="terminal">TERMINAL</option>
-                        <option value="lab">LABORATORIO</option>
-                    </select>
-                </label>
+                    <label class="difficulty-picker" for="arena-select">
+                        <span>Arena</span>
+                        <select id="arena-select">
+                            <option value="notebook" selected>CUADERNO</option>
+                            <option value="terminal">TERMINAL</option>
+                            <option value="lab">LABORATORIO</option>
+                        </select>
+                    </label>
 
-                <label class="motion-picker" for="reduce-motion-toggle">
-                    <input id="reduce-motion-toggle" type="checkbox">
-                    Reducir movimiento
-                </label>
+                    <label class="motion-picker" for="reduce-motion-toggle">
+                        <input id="reduce-motion-toggle" type="checkbox">
+                        <span>Reducir movimiento</span>
+                    </label>
+                </div>
 
                 <div id="stats-summary" class="stats-summary" role="status" aria-live="polite">Victorias: 0 | Derrotas: 0 | Mejor racha: 0</div>
 
@@ -157,6 +159,8 @@
     <script src="config.js"></script>
     <script src="audio.js"></script>
     <script src="effects.js"></script>
+    <script src="ai.js"></script>
+    <script src="fighter_render.js"></script>
     <script src="fighter.js"></script>
     <script src="game.js"></script>
 </body>

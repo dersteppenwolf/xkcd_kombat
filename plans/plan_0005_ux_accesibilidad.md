@@ -1,6 +1,6 @@
 # Exec Plan: UX Y Accesibilidad
 
-Estado: Implementado localmente, pendiente de commit/push.
+Estado: Cerrado en `5bd92d4 Improve UX accessibility controls`.
 
 ## Objetivo
 

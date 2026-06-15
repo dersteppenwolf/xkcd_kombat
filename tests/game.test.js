@@ -6,24 +6,26 @@ const vm = require('node:vm');
 
 function createMockContext() {
     const ctx = {
+        calls: [],
         lastTransform: null,
-        save() {},
-        restore() {},
-        beginPath() {},
-        moveTo() {},
-        lineTo() {},
-        quadraticCurveTo() {},
-        arc() {},
-        ellipse() {},
-        fill() {},
-        stroke() {},
-        fillRect() {},
-        clearRect() {},
-        translate() {},
-        scale() {},
-        strokeText() {},
-        fillText() {},
+        save() { this.calls.push('save'); },
+        restore() { this.calls.push('restore'); },
+        beginPath() { this.calls.push('beginPath'); },
+        moveTo() { this.calls.push('moveTo'); },
+        lineTo() { this.calls.push('lineTo'); },
+        quadraticCurveTo() { this.calls.push('quadraticCurveTo'); },
+        arc() { this.calls.push('arc'); },
+        ellipse() { this.calls.push('ellipse'); },
+        fill() { this.calls.push('fill'); },
+        stroke() { this.calls.push('stroke'); },
+        fillRect() { this.calls.push('fillRect'); },
+        clearRect() { this.calls.push('clearRect'); },
+        translate() { this.calls.push('translate'); },
+        scale() { this.calls.push('scale'); },
+        strokeText() { this.calls.push('strokeText'); },
+        fillText() { this.calls.push('fillText'); },
         setTransform(a, b, c, d, e, f) {
+            this.calls.push('setTransform');
             this.lastTransform = [a, b, c, d, e, f];
         }
     };
@@ -119,7 +121,7 @@ function loadGame() {
 
     context.globalThis = context;
 
-    const sourceFiles = ['config.js', 'audio.js', 'effects.js', 'fighter.js', 'game.js'];
+    const sourceFiles = ['config.js', 'audio.js', 'effects.js', 'ai.js', 'fighter_render.js', 'fighter.js', 'game.js'];
     const source = sourceFiles
         .map((file) => fs.readFileSync(path.join(__dirname, '..', 'src', file), 'utf8'))
         .join('\n');
@@ -128,6 +130,8 @@ function loadGame() {
             Fighter,
             FloatingText,
             ImpactParticle,
+            chooseAIAction,
+            drawFighter,
             resizeCanvas,
             initGame,
             startRound,
@@ -139,6 +143,7 @@ function loadGame() {
             togglePause,
             setDifficulty,
             setRoundTimerFrames,
+            setRoundTimeMs,
             setArena,
             setReducedMotion,
             recordMatchResult,
@@ -157,6 +162,7 @@ function loadGame() {
                 playerRounds,
                 cpuRounds,
                 roundTimerFrames,
+                roundTimeMs,
                 selectedArena,
                 reducedMotionEnabled,
                 stats,
@@ -172,6 +178,7 @@ function loadGame() {
                 pauseButtonDisplay: document.getElementById('pause-button').style.display,
                 reducedMotionToggleChecked: document.getElementById('reduce-motion-toggle').checked,
                 orientationWarningDisplay: document.getElementById('orientation-warning').style.display,
+                ctxCalls: [...ctx.calls],
                 transform: ctx.lastTransform
             })
         };
@@ -185,6 +192,31 @@ function loadGame() {
         elements,
         windowListeners
     };
+}
+
+function createFighters(api, playerX = 100, cpuX = 220) {
+    return {
+        player: new api.Fighter(playerX, true),
+        opponent: new api.Fighter(cpuX, false)
+    };
+}
+
+function startPlayingGame(api) {
+    api.initGame();
+    return api.getState();
+}
+
+function giveEnergy(fighter, amount = 100) {
+    fighter.energy = amount;
+}
+
+function advanceFrames(api, frames, deltaMs = 1000 / 60) {
+    for (let i = 0; i < frames; i++) api.update(deltaMs);
+}
+
+function tapControl(fighter, keys, opponent) {
+    fighter.updatePlayerControls(keys, opponent);
+    fighter.updatePlayerControls({}, opponent);
 }
 
 test('resizeCanvas preserves logical aspect ratio and scales backing store', () => {
@@ -202,8 +234,7 @@ test('resizeCanvas preserves logical aspect ratio and scales backing store', () 
 
 test('J triggers punch damage when opponent is in range', () => {
     const { api } = loadGame();
-    const player = new api.Fighter(100, true);
-    const opponent = new api.Fighter(170, false);
+    const { player, opponent } = createFighters(api, 100, 170);
 
     player.updatePlayerControls({ j: true }, opponent);
 
@@ -215,8 +246,7 @@ test('J triggers punch damage when opponent is in range', () => {
 
 test('K triggers kick damage when opponent is in range', () => {
     const { api } = loadGame();
-    const player = new api.Fighter(100, true);
-    const opponent = new api.Fighter(220, false);
+    const { player, opponent } = createFighters(api, 100, 220);
 
     player.updatePlayerControls({ k: true }, opponent);
 
@@ -227,8 +257,7 @@ test('K triggers kick damage when opponent is in range', () => {
 
 test('simple combos increase damage and cooldown', () => {
     const { api } = loadGame();
-    const player = new api.Fighter(100, true);
-    const opponent = new api.Fighter(170, false);
+    const { player, opponent } = createFighters(api, 100, 170);
 
     player.updatePlayerControls({ j: true }, opponent);
     player.updatePlayerControls({}, opponent);
@@ -368,9 +397,8 @@ test('crouch lowers body box under punches but remains vulnerable to kicks', () 
 
 test('special attack consumes full energy and deals heavy damage', () => {
     const { api } = loadGame();
-    const player = new api.Fighter(100, true);
-    const opponent = new api.Fighter(220, false);
-    player.energy = 100;
+    const { player, opponent } = createFighters(api, 100, 220);
+    giveEnergy(player);
 
     player.updatePlayerControls({ l: true }, opponent);
 
@@ -423,6 +451,18 @@ test('reduced motion limits shake hit-stop and impact particles', () => {
     assert.equal(state.impactParticles.length, 5);
 });
 
+test('fighter draw delegates to extracted render helpers', () => {
+    const { api } = loadGame();
+    const player = new api.Fighter(120, true);
+
+    player.draw();
+
+    const calls = api.getState().ctxCalls;
+    assert(calls.includes('arc'));
+    assert(calls.includes('stroke'));
+    assert(calls.includes('restore'));
+});
+
 test('game state gates simulation until a match starts', () => {
     const { api } = loadGame();
 
@@ -433,7 +473,7 @@ test('game state gates simulation until a match starts', () => {
     assert.equal(api.getState().gameState, 'menu');
     assert.equal(api.getState().player1.x, menuState.player1.x);
 
-    api.initGame();
+    startPlayingGame(api);
 
     assert.equal(api.getState().gameState, 'playing');
 });
@@ -503,6 +543,25 @@ test('difficulty selection changes CPU movement tuning', () => {
     assert.equal(api.getState().selectedDifficulty, 'normal');
 });
 
+test('CPU decision helper chooses deterministic defensive and offensive actions', () => {
+    const { api } = loadGame();
+    const difficulty = {
+        approachLong: 0.85,
+        approachMid: 0.60,
+        retreatMid: 0.80,
+        jumpMid: 0.95,
+        punchClose: 0.40,
+        kickClose: 0.75,
+        blockClose: 0.90
+    };
+
+    assert.equal(api.chooseAIAction({ dist: 130, health: 100, energy: 0, onGround: true, opponentAttacking: true, canPunch: false, canKick: false, difficulty, rand: 0.5 }), 'block');
+    assert.equal(api.chooseAIAction({ dist: 120, health: 20, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, difficulty, rand: 0.2 }), 'retreat');
+    assert.equal(api.chooseAIAction({ dist: 300, health: 100, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, difficulty, rand: 0.2 }), 'approach');
+    assert.equal(api.chooseAIAction({ dist: 80, health: 100, energy: 100, onGround: true, opponentAttacking: false, canPunch: true, canKick: true, difficulty, rand: 0.1 }), 'special');
+    assert.equal(api.chooseAIAction({ dist: 80, health: 100, energy: 0, onGround: true, opponentAttacking: false, canPunch: true, canKick: false, difficulty, rand: 0.2 }), 'punch');
+});
+
 test('arena selection falls back to notebook for invalid values', () => {
     const { api } = loadGame();
 
@@ -542,9 +601,9 @@ test('improved CPU blocks incoming close attacks', () => {
 test('health display animates toward real health', () => {
     const { api } = loadGame();
 
-    api.initGame();
+    startPlayingGame(api);
     api.getState().player1.health = 60;
-    api.update();
+    advanceFrames(api, 1);
 
     const displayHealth = api.getState().player1.displayHealth;
     assert(displayHealth < 100);
@@ -614,14 +673,27 @@ test('round timer awards round to fighter with more health', () => {
     api.initGame();
     api.getState().player1.health = 80;
     api.getState().player2.health = 60;
-    api.setRoundTimerFrames(1);
-    api.update();
+    api.setRoundTimeMs(1);
+    api.update(1);
 
     const state = api.getState();
     assert.equal(state.playerRounds, 1);
     assert.equal(state.cpuRounds, 0);
     assert.equal(state.roundTimerFrames, 3600);
+    assert.equal(state.roundTimeMs, 60000);
     assert.equal(state.gameState, 'playing');
+});
+
+test('round timer uses delta time and pauses outside playing', () => {
+    const { api } = loadGame();
+
+    api.initGame();
+    api.update(2500);
+    assert.equal(api.getState().roundTimeMs, 57500);
+
+    api.pauseGame();
+    api.update(2500);
+    assert.equal(api.getState().roundTimeMs, 57500);
 });
 
 test('round timer tie starts another round without scoring', () => {
@@ -630,8 +702,8 @@ test('round timer tie starts another round without scoring', () => {
     api.initGame();
     api.getState().player1.health = 70;
     api.getState().player2.health = 70;
-    api.setRoundTimerFrames(1);
-    api.update();
+    api.setRoundTimeMs(1);
+    api.update(1);
 
     const state = api.getState();
     assert.equal(state.playerRounds, 0);

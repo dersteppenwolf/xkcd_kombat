@@ -1,6 +1,6 @@
 # Exec Plan: Mejoras Tecnicas
 
-Estado: Propuesto.
+Estado: Cerrado localmente tras validacion completa; pendiente de commit/push.
 
 ## Objetivo
 
@@ -229,3 +229,13 @@ Recomendacion de commits:
 - Commit 5: `Document technical smoke test`.
 
 Ejecutar validacion antes de cada commit. Hacer push solo si el usuario lo pide.
+
+## Resultado
+
+- Agregados helpers locales de pruebas para iniciar partida, cargar energia y avanzar frames.
+- Extraido render de luchador a `src/fighter_render.js`; `Fighter.draw()` delega en `drawFighter(this)`.
+- Extraida decision de CPU a `src/ai.js` con `chooseAIAction(...)` testeable.
+- Migrado timer de round a milisegundos con delta time desde `requestAnimationFrame(timestamp)`.
+- Mantenidos cooldowns, hit-stun, combo window, hit-stop y timers visuales por frames para evitar sobrealcance.
+- Documentado smoke test tecnico ligero en `Readme.md`.
+- Actualizados `Readme.md` y `AGENTS.md` para nuevos archivos y comportamiento.

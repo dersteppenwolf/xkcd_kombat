@@ -1,6 +1,6 @@
 # Exec Plan: Agacharse
 
-Estado: Implementado localmente, pendiente de commit/push.
+Estado: Cerrado en `3a6cdc1 Add crouch controls`.
 
 ## Objetivo
 

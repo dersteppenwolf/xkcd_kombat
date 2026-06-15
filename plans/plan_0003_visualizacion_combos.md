@@ -1,6 +1,6 @@
 # Exec Plan: Visualizacion De Combos
 
-Estado: Implementado localmente, pendiente de commit/push.
+Estado: Cerrado en `aa9d665 Improve combo visual feedback`.
 
 ## Objetivo
 

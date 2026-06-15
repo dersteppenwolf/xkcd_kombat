@@ -14,9 +14,11 @@ let currentRound = 1;
 let playerRounds = 0;
 let cpuRounds = 0;
 let roundTimerFrames = ROUND_TIMER_FRAMES;
+let roundTimeMs = ROUND_TIME_MS;
 let selectedArena = 'notebook';
 let stats = loadStats();
 let reducedMotionEnabled = loadReducedMotionPreference();
+let lastFrameTimestamp = null;
 
 function getDifficultyConfig() {
     return DIFFICULTIES[selectedDifficulty] || DIFFICULTIES.normal;
@@ -33,6 +35,12 @@ function showStatusMessage(text, frames = 80) {
 
 function setRoundTimerFrames(value) {
     roundTimerFrames = Math.max(0, value);
+    roundTimeMs = roundTimerFrames * (1000 / 60);
+}
+
+function setRoundTimeMs(value) {
+    roundTimeMs = Math.max(0, value);
+    roundTimerFrames = Math.ceil(roundTimeMs / (1000 / 60));
 }
 
 function setArena(value) {
@@ -116,7 +124,7 @@ function renderPauseSummary() {
 
     const difficulty = DIFFICULTIES[selectedDifficulty] ? selectedDifficulty.toUpperCase() : 'NORMAL';
     const arena = getArenaConfig().label;
-    const seconds = Math.ceil(roundTimerFrames / 60);
+    const seconds = Math.ceil(roundTimeMs / 1000);
 
     summary.textContent = `Round ${currentRound} | Marcador ${playerRounds}-${cpuRounds} | Tiempo ${seconds}s | Dificultad ${difficulty} | Arena ${arena} | Controles: A/D/W/C/S/J/K/L, P o Esc para reanudar`;
 }
@@ -160,6 +168,7 @@ function startRound() {
     screenShake = 0;
     hitStopFrames = 0;
     roundTimerFrames = ROUND_TIMER_FRAMES;
+    roundTimeMs = ROUND_TIME_MS;
     gameState = 'playing';
     showStatusMessage(`ROUND ${currentRound}`, 75);
     document.getElementById('game-over').style.display = 'none';
@@ -190,6 +199,7 @@ function showMainMenu() {
     playerRounds = 0;
     cpuRounds = 0;
     roundTimerFrames = ROUND_TIMER_FRAMES;
+    roundTimeMs = ROUND_TIME_MS;
     gameState = 'menu';
     document.getElementById('game-over').style.display = 'none';
     document.getElementById('main-menu').style.display = 'flex';
@@ -256,7 +266,7 @@ function checkCollision() {
     }
 }
 
-function update() {
+function update(deltaMs = 1000 / 60) {
     if (gameState !== 'playing') return;
 
     if (hitStopFrames > 0) {
@@ -275,7 +285,7 @@ function update() {
         return;
     }
 
-    updateRoundTimer();
+    updateRoundTimer(deltaMs);
 }
 
 function finishRound(playerWon) {
@@ -307,12 +317,13 @@ function finishRound(playerWon) {
     }, 1400);
 }
 
-function updateRoundTimer() {
-    if (roundTimerFrames <= 0) return;
+function updateRoundTimer(deltaMs = 1000 / 60) {
+    if (roundTimeMs <= 0) return;
 
-    roundTimerFrames--;
+    roundTimeMs = Math.max(0, roundTimeMs - deltaMs);
+    roundTimerFrames = Math.ceil(roundTimeMs / (1000 / 60));
 
-    if (roundTimerFrames > 0) return;
+    if (roundTimeMs > 0) return;
 
     showStatusMessage('TIME!', 90);
 
@@ -439,7 +450,7 @@ function drawHealthBars() {
     ctx.fillStyle = '#000';
 
     ctx.textAlign = 'center';
-    ctx.fillText(`ROUND ${currentRound}  ${playerRounds}-${cpuRounds}  ${Math.ceil(roundTimerFrames / 60)}`, WIDTH / 2, 23);
+    ctx.fillText(`ROUND ${currentRound}  ${playerRounds}-${cpuRounds}  ${Math.ceil(roundTimeMs / 1000)}`, WIDTH / 2, 23);
 }
 
 function drawStatusMessage() {
@@ -491,8 +502,11 @@ function updateControlsVisibility() {
     updateOrientationWarning();
 }
 
-function gameLoop() {
-    update();
+function gameLoop(timestamp = 0) {
+    const deltaMs = lastFrameTimestamp === null ? 1000 / 60 : Math.min(100, Math.max(0, timestamp - lastFrameTimestamp));
+    lastFrameTimestamp = timestamp;
+
+    update(deltaMs);
     draw();
     requestAnimationFrame(gameLoop);
 }
