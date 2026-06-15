@@ -31,7 +31,7 @@ Estado actual:
 - Sistema de rondas al mejor de 3 implementado.
 - Temporizador de 60 segundos por round implementado.
 - IA con respuestas contextuales ante ataques, baja vida y distancia real de golpe.
-- Combos simples `J, J` y `J, K` implementados.
+- Combos simples `J, J`, `J, K` y `K, K` implementados.
 - Ataque especial con energia llena implementado en `L`.
 - Arenas seleccionables desde el menu principal.
 - Estadisticas locales con victorias, derrotas y rachas.
@@ -168,7 +168,7 @@ Validar en navegador antes de considerar listo un cambio visual o de jugabilidad
 - El canvas debe mantenerse proporcionado al redimensionar la ventana.
 - Deben aparecer dos personajes stickman.
 - Los controles de teclado deben responder: `A`, `D`, `W`, `S`, `J`, `K`, `P` y `Esc`.
-- Los combos `J, J` y `J, K` deben aplicar ataques de mayor impacto.
+- Los combos `J, J`, `J, K` y `K, K` deben aplicar ataques de mayor impacto.
 - Con energia llena, `L` debe lanzar el ataque especial.
 - Cambiar la arena en el menu debe cambiar el fondo del combate.
 - Al terminar partidas deben actualizarse las estadisticas locales.
@@ -199,6 +199,16 @@ La distribucion usa la mano izquierda para movimiento y defensa, y la mano derec
 | Patada | K |
 | Especial | L |
 | Pausar / reanudar | P / Esc |
+
+Combos disponibles:
+
+| Combo | Accion |
+| --- | --- |
+| J, J | Combo rapido de punetazos; menos alcance, buena recuperacion. |
+| J, K | Encadena punetazo con patada; mas alcance y daño. |
+| K, K | Back kick; patada pesada con mas daño y recuperacion lenta. |
+
+La segunda tecla debe pulsarse rapido, dentro de la ventana de combo. Si esperas demasiado, el juego ejecuta el ataque normal de la tecla presionada.
 
 ### Movil
 
@@ -348,7 +358,7 @@ Limitaciones de las pruebas:
 - Hitboxes logicas para cuerpo, punetazo y patada.
 - Indicador central de estado para `FIGHT!`, `BLOCK` y `K.O.`.
 - IA mejorada para bloquear ataques cercanos, retroceder con baja vida y atacar solo si la hitbox conecta.
-- Combos simples `J, J` y `J, K`.
+- Combos simples `J, J`, `J, K` y `K, K`.
 - Ataque especial con barra de energia y tecla `L`.
 - Arenas seleccionables: cuaderno, terminal y laboratorio.
 - Estadisticas locales con `localStorage`.
@@ -433,7 +443,7 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | Controles moviles responsivos | Implementados con tamaños adaptativos para pantallas pequeñas. |
 | Animacion de vida | Implementada con transicion visual de barras de vida hacia el valor real. |
 | Orientacion movil | Implementada con aviso para girar el telefono en vertical durante la partida. |
-| Combos simples | Implementados con `J, J` y `J, K`. |
+| Combos simples | Implementados con `J, J`, `J, K` y `K, K`. |
 | Ataque especial | Implementado con energia llena, tecla `L` y boton tactil `SPECIAL`. |
 | Arenas diferentes | Implementadas con seleccion de cuaderno, terminal y laboratorio. |
 | Estadisticas locales | Implementadas con victorias, derrotas, racha actual y mejor racha en `localStorage`. |

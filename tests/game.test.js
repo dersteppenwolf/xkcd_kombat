@@ -236,6 +236,21 @@ test('simple combos increase damage and cooldown', () => {
     assert.equal(opponent.health, 80);
 });
 
+test('K,K triggers back kick combo damage and cooldown', () => {
+    const { api } = loadGame();
+    const player = new api.Fighter(100, true);
+    const opponent = new api.Fighter(220, false);
+
+    player.updatePlayerControls({ k: true }, opponent);
+    player.updatePlayerControls({}, opponent);
+    player.attackCooldown = 0;
+    player.updatePlayerControls({ k: true }, opponent);
+
+    assert.equal(player.state, 'kick');
+    assert.equal(player.attackCooldown, 36);
+    assert.equal(opponent.health, 64);
+});
+
 test('special attack consumes full energy and deals heavy damage', () => {
     const { api } = loadGame();
     const player = new api.Fighter(100, true);

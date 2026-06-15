@@ -18,6 +18,7 @@ const ATTACKS = {
     kick: { damage: 14, range: 135, cooldown: 24, height: 42, yOffset: -32, xOffset: 18, animation: 'kick' },
     comboPunch: { damage: 12, range: 108, cooldown: 18, height: 38, yOffset: -68, xOffset: 22, animation: 'punch' },
     comboKick: { damage: 18, range: 150, cooldown: 30, height: 46, yOffset: -34, xOffset: 18, animation: 'kick' },
+    backKick: { damage: 22, range: 145, cooldown: 36, height: 48, yOffset: -30, xOffset: 16, animation: 'kick' },
     special: { damage: 26, range: 185, cooldown: 45, height: 64, yOffset: -76, xOffset: 20, animation: 'special' }
 };
 const BLOCK_DAMAGE_MULTIPLIER = 0.2;

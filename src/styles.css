@@ -145,34 +145,60 @@ canvas {
 }
 
 .help-card {
+    width: min(680px, calc(100vw - 32px));
     max-height: calc(100vh - 32px);
     overflow: auto;
+    padding: 22px;
+}
+
+.help-card h1 {
+    margin: 10px 0 6px;
+    font-size: clamp(34px, 7vw, 54px);
 }
 
 .help-section {
-    margin-top: 18px;
+    margin-top: 12px;
     text-align: left;
 }
 
 .help-section h2 {
-    margin: 0 0 8px;
-    font-size: 20px;
+    margin: 0 0 6px;
+    font-size: 18px;
     text-align: center;
 }
 
 .help-section p {
     margin: 0;
     max-width: none;
+    font-size: 14px;
+    line-height: 1.25;
 }
 
 .help-section ul {
     margin: 0;
     padding-left: 22px;
+    font-size: 14px;
     font-weight: bold;
+    line-height: 1.25;
 }
 
 .help-section li + li {
-    margin-top: 6px;
+    margin-top: 3px;
+}
+
+.help-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 18px;
+}
+
+.help-card .control-grid {
+    gap: 4px 12px;
+    font-size: 14px;
+}
+
+.combo-note {
+    margin-bottom: 6px !important;
 }
 
 .menu-actions button:hover,
@@ -363,6 +389,14 @@ canvas {
 }
 
 @media (max-width: 760px) {
+    .help-card {
+        padding: 18px;
+    }
+
+    .help-columns {
+        grid-template-columns: 1fr;
+    }
+
     #instructions {
         top: 6px;
         font-size: 12px;

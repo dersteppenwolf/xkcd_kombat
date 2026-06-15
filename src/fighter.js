@@ -109,6 +109,9 @@ class Fighter {
         } else if (combo === 'punch,kick') {
             this.comboBuffer = [];
             this.attack('comboKick', opponent);
+        } else if (combo === 'kick,kick') {
+            this.comboBuffer = [];
+            this.attack('backKick', opponent);
         } else {
             this.attack(input, opponent);
         }
@@ -210,7 +213,7 @@ class Fighter {
             };
         }
 
-        if (type === 'kick' || type === 'comboKick') {
+        if (type === 'kick' || type === 'comboKick' || type === 'backKick') {
             return {
                 x: this.facingRight ? this.x + attack.xOffset : this.x - attack.xOffset - attack.range,
                 y: this.y + attack.yOffset,
