@@ -1,5 +1,7 @@
 # Exec Plan: Back Kick
 
+Estado: Cerrado en `9a6201f Add back kick combo`.
+
 ## Objetivo
 
 Implementar una nueva accion de combate `backKick` como combo simple `K, K`.
@@ -112,3 +114,9 @@ Revisado con `karpathy-guidelines` antes de finalizar:
 - Un solo commit funcional para codigo, pruebas y documentacion de `backKick`.
 - Ejecutar validacion automatica completa antes del commit.
 - Hacer push solo si el usuario lo pide.
+
+## Resultado
+
+- Implementado y publicado en `9a6201f Add back kick combo`.
+- Validacion automatica completada con `21` pruebas pasando.
+- `K, K` quedo documentado en ayuda, `Readme.md` y `AGENTS.md`.

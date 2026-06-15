@@ -251,6 +251,70 @@ test('K,K triggers back kick combo damage and cooldown', () => {
     assert.equal(opponent.health, 64);
 });
 
+test('arrow keys move and jump like WASD controls', () => {
+    const { api } = loadGame();
+    const player = new api.Fighter(100, true);
+    const opponent = new api.Fighter(220, false);
+
+    player.updatePlayerControls({ arrowright: true }, opponent);
+    assert.equal(player.velX, 5);
+    assert.equal(player.state, 'walk');
+
+    player.velX = 0;
+    player.state = 'idle';
+    player.updatePlayerControls({ arrowleft: true }, opponent);
+    assert.equal(player.velX, -5);
+    assert.equal(player.state, 'walk');
+
+    player.updatePlayerControls({ arrowup: true }, opponent);
+    assert.equal(player.velY, -18);
+    assert.equal(player.onGround, false);
+    assert.equal(player.state, 'jump');
+});
+
+test('crouch stops movement and prevents attacks', () => {
+    const { api } = loadGame();
+    const player = new api.Fighter(100, true);
+    const opponent = new api.Fighter(170, false);
+
+    player.updatePlayerControls({ c: true, arrowright: true, j: true }, opponent);
+
+    assert.equal(player.state, 'crouch');
+    assert.equal(player.velX, 0);
+    assert.equal(player.attackCooldown, 0);
+    assert.equal(opponent.health, 100);
+});
+
+test('block takes precedence over crouch', () => {
+    const { api } = loadGame();
+    const player = new api.Fighter(100, true);
+    const opponent = new api.Fighter(170, false);
+
+    player.updatePlayerControls({ s: true, c: true }, opponent);
+
+    assert.equal(player.state, 'block');
+});
+
+test('crouch lowers body box under punches but remains vulnerable to kicks', () => {
+    const { api } = loadGame();
+    const attacker = new api.Fighter(100, true);
+    const defender = new api.Fighter(220, false);
+
+    defender.updatePlayerControls({ arrowdown: true }, attacker);
+    const crouchBox = defender.getBodyBox();
+
+    assert.equal(defender.state, 'crouch');
+    assert.equal(crouchBox.y, 352);
+    assert.equal(crouchBox.height, 63);
+
+    attacker.attack('punch', defender);
+    assert.equal(defender.health, 100);
+
+    attacker.attackCooldown = 0;
+    attacker.attack('kick', defender);
+    assert.equal(defender.health, 86);
+});
+
 test('special attack consumes full energy and deals heavy damage', () => {
     const { api } = loadGame();
     const player = new api.Fighter(100, true);

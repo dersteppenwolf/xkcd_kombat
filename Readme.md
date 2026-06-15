@@ -32,6 +32,8 @@ Estado actual:
 - Temporizador de 60 segundos por round implementado.
 - IA con respuestas contextuales ante ataques, baja vida y distancia real de golpe.
 - Combos simples `J, J`, `J, K` y `K, K` implementados.
+- Agacharse implementado con `C`, flecha abajo y boton tactil `CROUCH`.
+- Movimiento alternativo con flechas implementado.
 - Ataque especial con energia llena implementado en `L`.
 - Arenas seleccionables desde el menu principal.
 - Estadisticas locales con victorias, derrotas y rachas.
@@ -167,7 +169,8 @@ Validar en navegador antes de considerar listo un cambio visual o de jugabilidad
 - El canvas debe cargar correctamente.
 - El canvas debe mantenerse proporcionado al redimensionar la ventana.
 - Deben aparecer dos personajes stickman.
-- Los controles de teclado deben responder: `A`, `D`, `W`, `S`, `J`, `K`, `P` y `Esc`.
+- Los controles de teclado deben responder: `A`, `D`, `W`, flechas, `C`, `S`, `J`, `K`, `P` y `Esc`.
+- `C` o flecha abajo deben agachar al jugador; `S` debe seguir bloqueando.
 - Los combos `J, J`, `J, K` y `K, K` deben aplicar ataques de mayor impacto.
 - Con energia llena, `L` debe lanzar el ataque especial.
 - Cambiar la arena en el menu debe cambiar el fondo del combate.
@@ -191,9 +194,10 @@ La distribucion usa la mano izquierda para movimiento y defensa, y la mano derec
 
 | Accion | Tecla |
 | --- | --- |
-| Mover izquierda | A |
-| Mover derecha | D |
-| Saltar | W |
+| Mover izquierda | A / flecha izquierda |
+| Mover derecha | D / flecha derecha |
+| Saltar | W / flecha arriba |
+| Agacharse | C / flecha abajo |
 | Bloquear | S |
 | Punetazo | J |
 | Patada | K |
@@ -217,6 +221,7 @@ En dispositivos tactiles se muestran botones en pantalla durante la partida para
 - Izquierda
 - Derecha
 - Saltar
+- Agacharse
 - Bloquear
 - Punetazo
 - Patada
@@ -359,6 +364,8 @@ Limitaciones de las pruebas:
 - Indicador central de estado para `FIGHT!`, `BLOCK` y `K.O.`.
 - IA mejorada para bloquear ataques cercanos, retroceder con baja vida y atacar solo si la hitbox conecta.
 - Combos simples `J, J`, `J, K` y `K, K`.
+- Agacharse con hitbox baja para esquivar golpes altos.
+- Movimiento alternativo con flechas.
 - Ataque especial con barra de energia y tecla `L`.
 - Arenas seleccionables: cuaderno, terminal y laboratorio.
 - Estadisticas locales con `localStorage`.
@@ -444,6 +451,8 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | Animacion de vida | Implementada con transicion visual de barras de vida hacia el valor real. |
 | Orientacion movil | Implementada con aviso para girar el telefono en vertical durante la partida. |
 | Combos simples | Implementados con `J, J`, `J, K` y `K, K`. |
+| Agacharse | Implementado con `C`, flecha abajo y boton tactil `CROUCH`; reduce la hitbox vertical. |
+| Movimiento con flechas | Implementado con flechas izquierda, derecha y arriba como alternativa a `A`, `D` y `W`. |
 | Ataque especial | Implementado con energia llena, tecla `L` y boton tactil `SPECIAL`. |
 | Arenas diferentes | Implementadas con seleccion de cuaderno, terminal y laboratorio. |
 | Estadisticas locales | Implementadas con victorias, derrotas, racha actual y mejor racha en `localStorage`. |

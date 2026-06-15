@@ -58,25 +58,31 @@ class Fighter {
     }
 
     updatePlayerControls(keys, opponent) {
-        if (keys.a || keys.left) {
-            this.velX = -5;
-            if (this.onGround && this.attackCooldown === 0) this.state = 'walk';
-        }
+        const blockPressed = !!(keys.s || keys.block);
+        const crouchPressed = !!(keys.c || keys.arrowdown || keys.crouch);
 
-        if (keys.d || keys.right) {
-            this.velX = 5;
-            if (this.onGround && this.attackCooldown === 0) this.state = 'walk';
-        }
-
-        if ((keys.w || keys.jump) && this.onGround) {
-            this.velY = -18;
-            this.onGround = false;
-            this.state = 'jump';
-        }
-
-        if (keys.s || keys.block) {
+        if (blockPressed) {
             this.state = 'block';
             this.velX = 0;
+        } else if (crouchPressed && this.onGround && this.attackCooldown === 0) {
+            this.state = 'crouch';
+            this.velX = 0;
+        } else {
+            if (keys.a || keys.arrowleft || keys.left) {
+                this.velX = -5;
+                if (this.onGround && this.attackCooldown === 0) this.state = 'walk';
+            }
+
+            if (keys.d || keys.arrowright || keys.right) {
+                this.velX = 5;
+                if (this.onGround && this.attackCooldown === 0) this.state = 'walk';
+            }
+
+            if ((keys.w || keys.arrowup || keys.jump) && this.onGround) {
+                this.velY = -18;
+                this.onGround = false;
+                this.state = 'jump';
+            }
         }
 
         const punchPressed = !!(keys.j || keys.punch);
@@ -93,7 +99,7 @@ class Fighter {
     }
 
     handleAttackCommand(input, opponent) {
-        if (this.attackCooldown > 0 || this.state === 'block') return;
+        if (this.attackCooldown > 0 || this.state === 'block' || this.state === 'crouch') return;
 
         if (this.comboTimer <= 0) this.comboBuffer = [];
 
@@ -192,6 +198,15 @@ class Fighter {
     }
 
     getBodyBox() {
+        if (this.state === 'crouch') {
+            return {
+                x: this.x - 28,
+                y: this.y - 28,
+                width: 56,
+                height: 63
+            };
+        }
+
         return {
             x: this.x - 25,
             y: this.y - 100,
@@ -238,7 +253,7 @@ class Fighter {
     }
 
     attack(type, opponent) {
-        if (this.attackCooldown > 0 || this.state === 'block') return;
+        if (this.attackCooldown > 0 || this.state === 'block' || this.state === 'crouch') return;
 
         const attack = ATTACKS[type];
         if (!attack) return;
@@ -304,36 +319,41 @@ class Fighter {
 
         const legAngle = this.state === 'walk' && this.onGround ? Math.sin(this.frame / 3) * 20 : 0;
         const headBob = this.state === 'hit' ? Math.sin(this.frame / 2) * 5 : 0;
+        const isCrouching = this.state === 'crouch';
+        const hipY = isCrouching ? baseY + 4 : baseY - 20;
+        const torsoTopY = isCrouching ? baseY - 34 : baseY - 55;
+        const shoulderY = isCrouching ? baseY - 28 : baseY - 48;
+        const headY = isCrouching ? baseY - 54 : baseY - 75 + headBob;
 
         ctx.strokeStyle = '#111';
         ctx.lineWidth = 5;
         ctx.lineCap = 'round';
 
         ctx.beginPath();
-        ctx.moveTo(baseX, baseY - 20);
+        ctx.moveTo(baseX, hipY);
         ctx.lineTo(baseX - 15 + Math.sin(legAngle * Math.PI / 180) * 12, baseY + 35);
         ctx.stroke();
 
         if (this.state !== 'kick') {
             ctx.beginPath();
-            ctx.moveTo(baseX, baseY - 20);
+            ctx.moveTo(baseX, hipY);
             ctx.lineTo(baseX + 15 - Math.sin(legAngle * Math.PI / 180) * 12, baseY + 35);
             ctx.stroke();
         }
 
         ctx.beginPath();
-        ctx.moveTo(baseX, baseY - 55);
-        ctx.lineTo(baseX, baseY - 20);
+        ctx.moveTo(baseX, torsoTopY);
+        ctx.lineTo(baseX, hipY);
         ctx.stroke();
 
         ctx.lineWidth = 4.5;
         ctx.beginPath();
-        ctx.moveTo(baseX, baseY - 48);
-        ctx.quadraticCurveTo(baseX - 18, baseY - 35, baseX - 12, baseY - 15);
+        ctx.moveTo(baseX, shoulderY);
+        ctx.quadraticCurveTo(baseX - 18, shoulderY + 13, baseX - 12, hipY + 5);
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.moveTo(baseX, baseY - 48);
+        ctx.moveTo(baseX, shoulderY);
 
         if (this.state === 'punch' || this.state === 'special') {
             ctx.lineTo(baseX + 52, baseY - 48);
@@ -342,6 +362,8 @@ class Fighter {
         } else if (this.state === 'block') {
             ctx.lineTo(baseX + 15, baseY - 65);
             ctx.lineTo(baseX + 15, baseY - 35);
+        } else if (isCrouching) {
+            ctx.quadraticCurveTo(baseX + 18, shoulderY + 12, baseX + 28, hipY + 2);
         } else {
             ctx.quadraticCurveTo(baseX + 18, baseY - 35, baseX + 12, baseY - 15);
         }
@@ -418,13 +440,13 @@ class Fighter {
         ctx.strokeStyle = '#111';
         ctx.lineWidth = 5;
         ctx.beginPath();
-        ctx.arc(baseX, baseY - 75 + headBob, 20, 0, Math.PI * 2);
+        ctx.arc(baseX, headY, 20, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
 
         ctx.fillStyle = '#111';
         ctx.beginPath();
-        ctx.arc(baseX + 6, baseY - 78 + headBob, 3, 0, Math.PI * 2);
+        ctx.arc(baseX + 6, headY - 3, 3, 0, Math.PI * 2);
         ctx.fill();
 
         if (this.state === 'block') {

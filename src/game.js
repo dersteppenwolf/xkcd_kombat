@@ -465,6 +465,7 @@ function setupMobileControls() {
         left: document.getElementById('btn-left'),
         right: document.getElementById('btn-right'),
         jump: document.getElementById('btn-jump'),
+        crouch: document.getElementById('btn-crouch'),
         block: document.getElementById('btn-block'),
         punch: document.getElementById('btn-punch'),
         kick: document.getElementById('btn-kick'),
@@ -500,6 +501,10 @@ function setupKeyboardControls() {
             if (e.preventDefault) e.preventDefault();
             togglePause();
             return;
+        }
+
+        if (gameState === 'playing' && key.startsWith('arrow') && e.preventDefault) {
+            e.preventDefault();
         }
 
         keys[key] = true;
