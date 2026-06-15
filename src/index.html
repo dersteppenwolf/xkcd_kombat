@@ -12,6 +12,8 @@
 
         <canvas id="game" width="1000" height="500"></canvas>
 
+        <button id="pause-button" type="button">PAUSA</button>
+
         <div id="main-menu" class="panel-overlay">
             <div class="menu-card">
                 <div class="menu-kicker">Arcade VS AI</div>
@@ -31,6 +33,7 @@
                         <span>S</span><span>Bloquear</span>
                         <span>J</span><span>Punetazo</span>
                         <span>K</span><span>Patada</span>
+                        <span>P / Esc</span><span>Pausa</span>
                     </div>
                 </div>
             </div>
@@ -54,6 +57,7 @@
                         <span>S</span><span>Bloquear</span>
                         <span>J</span><span>Punetazo rapido</span>
                         <span>K</span><span>Patada de mayor alcance</span>
+                        <span>P / Esc</span><span>Pausar o reanudar</span>
                     </div>
                 </div>
 
@@ -68,6 +72,19 @@
 
                 <div class="menu-actions">
                     <button id="back-button" type="button">VOLVER</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pause-screen" class="panel-overlay">
+            <div class="menu-card">
+                <div class="menu-kicker">Combate detenido</div>
+                <h1>PAUSA</h1>
+                <p>Respira, revisa tu estrategia y vuelve al duelo cuando estes listo.</p>
+
+                <div class="menu-actions">
+                    <button id="resume-button" type="button">RESUMIR</button>
+                    <button id="pause-menu-button" type="button">MENU</button>
                 </div>
             </div>
         </div>

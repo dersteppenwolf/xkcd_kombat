@@ -124,6 +124,9 @@ function loadGame() {
             showMainMenu,
             showHelpScreen,
             hideHelpScreen,
+            pauseGame,
+            resumeGame,
+            togglePause,
             update,
             triggerImpactFeedback,
             getState: () => ({
@@ -139,6 +142,8 @@ function loadGame() {
                 canvasStyle: { ...canvas.style },
                 mainMenuDisplay: document.getElementById('main-menu').style.display,
                 helpScreenDisplay: document.getElementById('help-screen').style.display,
+                pauseScreenDisplay: document.getElementById('pause-screen').style.display,
+                pauseButtonDisplay: document.getElementById('pause-button').style.display,
                 transform: ctx.lastTransform
             })
         };
@@ -240,4 +245,28 @@ test('help screen opens from menu state and returns to main menu', () => {
     assert.equal(menuState.gameState, 'menu');
     assert.equal(menuState.mainMenuDisplay, 'flex');
     assert.equal(menuState.helpScreenDisplay, 'none');
+});
+
+test('pause stops simulation and resume returns to playing', () => {
+    const { api } = loadGame();
+
+    api.initGame();
+    const playingState = api.getState();
+    api.pauseGame();
+
+    const pausedState = api.getState();
+    assert.equal(pausedState.gameState, 'paused');
+    assert.equal(pausedState.pauseScreenDisplay, 'flex');
+    assert.equal(pausedState.pauseButtonDisplay, 'none');
+
+    api.update();
+
+    assert.equal(api.getState().player1.x, playingState.player1.x);
+
+    api.resumeGame();
+
+    const resumedState = api.getState();
+    assert.equal(resumedState.gameState, 'playing');
+    assert.equal(resumedState.pauseScreenDisplay, 'none');
+    assert.equal(resumedState.pauseButtonDisplay, 'block');
 });

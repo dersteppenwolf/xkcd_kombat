@@ -12,11 +12,11 @@
 - Node alternative from `C:\tmp\game`: `npx http-server . -p 8000`, then browse to `http://localhost:8000/src/`.
 - JS syntax check: `node --check src\game.js`.
 - Unit tests: `node --test tests\game.test.js`.
-- Manual smoke test: menu appears, `AYUDA` opens help, `VOLVER` returns, `INICIAR JUEGO` starts, `A/D/W/S/J/K` work, canvas stays proportional after resize, game over appears at `0%`, `REINICIAR` restarts, `MENU` returns to menu.
+- Manual smoke test: menu appears, `AYUDA` opens help, `VOLVER` returns, `INICIAR JUEGO` starts, `A/D/W/S/J/K` work, `P`/`Esc` pause and resume, canvas stays proportional after resize, game over appears at `0%`, `REINICIAR` restarts, `MENU` returns to menu.
 
 ## Runtime Notes
-- `gameState` in `src/game.js` controls simulation: `menu` and `gameOver` stop updates; only `playing` advances physics, AI, and combat.
-- Mobile controls are hidden outside `playing`; call `updateControlsVisibility()` when changing state.
+- `gameState` in `src/game.js` controls simulation: `menu`, `paused`, and `gameOver` stop updates; only `playing` advances physics, AI, and combat.
+- Mobile controls and the pause button are hidden outside `playing`; call `updateControlsVisibility()` when changing state.
 - Web Audio is created lazily after user interaction via `initAudio()` to satisfy browser autoplay policies.
 - Canvas simulation uses fixed logical dimensions `1000x500`; `resizeCanvas()` maps that space to a responsive CSS size and DPR-aware backing store. Keep hitboxes in logical coordinates.
 

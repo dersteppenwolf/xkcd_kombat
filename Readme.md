@@ -28,6 +28,7 @@ Estado actual:
 - Combate humano contra CPU implementado.
 - Pantalla de fin de juego con opciones `REINICIAR` y `MENU`.
 - Controles de teclado y controles tactiles durante la partida.
+- Pausa con `P`, `Esc` o boton `PAUSA` durante la partida.
 - Canvas responsive con soporte para `devicePixelRatio`.
 - Feedback de golpes con sacudida, hit-stop y particulas.
 - Pruebas unitarias basicas con `node:test`.
@@ -139,7 +140,8 @@ Validar en navegador antes de considerar listo un cambio visual o de jugabilidad
 - El canvas debe cargar correctamente.
 - El canvas debe mantenerse proporcionado al redimensionar la ventana.
 - Deben aparecer dos personajes stickman.
-- Los controles de teclado deben responder: `A`, `D`, `W`, `S`, `J`, `K`.
+- Los controles de teclado deben responder: `A`, `D`, `W`, `S`, `J`, `K`, `P` y `Esc`.
+- `P`, `Esc` o `PAUSA` deben pausar la partida; `RESUMIR` debe continuar.
 - Los golpes deben reducir la barra de vida del rival.
 - Al llegar una vida a cero debe aparecer la pantalla de fin de juego.
 - El boton `REINICIAR` debe iniciar una nueva partida.
@@ -160,6 +162,7 @@ La distribucion usa la mano izquierda para movimiento y defensa, y la mano derec
 | Bloquear | S |
 | Punetazo | J |
 | Patada | K |
+| Pausar / reanudar | P / Esc |
 
 ### Movil
 
@@ -171,6 +174,7 @@ En dispositivos tactiles se muestran botones en pantalla durante la partida para
 - Bloquear
 - Punetazo
 - Patada
+- Pausa
 
 ## Arquitectura
 
@@ -205,9 +209,11 @@ En dispositivos tactiles se muestran botones en pantalla durante la partida para
 4. El boton `VOLVER` regresa al menu principal.
 5. El boton `INICIAR JUEGO` crea una nueva partida y oculta el menu.
 6. Durante la partida, el jugador controla al luchador humano y la CPU controla al rival.
-7. Cuando un luchador llega a `0%` de vida, aparece la pantalla de fin de juego.
-8. El boton `REINICIAR` empieza una partida nueva inmediatamente.
-9. El boton `MENU` vuelve al menu principal.
+7. Durante la partida, `P`, `Esc` o `PAUSA` detienen la simulacion y muestran la pantalla de pausa.
+8. El boton `RESUMIR` continua la partida desde pausa.
+9. Cuando un luchador llega a `0%` de vida, aparece la pantalla de fin de juego.
+10. El boton `REINICIAR` empieza una partida nueva inmediatamente.
+11. El boton `MENU` vuelve al menu principal.
 
 ### Estados Del Juego
 
@@ -215,6 +221,7 @@ En dispositivos tactiles se muestran botones en pantalla durante la partida para
 | --- | --- |
 | `menu` | Muestra el menu principal y detiene la simulacion. |
 | `playing` | Actualiza fisica, controles, IA, golpes, efectos y render. |
+| `paused` | Detiene fisica, IA, golpes y controles de juego hasta reanudar. |
 | `gameOver` | Detiene la simulacion y muestra opciones de reinicio o regreso al menu. |
 
 ### Logica Principal
@@ -246,6 +253,7 @@ Actualmente cubren:
 - Bloqueo, vida conservada y feedback de impacto reducido.
 - Transicion de estado entre `menu` y `playing`.
 - Apertura y cierre de la pantalla de ayuda desde el menu.
+- Pausa, detencion de simulacion y reanudacion de partida.
 
 Limitaciones de las pruebas:
 
@@ -268,6 +276,7 @@ Limitaciones de las pruebas:
 - Menu principal.
 - Pantalla de ayuda con objetivo, controles y consejos.
 - Inicio de partida desde boton.
+- Pausa con `P`, `Esc`, boton `PAUSA` y boton `RESUMIR`.
 - Regreso al menu desde pantalla de fin de juego.
 - Reinicio de partida.
 - Combate humano contra CPU.
@@ -292,7 +301,7 @@ Limitaciones de las pruebas:
 
 - La deteccion de golpes usa distancia simple, no hitboxes detalladas.
 - La IA es probabilistica y no aprende del jugador.
-- No hay pausa ni seleccion de dificultad.
+- No hay seleccion de dificultad.
 - Las pruebas unitarias no reemplazan validacion visual en navegador.
 
 ## Backlog
@@ -305,6 +314,7 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | --- | --- |
 | Menu principal | Implementado con titulo, descripcion, controles y boton `INICIAR JUEGO`. |
 | Pantalla de ayuda | Implementada con objetivo, controles, consejos y boton `VOLVER`. |
+| Pausa | Implementada con `P`, `Esc`, boton `PAUSA`, overlay y boton `RESUMIR`. |
 | Navegacion post-partida | Implementados botones `REINICIAR` y `MENU` en la pantalla de fin de juego. |
 | Feedback de golpes | Implementado con shake del canvas, hit-stop breve y particulas/lineas de impacto. |
 | Mejor escalado del canvas | Implementado con resize responsive y backing store ajustado por `devicePixelRatio`. |
@@ -313,7 +323,6 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 
 | Mejora | Objetivo | Beneficio |
 | --- | --- | --- |
-| Pausa | Permitir pausar con `P`, `Esc` o un boton tactil. | Mejora la experiencia en sesiones largas y en movil. |
 | Seleccion de dificultad | Configurar niveles facil, normal y dificil para la CPU. | Permite adaptar el reto a distintos jugadores. |
 | Ajuste de balance | Revisar daño, rango, cooldown y bloqueo para punetazo y patada. | Hace que el combate se sienta mas justo y expresivo. |
 
@@ -344,12 +353,11 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 
 ### Orden Recomendado De Implementacion
 
-1. Pausa.
-2. Seleccion de dificultad.
-3. Ajuste de balance.
-4. Hitboxes reales.
-5. Indicador de estado.
-6. Sistema de rondas.
-7. Temporizador.
+1. Seleccion de dificultad.
+2. Ajuste de balance.
+3. Hitboxes reales.
+4. Indicador de estado.
+5. Sistema de rondas.
+6. Temporizador.
 
 Este orden prioriza mejoras visibles para el jugador sin reescribir completamente la arquitectura actual.

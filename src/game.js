@@ -477,6 +477,7 @@ function initGame() {
     document.getElementById('game-over').style.display = 'none';
     document.getElementById('main-menu').style.display = 'none';
     document.getElementById('help-screen').style.display = 'none';
+    document.getElementById('pause-screen').style.display = 'none';
     updateControlsVisibility();
 }
 
@@ -492,6 +493,7 @@ function showMainMenu() {
     document.getElementById('game-over').style.display = 'none';
     document.getElementById('main-menu').style.display = 'flex';
     document.getElementById('help-screen').style.display = 'none';
+    document.getElementById('pause-screen').style.display = 'none';
     updateControlsVisibility();
 }
 
@@ -500,14 +502,39 @@ function showHelpScreen() {
     document.getElementById('game-over').style.display = 'none';
     document.getElementById('main-menu').style.display = 'none';
     document.getElementById('help-screen').style.display = 'flex';
+    document.getElementById('pause-screen').style.display = 'none';
     updateControlsVisibility();
 }
 
 function hideHelpScreen() {
     document.getElementById('help-screen').style.display = 'none';
     document.getElementById('main-menu').style.display = 'flex';
+    document.getElementById('pause-screen').style.display = 'none';
     gameState = 'menu';
     updateControlsVisibility();
+}
+
+function pauseGame() {
+    if (gameState !== 'playing') return;
+
+    keys = {};
+    gameState = 'paused';
+    document.getElementById('pause-screen').style.display = 'flex';
+    updateControlsVisibility();
+}
+
+function resumeGame() {
+    if (gameState !== 'paused') return;
+
+    keys = {};
+    gameState = 'playing';
+    document.getElementById('pause-screen').style.display = 'none';
+    updateControlsVisibility();
+}
+
+function togglePause() {
+    if (gameState === 'playing') pauseGame();
+    else if (gameState === 'paused') resumeGame();
 }
 
 function checkCollision() {
@@ -545,6 +572,7 @@ function update() {
         const winText = document.getElementById('winner-text');
         winText.innerHTML = player1.health <= 0 ? '¡LA MÁQUINA GANA!<br>🤖' : '¡SISTEMA DOMINADO!<br>😎';
         document.getElementById('game-over').style.display = 'block';
+        document.getElementById('pause-screen').style.display = 'none';
         updateControlsVisibility();
     }
 }
@@ -643,6 +671,7 @@ function draw() {
 
 function updateControlsVisibility() {
     document.getElementById('controls').style.display = mobileControlsEnabled && gameState === 'playing' ? 'block' : 'none';
+    document.getElementById('pause-button').style.display = gameState === 'playing' ? 'block' : 'none';
 }
 
 function gameLoop() {
@@ -687,7 +716,15 @@ function setupMobileControls() {
 
 function setupKeyboardControls() {
     window.addEventListener('keydown', (e) => {
-        keys[e.key.toLowerCase()] = true;
+        const key = e.key.toLowerCase();
+
+        if (key === 'p' || key === 'escape') {
+            if (e.preventDefault) e.preventDefault();
+            togglePause();
+            return;
+        }
+
+        keys[key] = true;
     });
 
     window.addEventListener('keyup', (e) => {
@@ -698,6 +735,9 @@ function setupKeyboardControls() {
 function setupRestartButton() {
     document.getElementById('restart-button').addEventListener('click', initGame);
     document.getElementById('menu-button').addEventListener('click', showMainMenu);
+    document.getElementById('pause-button').addEventListener('click', pauseGame);
+    document.getElementById('resume-button').addEventListener('click', resumeGame);
+    document.getElementById('pause-menu-button').addEventListener('click', showMainMenu);
 }
 
 function setupMainMenu() {

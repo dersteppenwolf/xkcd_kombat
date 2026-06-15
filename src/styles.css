@@ -94,6 +94,30 @@ canvas {
     display: none;
 }
 
+#pause-screen {
+    display: none;
+}
+
+#pause-button {
+    display: none;
+    position: absolute;
+    top: 54px;
+    right: 16px;
+    z-index: 120;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #000;
+    font-family: "Comic Sans MS", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#pause-button:hover {
+    background: #000;
+    color: #fff;
+}
+
 .help-card {
     max-height: calc(100vh - 32px);
     overflow: auto;
