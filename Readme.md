@@ -2,6 +2,24 @@
 
 Juego web arcade de pelea estilo stickman/xkcd, hecho con HTML, CSS y JavaScript puro sobre Canvas. El jugador humano pelea contra una CPU en rondas al mejor de 3, con combos, bloqueo, ataque especial, arenas tematicas, controles tactiles e interfaz en espanol/ingles.
 
+## Tabla De Contenido
+
+- [Inicio Rapido](#inicio-rapido)
+- [Como Jugar](#como-jugar)
+- [Controles](#controles)
+- [Idiomas](#idiomas)
+- [Arenas](#arenas)
+- [Funcionalidades](#funcionalidades)
+- [Ejecutar](#ejecutar)
+- [Publicacion En Linea](#publicacion-en-linea)
+- [Validacion](#validacion)
+- [Arquitectura](#arquitectura)
+- [Pruebas](#pruebas)
+- [Decisiones Tecnicas](#decisiones-tecnicas)
+- [No Implementado Todavia](#no-implementado-todavia)
+- [Sugerencias De Mejora](#sugerencias-de-mejora)
+- [Backlog Completado](#backlog-completado)
+
 ## Inicio Rapido
 
 Desde `C:\tmp\game`:
@@ -192,9 +210,28 @@ https://dersteppenwolf.github.io/xkcd_kombat/
 
 Configuracion requerida en GitHub:
 
-- Ir a `Settings > Pages`.
-- En `Build and deployment`, seleccionar `Source: GitHub Actions`.
-- Hacer push a `main` o ejecutar manualmente `Deploy GitHub Pages` desde `Actions`.
+- Ir al repositorio en GitHub.
+- Abrir `Settings > Pages`.
+- En `Build and deployment`, configurar `Source: GitHub Actions`.
+- No seleccionar `Deploy from a branch`; el sitio se publica con el workflow `.github/workflows/pages.yml`.
+- Confirmar que el repositorio tiene habilitadas las Actions en `Settings > Actions > General`.
+- Hacer push a `main` o ejecutar manualmente `Deploy GitHub Pages` desde la pestaña `Actions`.
+- Esperar a que el workflow termine en verde.
+- Abrir la URL publicada por el workflow o la URL esperada indicada arriba.
+
+Permisos usados por el workflow:
+
+- `contents: read` para leer el repositorio.
+- `pages: write` para publicar en GitHub Pages.
+- `id-token: write` para autenticar el despliegue oficial de Pages.
+
+Verificacion despues del despliegue:
+
+- La URL debe cargar el menu principal sin `/src/` en la ruta.
+- Los estilos deben verse aplicados.
+- Los selectores de idioma, dificultad y arena deben funcionar.
+- Al iniciar partida, el canvas debe cargar y responder a teclado.
+- Si la pagina muestra 404, revisar que `Source` sea `GitHub Actions` y que el ultimo workflow haya terminado correctamente.
 
 No hay build step: se suben directamente `src/index.html`, `src/styles.css` y los scripts de `src/`.
 
