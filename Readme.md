@@ -535,56 +535,57 @@ Siguiente enfoque recomendado:
 
 ## Sugerencias De Mejora
 
-Estas sugerencias parten del estado actual del codigo y estan ordenadas por impacto practico. La recomendacion es convertir cada mejora sustancial en un ExecPlan dentro de `plans/` antes de implementarla.
+Estas sugerencias parten del estado actual del codigo y estan ordenadas por impacto practico. La columna `Estado` refleja la validacion actual contra el codigo. La recomendacion es convertir cada mejora pendiente o parcial sustancial en un ExecPlan dentro de `plans/` antes de implementarla.
 
 ### Mejoras Inmediatas
 
-| Mejora | Que cambiar | Por que conviene |
-| --- | --- | --- |
-| Depuracion visual opcional | Agregar toggle de desarrollador para dibujar `getBodyBox()` y `getAttackBox()` sobre el canvas. | Reduce ensayo manual al ajustar daño, alcance, agacharse y combos. |
-| Sonidos diferenciados | Separar sonidos para punetazo, patada, bloqueo, combo, especial, round y victoria. | Mejora lectura del combate sin agregar assets externos. |
-| Feedback del especial | Dar al especial texto propio, particulas azules, halo mas grande y sonido dedicado. | Hace que gastar energia completa se sienta como un evento importante. |
-| Reset de estadisticas | Agregar boton en menu para borrar `xkcdKombatStats` con confirmacion simple. | Cierra una necesidad visible del sistema de estadisticas actual. |
-| Persistir preferencias | Guardar dificultad y arena seleccionadas en `localStorage`. | Evita que el jugador repita configuracion en cada carga. |
+| Mejora | Estado | Que falta o que cambiar | Por que conviene |
+| --- | --- | --- | --- |
+| Depuracion visual opcional | Pendiente | Agregar toggle de desarrollador para dibujar `getBodyBox()` y `getAttackBox()` sobre el canvas. | Reduce ensayo manual al ajustar daño, alcance, agacharse y combos. |
+| Sonidos diferenciados | Parcial | Existen sonidos basicos de golpe/punetazo; faltan sonidos propios para patada, bloqueo, combo, especial, round y victoria. | Mejora lectura del combate sin agregar assets externos. |
+| Feedback del especial | Parcial | Ya existe halo azul en el golpe especial; faltan texto propio, particulas azules mas distintivas y sonido dedicado. | Hace que gastar energia completa se sienta como un evento importante. |
+| Reset de estadisticas | Pendiente | Agregar boton en menu para borrar `xkcdKombatStats` con confirmacion simple. | Cierra una necesidad visible del sistema de estadisticas actual. |
+| Persistir preferencias | Parcial | `Reducir movimiento` ya persiste; faltan dificultad y arena en `localStorage`. | Evita que el jugador repita configuracion en cada carga. |
 
 ### Mejoras De Jugabilidad
 
-| Mejora | Que cambiar | Por que conviene |
-| --- | --- | --- |
-| Modo entrenamiento | Permitir CPU inmovil, vida infinita, energia configurable y reinicio rapido de posicion. | Facilita aprender combos y validar balance sin presion. |
-| Resultado detallado | Mostrar ganador, dificultad, arena, marcador, tiempo restante, golpes clave y estadisticas actualizadas. | Da cierre arcade y hace mas visible el progreso. |
-| Personalidades de IA | Agregar variantes `agresiva`, `defensiva` y `evasiva` independientes de dificultad. | Aumenta variedad sin cambiar controles. |
-| Mejor telemetria de combate local | Contar golpes lanzados, aciertos, bloqueos, combos y especiales por partida. | Ayuda a balancear y puede alimentar la pantalla de resultado. |
-| Ventana de combo visible opcional | Mostrar una barra breve o pulso junto al jugador cuando hay input pendiente. | Hace mas facil entender por que un combo salio o fallo. |
+| Mejora | Estado | Que falta o que cambiar | Por que conviene |
+| --- | --- | --- | --- |
+| Modo entrenamiento | Pendiente | Permitir CPU inmovil, vida infinita, energia configurable y reinicio rapido de posicion. | Facilita aprender combos y validar balance sin presion. |
+| Resultado detallado | Parcial | La pantalla final muestra ganador; faltan dificultad, arena, marcador, tiempo restante, golpes clave y estadisticas actualizadas. | Da cierre arcade y hace mas visible el progreso. |
+| Personalidades de IA | Pendiente | Agregar variantes `agresiva`, `defensiva` y `evasiva` independientes de dificultad. | Aumenta variedad sin cambiar controles. |
+| Mejor telemetria de combate local | Pendiente | Contar golpes lanzados, aciertos, bloqueos, combos y especiales por partida. | Ayuda a balancear y puede alimentar la pantalla de resultado. |
+| Ventana de combo visible opcional | Parcial | Ya existe pista `J...` / `K...`; falta hacerla opcional o convertirla en barra/pulso configurable. | Hace mas facil entender por que un combo salio o fallo. |
 
 ### Mejoras Tecnicas
 
-| Mejora | Que cambiar | Por que conviene |
-| --- | --- | --- |
-| Separar dibujo del luchador | Implementado con `src/fighter_render.js` y `Fighter.draw()` como fachada. | `src/fighter.js` queda mas facil de modificar sin tocar logica de combate. |
-| Separar IA | Implementado con `chooseAIAction(...)` en `src/ai.js`. | Permite probar la IA con menos mocks y agregar personalidades con menor riesgo. |
-| Temporizador basado en delta time | Implementado para el round timer con `requestAnimationFrame(timestamp)`. | Hace la duracion mas estable cuando el frame rate no es exactamente 60 FPS. |
-| Fixtures de pruebas | Implementados helpers locales para iniciar partida, cargar energia y avanzar frames. | Reduce duplicacion en `tests/game.test.js` a medida que crezcan los casos. |
-| Prueba smoke ligera en navegador | Documentada como recorrido tecnico corto. | Cubre lo que Node no puede validar visualmente. |
+| Mejora | Estado | Resultado | Por que conviene |
+| --- | --- | --- | --- |
+| Separar dibujo del luchador | Implementado | Implementado con `src/fighter_render.js` y `Fighter.draw()` como fachada. | `src/fighter.js` queda mas facil de modificar sin tocar logica de combate. |
+| Separar IA | Implementado | Implementado con `chooseAIAction(...)` en `src/ai.js`. | Permite probar la IA con menos mocks y agregar personalidades con menor riesgo. |
+| Temporizador basado en delta time | Implementado parcial por alcance | Implementado para el round timer con `requestAnimationFrame(timestamp)`; cooldowns, combo window y timers visuales siguen por frames. | Hace la duracion del round mas estable cuando el frame rate no es exactamente 60 FPS. |
+| Fixtures de pruebas | Implementado | Implementados helpers locales para iniciar partida, cargar energia y avanzar frames. | Reduce duplicacion en `tests/game.test.js` a medida que crezcan los casos. |
+| Prueba smoke ligera en navegador | Implementado | Documentada como recorrido tecnico corto. | Cubre lo que Node no puede validar visualmente. |
 
 ### Mejoras De UX Y Accesibilidad
 
-| Mejora | Que cambiar | Por que conviene |
-| --- | --- | --- |
-| Navegacion por teclado en menus | Implementado con foco visible para botones, selects, inputs y controles tactiles. | Mejora accesibilidad sin afectar combate. |
-| Etiquetas ARIA | Implementado en canvas, overlays, indicadores y botones tactiles. | Ayuda a tecnologias asistivas y documenta mejor la intencion de controles. |
-| Pausa mas informativa | Implementado con controles clave, dificultad, arena, marcador, round y tiempo. | Convierte la pausa en una referencia rapida durante la partida. |
-| Ajuste de controles tactiles | Implementado con zonas mas adaptables, `clamp()` y safe areas. | Reduce errores de input en movil. |
-| Opcion de reducir movimiento | Implementado con preferencia persistente en `localStorage` para limitar shake, hit-stop y particulas. | Mejora comodidad y accesibilidad. |
+| Mejora | Estado | Resultado | Por que conviene |
+| --- | --- | --- | --- |
+| Navegacion por teclado en menus | Implementado | Implementado con foco visible para botones, selects, inputs y controles tactiles. | Mejora accesibilidad sin afectar combate. |
+| Etiquetas ARIA | Implementado | Implementado en canvas, overlays, indicadores y botones tactiles. | Ayuda a tecnologias asistivas y documenta mejor la intencion de controles. |
+| Pausa mas informativa | Implementado | Implementado con controles clave, dificultad, arena, marcador, round y tiempo. | Convierte la pausa en una referencia rapida durante la partida. |
+| Ajuste de controles tactiles | Implementado | Implementado con zonas mas adaptables, `clamp()` y safe areas. | Reduce errores de input en movil. |
+| Opcion de reducir movimiento | Implementado | Implementado con preferencia persistente en `localStorage` para limitar shake, hit-stop y particulas. | Mejora comodidad y accesibilidad. |
 
 ### Recomendacion De Orden
 
 1. Depuracion visual opcional.
-2. Sonidos diferenciados y feedback del especial.
-3. Reset de estadisticas y persistencia de preferencias.
+2. Completar sonidos diferenciados y feedback del especial.
+3. Reset de estadisticas y persistencia de dificultad/arena.
 4. Modo entrenamiento.
 5. Resultado detallado con telemetria local de combate.
-6. Mantener IA/render separados cuando futuras mejoras toquen esas areas.
+6. Personalidades de IA.
+7. Mantener IA/render separados cuando futuras mejoras toquen esas areas.
 
 ## Backlog
 
@@ -626,18 +627,18 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | Mejora | Objetivo | Beneficio |
 | --- | --- | --- |
 | Depuracion visual opcional | Agregar un modo para dibujar hitboxes y puntos de impacto. | Acelera el desarrollo de combate sin afectar el modo normal. |
-| Sonidos diferenciados | Usar sonidos distintos para punetazo, patada, bloqueo, especial, round y victoria. | Mejora claridad audiovisual. |
+| Completar sonidos diferenciados | Agregar sonidos propios para patada, bloqueo, combo, especial, round y victoria. | Mejora claridad audiovisual. |
 | Modo entrenamiento | Permitir probar golpes contra una CPU inmovil o con vida infinita. | Facilita ajustar controles, rangos y balance. |
 
 ### Prioridad Media
 
 | Mejora | Objetivo | Beneficio |
 | --- | --- | --- |
-| Pantalla de resultado detallada | Mostrar ganador, dificultad, arena, marcador, tiempo restante y estadisticas actualizadas. | Cierra mejor la experiencia arcade. |
+| Completar pantalla de resultado | Mostrar dificultad, arena, marcador, tiempo restante, golpes clave y estadisticas actualizadas. | Cierra mejor la experiencia arcade. |
 | Reinicio de estadisticas | Agregar boton para borrar victorias, derrotas y rachas guardadas. | Da control al jugador sobre datos locales. |
-| Persistencia de preferencias | Guardar dificultad y arena seleccionadas entre sesiones. | Reduce friccion al volver al juego. |
+| Completar persistencia de preferencias | Guardar dificultad y arena seleccionadas entre sesiones. | Reduce friccion al volver al juego. |
 | Personalidades de IA | Agregar estilos agresivo, defensivo y balanceado ademas de dificultad. | Aumenta rejugabilidad y variedad del rival. |
-| Feedback del especial | Agregar texto, particulas y sonido propios al especial. | Hace que gastar energia se sienta mas satisfactorio. |
+| Completar feedback del especial | Agregar texto, particulas y sonido propios al especial. | Hace que gastar energia se sienta mas satisfactorio. |
 
 ### Prioridad Baja
 
@@ -650,9 +651,9 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 ### Orden Recomendado De Implementacion
 
 1. Depuracion visual opcional.
-2. Sonidos diferenciados.
+2. Completar sonidos diferenciados y feedback del especial.
 3. Modo entrenamiento.
-4. Pantalla de resultado detallada.
+4. Completar pantalla de resultado detallada.
 5. Reinicio de estadisticas.
 
 Este orden prioriza mejoras visibles para el jugador sin reescribir completamente la arquitectura actual.
