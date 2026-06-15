@@ -10,13 +10,13 @@
 - Preferred local run from `C:\tmp\game`: `python -m http.server 8000`, then browse to `http://localhost:8000/src/`.
 - Node alternative from `C:\tmp\game`: `npx http-server . -p 8000`, then browse to `http://localhost:8000/src/`.
 - JS syntax check: `node --check src\game.js`.
-- Manual smoke test: menu appears, `INICIAR JUEGO` starts, `A/D/W/S/J/K` work, game over appears at `0%`, `REINICIAR` restarts, `MENU` returns to menu.
+- Manual smoke test: menu appears, `INICIAR JUEGO` starts, `A/D/W/S/J/K` work, canvas stays proportional after resize, game over appears at `0%`, `REINICIAR` restarts, `MENU` returns to menu.
 
 ## Runtime Notes
 - `gameState` in `src/game.js` controls simulation: `menu` and `gameOver` stop updates; only `playing` advances physics, AI, and combat.
 - Mobile controls are hidden outside `playing`; call `updateControlsVisibility()` when changing state.
 - Web Audio is created lazily after user interaction via `initAudio()` to satisfy browser autoplay policies.
-- Canvas uses fixed logical dimensions `1000x500`; CSS scales display only. Be careful when adding hitboxes or responsive behavior.
+- Canvas simulation uses fixed logical dimensions `1000x500`; `resizeCanvas()` maps that space to a responsive CSS size and DPR-aware backing store. Keep hitboxes in logical coordinates.
 
 ## Conventions
 - Preserve the current no-dependency setup unless a requested feature clearly needs tooling.

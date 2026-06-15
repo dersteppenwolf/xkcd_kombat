@@ -95,6 +95,7 @@ Para validar el comportamiento en navegador:
 - Debe aparecer el menu principal al cargar.
 - El boton `INICIAR JUEGO` debe comenzar la partida.
 - El canvas debe cargar correctamente.
+- El canvas debe mantenerse proporcionado al redimensionar la ventana.
 - Deben aparecer dos personajes stickman.
 - Los controles de teclado deben responder: `A`, `D`, `W`, `S`, `J`, `K`.
 - Los golpes deben reducir la barra de vida del rival.
@@ -179,6 +180,7 @@ El estado general del juego se controla con `gameState`:
 - Controles de teclado.
 - Controles tactiles durante la partida.
 - Renderizado Canvas.
+- Escalado responsive del canvas con soporte para `devicePixelRatio`.
 - Sacudida de pantalla, hit-stop y particulas al impactar o bloquear golpes.
 - Audio basico generado por Web Audio API.
 
@@ -194,7 +196,7 @@ El estado general del juego se controla con `gameState`:
 
 - La deteccion de golpes usa distancia simple, no hitboxes detalladas.
 - La IA es probabilistica y no aprende del jugador.
-- El canvas usa resolucion logica fija de `1000x500`.
+- La simulacion sigue usando coordenadas logicas fijas de `1000x500`.
 - No hay pausa ni seleccion de dificultad.
 
 ## Mejoras Sugeridas
@@ -208,6 +210,7 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | Menu principal | Implementado con titulo, descripcion, controles y boton `INICIAR JUEGO`. |
 | Navegacion post-partida | Implementados botones `REINICIAR` y `MENU` en la pantalla de fin de juego. |
 | Feedback de golpes | Implementado con shake del canvas, hit-stop breve y particulas/lineas de impacto. |
+| Mejor escalado del canvas | Implementado con resize responsive y backing store ajustado por `devicePixelRatio`. |
 
 ### Prioridad Alta
 
@@ -215,7 +218,6 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 | --- | --- | --- |
 | Pausa | Permitir pausar con `P`, `Esc` o un boton tactil. | Mejora la experiencia en sesiones largas y en movil. |
 | Seleccion de dificultad | Configurar niveles facil, normal y dificil para la CPU. | Permite adaptar el reto a distintos jugadores. |
-| Mejor escalado del canvas | Adaptar el render a pantallas pequenas y `devicePixelRatio`. | Mejora nitidez y jugabilidad en desktop y movil. |
 
 ### Prioridad Media
 
@@ -241,8 +243,7 @@ Esta lista funciona como backlog inicial para evolucionar el prototipo hacia un 
 
 1. Pausa.
 2. Seleccion de dificultad.
-3. Escalado responsive del canvas.
-4. Hitboxes reales.
-5. Sistema de rondas.
+3. Hitboxes reales.
+4. Sistema de rondas.
 
 Este orden prioriza mejoras visibles para el jugador sin reescribir completamente la arquitectura actual.

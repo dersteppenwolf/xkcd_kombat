@@ -3,6 +3,7 @@ const ctx = canvas.getContext('2d');
 const WIDTH = 1000;
 const HEIGHT = 500;
 const GROUND_Y = 380;
+const MAX_DEVICE_PIXEL_RATIO = 2;
 
 let audioCtx;
 
@@ -443,6 +444,27 @@ let mobileControlsEnabled = false;
 let screenShake = 0;
 let hitStopFrames = 0;
 
+function resizeCanvas() {
+    const aspectRatio = WIDTH / HEIGHT;
+    const maxDisplayWidth = Math.max(160, window.innerWidth - 24);
+    const maxDisplayHeight = Math.max(120, window.innerHeight * 0.72);
+    const displayWidth = Math.min(maxDisplayWidth, maxDisplayHeight * aspectRatio);
+    const displayHeight = displayWidth / aspectRatio;
+    const dpr = Math.min(window.devicePixelRatio || 1, MAX_DEVICE_PIXEL_RATIO);
+    const backingWidth = Math.round(displayWidth * dpr);
+    const backingHeight = Math.round(displayHeight * dpr);
+
+    canvas.style.width = `${displayWidth}px`;
+    canvas.style.height = `${displayHeight}px`;
+
+    if (canvas.width !== backingWidth || canvas.height !== backingHeight) {
+        canvas.width = backingWidth;
+        canvas.height = backingHeight;
+    }
+
+    ctx.setTransform(backingWidth / WIDTH, 0, 0, backingHeight / HEIGHT, 0, 0);
+}
+
 function initGame() {
     player1 = new Fighter(250, true);
     player2 = new Fighter(750, false);
@@ -666,6 +688,7 @@ function setupMainMenu() {
 }
 
 window.addEventListener('load', () => {
+    resizeCanvas();
     showMainMenu();
     setupMobileControls();
     setupKeyboardControls();
@@ -673,3 +696,5 @@ window.addEventListener('load', () => {
     setupRestartButton();
     gameLoop();
 });
+
+window.addEventListener('resize', resizeCanvas);
