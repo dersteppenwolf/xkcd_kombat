@@ -22,6 +22,8 @@ let lastFrameTimestamp = null;
 let visualFrame = 0;
 let impactFlash = null;
 let matchStats = createMatchStats();
+let vsIntroTimer = 0;
+const VS_INTRO_FRAMES = 90;
 
 function getDifficultyConfig() {
     return DIFFICULTIES[selectedDifficulty] || DIFFICULTIES.normal;
@@ -44,6 +46,10 @@ function setRoundTimerFrames(value) {
 function setRoundTimeMs(value) {
     roundTimeMs = Math.max(0, value);
     roundTimerFrames = Math.ceil(roundTimeMs / (1000 / 60));
+}
+
+function skipVsIntro() {
+    vsIntroTimer = 0;
 }
 
 function setArena(value) {
@@ -310,6 +316,7 @@ function startRound() {
     impactFlash = null;
     roundTimerFrames = ROUND_TIMER_FRAMES;
     roundTimeMs = ROUND_TIME_MS;
+    vsIntroTimer = VS_INTRO_FRAMES;
     gameState = 'playing';
     showStatusMessage(`${t('round')} ${currentRound}`, 75);
     document.getElementById('game-over').style.display = 'none';
@@ -344,6 +351,7 @@ function showMainMenu() {
     matchStats = createMatchStats();
     roundTimerFrames = ROUND_TIMER_FRAMES;
     roundTimeMs = ROUND_TIME_MS;
+    vsIntroTimer = 0;
     gameState = 'menu';
     document.getElementById('game-over').style.display = 'none';
     document.getElementById('main-menu').style.display = 'flex';
@@ -414,6 +422,12 @@ function checkCollision() {
 
 function update(deltaMs = 1000 / 60) {
     if (gameState !== 'playing') return;
+
+    if (vsIntroTimer > 0) {
+        vsIntroTimer--;
+        updateEffects();
+        return;
+    }
 
     if (hitStopFrames > 0) {
         hitStopFrames--;
@@ -995,6 +1009,37 @@ function getStatusAccent(text) {
     return '#111';
 }
 
+function drawVsIntro() {
+    if (vsIntroTimer <= 0) return;
+
+    const alpha = Math.min(1, Math.max(0.25, vsIntroTimer / VS_INTRO_FRAMES));
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.72)';
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.fillStyle = '#fffdf2';
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 7;
+    ctx.fillRect(190, 112, 620, 220);
+    ctx.strokeRect(190, 112, 620, 220);
+
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 34px "Comic Sans MS"';
+    ctx.fillStyle = '#111';
+    ctx.fillText(`${t('round')} ${currentRound}`, WIDTH / 2, 155);
+    ctx.font = 'bold 58px "Comic Sans MS"';
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = '#000';
+    ctx.strokeText('P1  VS  AI', WIDTH / 2, 235);
+    ctx.fillStyle = '#ffcc00';
+    ctx.fillText('P1  VS  AI', WIDTH / 2, 235);
+    ctx.font = 'bold 20px "Comic Sans MS"';
+    ctx.fillStyle = '#111';
+    ctx.fillText(`${getDifficultyLabel()} | ${getArenaLabel()}`, WIDTH / 2, 285);
+    ctx.restore();
+}
+
 function drawImpactFlash() {
     if (!impactFlash) return;
 
@@ -1046,6 +1091,7 @@ function draw() {
     drawImpactFlash();
     floatingTexts.forEach((t) => t.draw());
     drawHealthBars();
+    drawVsIntro();
     drawStatusMessage();
 
     ctx.restore();

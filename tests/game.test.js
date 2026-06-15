@@ -172,6 +172,7 @@ function loadGame(options = {}) {
             setDifficulty,
             setRoundTimerFrames,
             setRoundTimeMs,
+            skipVsIntro,
             setArena,
             getArenaConfig,
             getArenaLabel,
@@ -208,6 +209,7 @@ function loadGame(options = {}) {
                 hitStopFrames,
                 visualFrame,
                 impactFlash,
+                vsIntroTimer,
                 matchStats,
                 canvasWidth: canvas.width,
                 canvasHeight: canvas.height,
@@ -254,6 +256,7 @@ function createFighters(api, playerX = 100, cpuX = 220) {
 
 function startPlayingGame(api) {
     api.initGame();
+    api.skipVsIntro();
     return api.getState();
 }
 
@@ -662,6 +665,26 @@ test('game state gates simulation until a match starts', () => {
     assert.equal(api.getState().gameState, 'playing');
 });
 
+test('arcade VS intro freezes simulation and renders match summary', () => {
+    const { api } = loadGame();
+
+    api.setDifficulty('hard');
+    api.setArena('terminal');
+    api.initGame();
+
+    const before = api.getState();
+    api.update(1000);
+    api.draw();
+
+    const state = api.getState();
+    assert.equal(before.vsIntroTimer, 90);
+    assert.equal(state.vsIntroTimer, 89);
+    assert.equal(state.roundTimeMs, 60000);
+    assert.equal(state.player1.x, before.player1.x);
+    assert(state.textCalls.includes('P1  VS  AI'));
+    assert(state.textCalls.includes('DIFICIL | TERMINAL'));
+});
+
 test('help screen opens from menu state and returns to main menu', () => {
     const { api } = loadGame();
 
@@ -964,6 +987,7 @@ test('round system advances rounds and ends match at two wins', () => {
     const { api } = loadGame();
 
     api.initGame();
+    api.skipVsIntro();
     api.getState().player2.health = 0;
     api.update();
 
@@ -973,6 +997,7 @@ test('round system advances rounds and ends match at two wins', () => {
     assert.equal(state.currentRound, 2);
     assert.equal(state.gameState, 'playing');
 
+    api.skipVsIntro();
     state.player2.health = 0;
     api.update();
 
@@ -1022,6 +1047,7 @@ test('round timer awards round to fighter with more health', () => {
     const { api } = loadGame();
 
     api.initGame();
+    api.skipVsIntro();
     api.getState().player1.health = 80;
     api.getState().player2.health = 60;
     api.setRoundTimeMs(1);
@@ -1039,6 +1065,7 @@ test('round timer uses delta time and pauses outside playing', () => {
     const { api } = loadGame();
 
     api.initGame();
+    api.skipVsIntro();
     api.update(2500);
     assert.equal(api.getState().roundTimeMs, 57500);
 
@@ -1051,6 +1078,7 @@ test('round timer tie starts another round without scoring', () => {
     const { api } = loadGame();
 
     api.initGame();
+    api.skipVsIntro();
     api.getState().player1.health = 70;
     api.getState().player2.health = 70;
     api.setRoundTimeMs(1);

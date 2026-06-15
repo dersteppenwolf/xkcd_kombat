@@ -175,6 +175,7 @@ Las arenas son visuales. No modifican dano, velocidad, IA, hitboxes ni reglas de
 - Selector de idioma con persistencia.
 - Selector de dificultad.
 - Selector de arena con preview visual y descripcion.
+- Intro `VS` arcade con dificultad y arena antes de cada round.
 - Opcion `Reducir movimiento` persistida en `xkcdKombatReducedMotion`.
 - Pausa con resumen de round, marcador, tiempo, dificultad, arena y controles.
 - Pantalla de fin de juego con medalla post-partida, `REINICIAR` / `RESTART` y `MENU`.
@@ -434,11 +435,10 @@ Limitaciones de las pruebas:
 
 Priorizacion orientada a atraer y retener usuarios: primero mejoras visibles en los primeros segundos, luego motivacion para rejugar y finalmente profundidad o mantenimiento.
 
-Siguiente mejora recomendada: `Intro VS arcade`, porque da anticipacion antes de cada combate y aprovecha la seleccion de dificultad/arena ya visible.
+Siguiente mejora recomendada: `Feedback visual mas fuerte para el especial`, porque hace que gastar energia llena se sienta mas importante.
 
 | Prioridad | Mejora | Motivo | Tipo |
 | --- | --- | --- | --- |
-| Alta | Intro `VS` arcade | Da contexto y anticipacion antes de cada combate con `P1`, `AI`, dificultad y arena. | Presentacion |
 | Alta | Feedback visual mas fuerte para el especial | Hace que gastar energia llena se sienta importante con flash, rastro y texto `SPECIAL!`. | Visual / combate |
 | Alta | Indicador de especial listo sobre el personaje | Evita que el jugador tenga que mirar solo el HUD y aumenta la emocion de usar `L`. | Visual / UX |
 | Alta | Pantalla final enriquecida | Muestra marcador, dificultad, arena, racha, medalla y frase humoristica para dar mejor cierre. | UX / progresion |
@@ -471,5 +471,6 @@ Siguiente mejora recomendada: `Intro VS arcade`, porque da anticipacion antes de
 | Mobile | Controles tactiles, safe areas y aviso de orientacion. |
 | Arenas | Nueve fondos tematicos sin efectos jugables. |
 | Preview de arena | Menu inicial con mini-preview, nombre y descripcion por arena. |
+| Intro VS arcade | Overlay `P1 VS AI` con round, dificultad y arena antes de cada round. |
 | i18n | Espanol/ingles con autodeteccion y persistencia. |
 | Arquitectura tecnica | IA/render/i18n separados y tests con `node:test`. |
