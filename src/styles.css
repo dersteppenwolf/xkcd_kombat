@@ -316,11 +316,6 @@ input:focus-visible,
 .arena-preview--remoteMeeting .arena-preview-prop-a,
 .arena-preview--remoteMeeting .arena-preview-prop-b { background: #fff; }
 
-.arena-preview--terminal .arena-preview-stage { background: #07130c; color: #86efac; }
-.arena-preview--terminal .arena-preview-stage::after { background: #22c55e; }
-.arena-preview--terminal .arena-preview-prop-a,
-.arena-preview--terminal .arena-preview-prop-b { border-color: #22c55e; background: rgba(34, 197, 94, 0.22); }
-
 .arena-preview--mathClass .arena-preview-stage { background: #eef7e5; }
 .arena-preview--mathClass .arena-preview-stage::after { background: #365314; }
 .arena-preview--mathClass .arena-preview-prop-a,

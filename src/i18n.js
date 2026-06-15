@@ -97,7 +97,6 @@ const I18N = {
         arenaLab: 'LABORATORIO',
         arenaMeeting: 'REUNION PRESENCIAL',
         arenaRemoteMeeting: 'REUNION REMOTA',
-        arenaTerminal: 'TERMINAL',
         arenaMathClass: 'CLASE DE MATEMATICAS',
         arenaServerDown: 'SERVIDOR CAIDO',
         arenaGeekConvention: 'CONVENCION GEEK',
@@ -106,7 +105,6 @@ const I18N = {
         arenaPreviewLab: 'Paneles, formulas y una muestra marcada como NaN.',
         arenaPreviewMeeting: 'Oficina, post-its y una reunion que pudo ser email.',
         arenaPreviewRemoteMeeting: 'Ventanas, mute, lag y reconexion emocional.',
-        arenaPreviewTerminal: 'Consola verde, comandos peligrosos y cero piedad.',
         arenaPreviewMathClass: 'Pizarra, limites absurdos y teoremas stickman.',
         arenaPreviewServerDown: 'Rack roto, error 500 y luces rojas de panico.',
         arenaPreviewGeekConvention: 'Stands, stickers y una fila que nunca termina.'
@@ -205,7 +203,6 @@ const I18N = {
         arenaLab: 'LAB',
         arenaMeeting: 'IN-PERSON MEETING',
         arenaRemoteMeeting: 'REMOTE MEETING',
-        arenaTerminal: 'TERMINAL',
         arenaMathClass: 'MATH CLASS',
         arenaServerDown: 'SERVER DOWN',
         arenaGeekConvention: 'GEEK CONVENTION',
@@ -214,7 +211,6 @@ const I18N = {
         arenaPreviewLab: 'Panels, formulas, and one sample labeled NaN.',
         arenaPreviewMeeting: 'Office, sticky notes, and a meeting that could be email.',
         arenaPreviewRemoteMeeting: 'Windows, mute, lag, and emotional reconnecting.',
-        arenaPreviewTerminal: 'Green console, dangerous commands, and no mercy.',
         arenaPreviewMathClass: 'Blackboard, absurd limits, and stickman theorems.',
         arenaPreviewServerDown: 'Broken rack, error 500, and panic red lights.',
         arenaPreviewGeekConvention: 'Booths, stickers, and a queue that never ends.'

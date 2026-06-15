@@ -70,7 +70,6 @@ function getArenaPreviewTextKey() {
         lab: 'arenaPreviewLab',
         meeting: 'arenaPreviewMeeting',
         remoteMeeting: 'arenaPreviewRemoteMeeting',
-        terminal: 'arenaPreviewTerminal',
         mathClass: 'arenaPreviewMathClass',
         serverDown: 'arenaPreviewServerDown',
         geekConvention: 'arenaPreviewGeekConvention'
@@ -645,7 +644,6 @@ function drawArenaDetails(arenaKey, arena) {
     else if (arenaKey === 'lab') drawLabDetails(arena);
     else if (arenaKey === 'meeting') drawMeetingDetails(arena);
     else if (arenaKey === 'remoteMeeting') drawRemoteMeetingDetails(arena);
-    else if (arenaKey === 'terminal') drawTerminalDetails(arena);
     else if (arenaKey === 'mathClass') drawMathClassDetails(arena);
     else if (arenaKey === 'serverDown') drawServerDownDetails(arena);
     else if (arenaKey === 'geekConvention') drawGeekConventionDetails(arena);
@@ -800,23 +798,6 @@ function drawRemoteMeetingDetails(arena) {
     ctx.fillText('RECONNECTING', 730, 292);
     ctx.fillStyle = motionFrame % 48 < 24 ? '#dc2626' : 'rgba(220, 38, 38, 0.32)';
     ctx.fillText('REC', 860, 238);
-}
-
-function drawTerminalDetails(arena) {
-    const motionFrame = getArenaMotionFrame();
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-    ctx.fillRect(86, 72, 828, 230);
-    ctx.strokeStyle = arena.ground;
-    ctx.lineWidth = 3;
-    ctx.strokeRect(86, 72, 828, 230);
-
-    ctx.fillStyle = '#86efac';
-    ctx.font = 'bold 17px "Comic Sans MS"';
-    ctx.fillText('> ./kombat --no-mercy', 120, 112);
-    ctx.fillText('> cpu_process: RUNNING', 120, 152);
-    ctx.fillText('> human_input: mashing J,K,L', 120, 192);
-    ctx.fillText('SEGFAULT? not today.', 590, 252);
-    if (motionFrame % 42 < 24) ctx.fillText('_', 338, 112);
 }
 
 function drawMathClassDetails(arena) {

@@ -97,13 +97,6 @@ const ARENAS = {
         ground: '#1d4ed8',
         accent: 'rgba(29, 78, 216, 0.18)'
     },
-    terminal: {
-        label: 'TERMINAL',
-        labelKey: 'arenaTerminal',
-        background: '#07130c',
-        ground: '#22c55e',
-        accent: 'rgba(34, 197, 94, 0.24)'
-    },
     mathClass: {
         label: 'CLASE DE MATEMATICAS',
         labelKey: 'arenaMathClass',

@@ -146,7 +146,6 @@ No todos los textos decorativos de arenas o chistes tecnicos se traducen; alguno
 | LABORATORIO / LAB | Ciencia, formulas y paneles. |
 | REUNION PRESENCIAL / IN-PERSON MEETING | Oficina, proyector y post-its. |
 | REUNION REMOTA / REMOTE MEETING | Videollamada, chat, mute y lag. |
-| TERMINAL / TERMINAL | Consola, procesos y errores. |
 | CLASE DE MATEMATICAS / MATH CLASS | Pizarra, formulas y teoremas absurdos. |
 | SERVIDOR CAIDO / SERVER DOWN | Rack roto, errores 500 y reintentos. |
 | CONVENCION GEEK / GEEK CONVENTION | Stands, stickers y cola infinita. |
@@ -446,7 +445,7 @@ Siguiente mejora recomendada: `Trailer GIF o captura animada en README`, porque 
 | Alta | Depuracion visual opcional | Acelera ajuste de hitboxes, estados, cooldowns y decisiones de IA. | Herramienta dev |
 | Media | Misiones rapidas diarias/locales | Propone retos como ganar sin especial, conectar 3 combos o bloquear 5 golpes. | Retencion |
 | Media | Logros locales | Da objetivos persistentes sin servidor: primera victoria, rey del bloqueo, exterminador de bugs. | Progresion |
-| Media | Selector de tema visual del HUD | Permite elegir estilo comic, terminal o cuaderno sin alterar gameplay. | Personalizacion |
+| Media | Selector de tema visual del HUD | Permite elegir estilo comic, consola o cuaderno sin alterar gameplay. | Personalizacion |
 | Media | Persistir dificultad y arena | Reduce friccion al volver al juego y conserva preferencias habituales. | Persistencia |
 | Media | Reset visible de estadisticas | Da control sobre datos locales sin depender de limpiar `localStorage`. | UX / datos |
 | Media | Personalidades de IA | Aumenta variedad sin cambiar controles: agresiva, defensiva, saltarina o aleatoria. | Gameplay / IA |

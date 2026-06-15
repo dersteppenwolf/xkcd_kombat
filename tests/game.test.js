@@ -695,7 +695,7 @@ test('arcade VS intro freezes simulation and renders match summary', () => {
     const { api } = loadGame();
 
     api.setDifficulty('hard');
-    api.setArena('terminal');
+    api.setArena('serverDown');
     api.initGame();
 
     const before = api.getState();
@@ -708,7 +708,7 @@ test('arcade VS intro freezes simulation and renders match summary', () => {
     assert.equal(state.roundTimeMs, 60000);
     assert.equal(state.player1.x, before.player1.x);
     assert(state.textCalls.includes('P1  VS  AI'));
-    assert(state.textCalls.includes('DIFICIL | TERMINAL'));
+    assert(state.textCalls.includes('DIFICIL | SERVIDOR CAIDO'));
 });
 
 test('help screen opens from menu state and returns to main menu', () => {
@@ -833,8 +833,8 @@ test('arena selection supports themed arenas and falls back to notebook', () => 
     assert.equal(api.getArenaLabel(), 'REUNION REMOTA');
 
     api.setArena('terminal');
-    assert.equal(api.getState().selectedArena, 'terminal');
-    assert.equal(api.getArenaLabel(), 'TERMINAL');
+    assert.equal(api.getState().selectedArena, 'notebook');
+    assert.equal(api.getArenaLabel(), 'CUADERNO');
 
     api.setArena('mathClass');
     assert.equal(api.getState().selectedArena, 'mathClass');
@@ -862,16 +862,16 @@ test('arena preview updates with selection and language', () => {
     assert.equal(state.arenaPreviewTitle, 'CUADERNO');
     assert.match(state.arenaPreviewText, /Bocetos/);
 
-    api.setArena('terminal');
+    api.setArena('mathClass');
     state = api.getState();
-    assert.equal(state.arenaPreviewClass, 'arena-preview arena-preview--terminal');
-    assert.equal(state.arenaPreviewTitle, 'TERMINAL');
-    assert.match(state.arenaPreviewText, /Consola verde/);
+    assert.equal(state.arenaPreviewClass, 'arena-preview arena-preview--mathClass');
+    assert.equal(state.arenaPreviewTitle, 'CLASE DE MATEMATICAS');
+    assert.match(state.arenaPreviewText, /Pizarra/);
 
     api.setLanguage('en');
     state = api.getState();
-    assert.equal(state.arenaPreviewTitle, 'TERMINAL');
-    assert.match(state.arenaPreviewText, /Green console/);
+    assert.equal(state.arenaPreviewTitle, 'MATH CLASS');
+    assert.match(state.arenaPreviewText, /Blackboard/);
 });
 
 test('new arena backgrounds render themed canvas primitives', () => {
@@ -882,8 +882,6 @@ test('new arena backgrounds render themed canvas primitives', () => {
     api.setArena('meeting');
     api.drawBackground();
     api.setArena('remoteMeeting');
-    api.drawBackground();
-    api.setArena('terminal');
     api.drawBackground();
     api.setArena('mathClass');
     api.drawBackground();
@@ -898,7 +896,6 @@ test('new arena backgrounds render themed canvas primitives', () => {
     assert(state.textCalls.includes('COFFEE'));
     assert(state.textCalls.includes('THIS COULD BE AN EMAIL'));
     assert(state.textCalls.includes("YOU'RE MUTED"));
-    assert(state.textCalls.includes('> ./kombat --no-mercy'));
     assert(state.textCalls.includes('f(punch) = pain'));
     assert(state.textCalls.includes('SERVER DOWN'));
     assert(state.textCalls.includes('BOOTH 404'));
@@ -907,13 +904,13 @@ test('new arena backgrounds render themed canvas primitives', () => {
 test('arena animations advance through draw and respect reduced motion', () => {
     const { api } = loadGame();
 
-    api.setArena('terminal');
+    api.setArena('serverDown');
     api.draw();
     api.draw();
 
     let state = api.getState();
     assert.equal(state.visualFrame, 2);
-    assert(state.textCalls.includes('_'));
+    assert(state.textCalls.includes('SERVER DOWN'));
 
     api.setReducedMotion(true);
     api.draw();
