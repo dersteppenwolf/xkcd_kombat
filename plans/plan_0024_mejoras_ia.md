@@ -134,5 +134,19 @@ Revision aplicada:
 
 ## Estado De Ejecucion
 
-- Plan creado.
-- Implementacion pendiente.
+- Plan ejecutado.
+- Implementacion base completada en `src/config.js`, `src/ai.js`, `src/fighter.js`, `tests/game.test.js` y `Readme.md`.
+- Se agregaron parametros de dificultad para reaccion defensiva, patada a media distancia, especial, retirada con poca vida y salto en esquina.
+- `chooseAIAction()` ahora considera `canSpecial`, `attackCooldown`, `opponentHealth`, posicion y bordes antes de elegir acciones.
+- `Fighter.updateAI()` pasa el contexto adicional y cancela una retirada obsoleta si la CPU llega a una pared.
+- La fase opcional de combos CPU no se implemento para mantener el cambio quirurgico y evitar sobrealcance.
+- Validacion completa completada:
+  - `node --check src\config.js`
+  - `node --check src\audio.js`
+  - `node --check src\effects.js`
+  - `node --check src\ai.js`
+  - `node --check src\fighter_render.js`
+  - `node --check src\fighter.js`
+  - `node --check src\game.js`
+  - `node --test tests\game.test.js` (`57` tests passing)
+  - `git diff --check`

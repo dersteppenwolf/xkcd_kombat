@@ -29,37 +29,52 @@ const DIFFICULTIES = {
         decisionMin: 22,
         decisionSpread: 14,
         moveSpeed: 3.5,
+        blockReaction: 0.35,
         approachLong: 0.65,
         approachMid: 0.45,
         retreatMid: 0.75,
         jumpMid: 0.88,
         punchClose: 0.25,
+        kickMid: 0.12,
         kickClose: 0.52,
-        blockClose: 0.78
+        blockClose: 0.78,
+        specialChance: 0.10,
+        lowHealthRetreat: 0.60,
+        cornerJump: 0.30
     },
     normal: {
         decisionMin: 12,
         decisionSpread: 10,
         moveSpeed: 4.5,
+        blockReaction: 0.60,
         approachLong: 0.85,
         approachMid: 0.60,
         retreatMid: 0.80,
         jumpMid: 0.95,
         punchClose: 0.40,
+        kickMid: 0.24,
         kickClose: 0.75,
-        blockClose: 0.90
+        blockClose: 0.90,
+        specialChance: 0.18,
+        lowHealthRetreat: 0.70,
+        cornerJump: 0.45
     },
     hard: {
         decisionMin: 7,
         decisionSpread: 6,
         moveSpeed: 5.2,
+        blockReaction: 0.82,
         approachLong: 0.95,
         approachMid: 0.72,
         retreatMid: 0.86,
         jumpMid: 0.93,
         punchClose: 0.52,
+        kickMid: 0.38,
         kickClose: 0.88,
-        blockClose: 0.96
+        blockClose: 0.96,
+        specialChance: 0.26,
+        lowHealthRetreat: 0.78,
+        cornerJump: 0.60
     }
 };
 const ARENAS = {

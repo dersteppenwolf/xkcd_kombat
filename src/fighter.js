@@ -179,9 +179,12 @@ class Fighter {
     updateAI(opponent) {
         const dist = Math.abs(this.x - opponent.x);
         const difficulty = getDifficultyConfig();
-        const opponentAttacking = opponent.state === 'punch' || opponent.state === 'kick';
+        const opponentAttacking = opponent.state === 'punch' || opponent.state === 'kick' || opponent.state === 'special';
         const canPunch = this.canHitOpponent('punch', opponent);
         const canKick = this.canHitOpponent('kick', opponent);
+        const canSpecial = this.canHitOpponent('special', opponent);
+        const nearLeftWall = this.x <= 70;
+        const nearRightWall = this.x >= WIDTH - 70;
         this.aiDecisionTimer--;
 
         if (this.aiDecisionTimer <= 0) {
@@ -195,6 +198,13 @@ class Fighter {
                 opponentAttacking,
                 canPunch,
                 canKick,
+                canSpecial,
+                attackCooldown: this.attackCooldown,
+                opponentHealth: opponent.health,
+                x: this.x,
+                opponentX: opponent.x,
+                nearLeftWall,
+                nearRightWall,
                 difficulty,
                 rand
             });
@@ -204,8 +214,15 @@ class Fighter {
             this.velX = this.x < opponent.x ? difficulty.moveSpeed : -difficulty.moveSpeed;
             if (this.onGround && this.attackCooldown === 0) this.state = 'walk';
         } else if (this.aiAction === 'retreat') {
-            this.velX = this.x < opponent.x ? -difficulty.moveSpeed : difficulty.moveSpeed;
-            if (this.onGround && this.attackCooldown === 0) this.state = 'walk';
+            const retreatBlocked = (this.x < opponent.x && nearLeftWall) || (this.x > opponent.x && nearRightWall);
+            if (retreatBlocked) {
+                this.velX = 0;
+                if (this.onGround && this.attackCooldown === 0) this.state = 'block';
+                this.aiAction = 'block';
+            } else {
+                this.velX = this.x < opponent.x ? -difficulty.moveSpeed : difficulty.moveSpeed;
+                if (this.onGround && this.attackCooldown === 0) this.state = 'walk';
+            }
         } else if (this.aiAction === 'jump' && this.onGround) {
             this.velY = -18;
             this.onGround = false;

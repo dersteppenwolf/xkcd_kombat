@@ -847,20 +847,63 @@ test('difficulty selection changes CPU movement tuning', () => {
 test('CPU decision helper chooses deterministic defensive and offensive actions', () => {
     const { api } = loadGame();
     const difficulty = {
+        blockReaction: 0.60,
         approachLong: 0.85,
         approachMid: 0.60,
         retreatMid: 0.80,
         jumpMid: 0.95,
         punchClose: 0.40,
+        kickMid: 0.24,
         kickClose: 0.75,
-        blockClose: 0.90
+        blockClose: 0.90,
+        specialChance: 0.18,
+        lowHealthRetreat: 0.70,
+        cornerJump: 0.45
     };
 
     assert.equal(api.chooseAIAction({ dist: 130, health: 100, energy: 0, onGround: true, opponentAttacking: true, canPunch: false, canKick: false, difficulty, rand: 0.5 }), 'block');
     assert.equal(api.chooseAIAction({ dist: 120, health: 20, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, difficulty, rand: 0.2 }), 'retreat');
     assert.equal(api.chooseAIAction({ dist: 300, health: 100, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, difficulty, rand: 0.2 }), 'approach');
-    assert.equal(api.chooseAIAction({ dist: 80, health: 100, energy: 100, onGround: true, opponentAttacking: false, canPunch: true, canKick: true, difficulty, rand: 0.1 }), 'special');
+    assert.equal(api.chooseAIAction({ dist: 80, health: 100, energy: 100, onGround: true, opponentAttacking: false, canPunch: true, canKick: true, canSpecial: true, difficulty, rand: 0.1 }), 'special');
     assert.equal(api.chooseAIAction({ dist: 80, health: 100, energy: 0, onGround: true, opponentAttacking: false, canPunch: true, canKick: false, difficulty, rand: 0.2 }), 'punch');
+});
+
+test('CPU decision helper uses reaction chance, range, cooldown, and wall context', () => {
+    const { api } = loadGame();
+    const difficulty = {
+        blockReaction: 0.60,
+        approachLong: 0.85,
+        approachMid: 0.60,
+        retreatMid: 0.80,
+        jumpMid: 0.95,
+        punchClose: 0.40,
+        kickMid: 0.24,
+        kickClose: 0.75,
+        blockClose: 0.90,
+        specialChance: 0.18,
+        lowHealthRetreat: 0.70,
+        cornerJump: 0.45
+    };
+
+    assert.equal(api.chooseAIAction({ dist: 130, health: 100, energy: 0, onGround: true, opponentAttacking: true, canPunch: false, canKick: false, difficulty, rand: 0.7 }), 'retreat');
+    assert.equal(api.chooseAIAction({ dist: 125, health: 100, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: true, difficulty, rand: 0.2 }), 'kick');
+    assert.equal(api.chooseAIAction({ dist: 80, health: 100, energy: 0, onGround: true, opponentAttacking: false, canPunch: true, canKick: true, attackCooldown: 4, difficulty, rand: 0.2 }), 'block');
+    assert.equal(api.chooseAIAction({ dist: 120, health: 20, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, x: 60, opponentX: 180, nearLeftWall: true, difficulty, rand: 0.2 }), 'block');
+    assert.equal(api.chooseAIAction({ dist: 155, health: 100, energy: 100, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, canSpecial: true, opponentHealth: 20, difficulty, rand: 0.9 }), 'special');
+});
+
+test('CPU stale retreat action stops at arena wall', () => {
+    const { api } = loadGame();
+    const cpu = new api.Fighter(60, false);
+    const opponent = new api.Fighter(160, true);
+
+    cpu.aiAction = 'retreat';
+    cpu.aiDecisionTimer = 99;
+    cpu.updateAI(opponent);
+
+    assert.equal(cpu.velX, 0);
+    assert.equal(cpu.state, 'block');
+    assert.equal(cpu.aiAction, 'block');
 });
 
 test('arena selection supports themed arenas and falls back to notebook', () => {
@@ -998,12 +1041,18 @@ test('legacy motion and stats preferences are still read', () => {
 });
 
 test('improved CPU blocks incoming close attacks', () => {
-    const { api } = loadGame();
+    const { api, context } = loadGame();
     const cpu = new api.Fighter(180, false);
     const opponent = new api.Fighter(100, true);
+    const originalRandom = context.Math.random;
     opponent.state = 'punch';
 
-    cpu.updateAI(opponent);
+    try {
+        context.Math.random = () => 0.1;
+        cpu.updateAI(opponent);
+    } finally {
+        context.Math.random = originalRandom;
+    }
 
     assert.equal(cpu.state, 'block');
     assert.equal(cpu.aiAction, 'block');

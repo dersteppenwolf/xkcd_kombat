@@ -168,7 +168,7 @@ Arenas are visual only. They do not modify damage, speed, AI, hitboxes, or victo
 - Crouch with low hitbox.
 - `J,J`, `J,K`, and `K,K` combos.
 - Special attack on `L` with full energy and stronger visual feedback.
-- AI that blocks close attacks, retreats at low health, and attacks based on range.
+- AI with difficulty-based reactions, range-aware attacks, low-health retreats, and wall-aware defense.
 
 ### UI/UX
 
@@ -470,6 +470,7 @@ Next recommended improvement: `Training mode`, because it makes it easier to pra
 | Menu, help, and pause | Complete flow with overlays and summary. |
 | Base combat | Movement, attacks, blocking, hitboxes, and rounds. |
 | Combos and special | `J,J`, `J,K`, `K,K`, and `L` with full energy. |
+| CPU AI tuning | Difficulty-based block reactions, range-aware attacks, cooldown checks, and wall-aware retreats. |
 | Special feedback | Flash, trail, and `SPECIAL!` text when using the full bar. |
 | Special ready indicator | Text and aura above the character when energy is full. |
 | Enriched final screen | Score, difficulty, arena, streak, medal, and humorous phrase at match end. |
