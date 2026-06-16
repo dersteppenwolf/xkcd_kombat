@@ -146,5 +146,18 @@ Revision aplicada:
 
 ## Estado De Ejecucion
 
-- Plan creado.
-- Implementacion pendiente.
+- Plan ejecutado.
+- Fase base completada: contraataque despues de bloqueo y especial tactico.
+- Fase secundaria completada de forma acotada: memoria corta para ataques y bloqueos repetidos del jugador.
+- No se implementaron perfiles de personalidad, debug visual ni combos CPU; quedan como candidatos a planes separados para evitar sobrealcance.
+- Cambios realizados en `src/config.js`, `src/ai.js`, `src/fighter.js`, `tests/game.test.js`, `Readme.md` y este plan.
+- Validacion completa completada:
+  - `node --check src\config.js`
+  - `node --check src\audio.js`
+  - `node --check src\effects.js`
+  - `node --check src\ai.js`
+  - `node --check src\fighter_render.js`
+  - `node --check src\fighter.js`
+  - `node --check src\game.js`
+  - `node --test tests\game.test.js` (`60` tests passing)
+  - `git diff --check`

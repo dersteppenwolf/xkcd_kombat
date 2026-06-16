@@ -858,7 +858,11 @@ test('CPU decision helper chooses deterministic defensive and offensive actions'
         blockClose: 0.90,
         specialChance: 0.18,
         lowHealthRetreat: 0.70,
-        cornerJump: 0.45
+        cornerJump: 0.45,
+        counterChance: 0.45,
+        comebackSpecialChance: 0.28,
+        comebackSpecialGap: 22,
+        patternBlockBonus: 0.16
     };
 
     assert.equal(api.chooseAIAction({ dist: 130, health: 100, energy: 0, onGround: true, opponentAttacking: true, canPunch: false, canKick: false, difficulty, rand: 0.5 }), 'block');
@@ -882,7 +886,11 @@ test('CPU decision helper uses reaction chance, range, cooldown, and wall contex
         blockClose: 0.90,
         specialChance: 0.18,
         lowHealthRetreat: 0.70,
-        cornerJump: 0.45
+        cornerJump: 0.45,
+        counterChance: 0.45,
+        comebackSpecialChance: 0.28,
+        comebackSpecialGap: 22,
+        patternBlockBonus: 0.16
     };
 
     assert.equal(api.chooseAIAction({ dist: 130, health: 100, energy: 0, onGround: true, opponentAttacking: true, canPunch: false, canKick: false, difficulty, rand: 0.7 }), 'retreat');
@@ -890,6 +898,82 @@ test('CPU decision helper uses reaction chance, range, cooldown, and wall contex
     assert.equal(api.chooseAIAction({ dist: 80, health: 100, energy: 0, onGround: true, opponentAttacking: false, canPunch: true, canKick: true, attackCooldown: 4, difficulty, rand: 0.2 }), 'block');
     assert.equal(api.chooseAIAction({ dist: 120, health: 20, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, x: 60, opponentX: 180, nearLeftWall: true, difficulty, rand: 0.2 }), 'block');
     assert.equal(api.chooseAIAction({ dist: 155, health: 100, energy: 100, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, canSpecial: true, opponentHealth: 20, difficulty, rand: 0.9 }), 'special');
+});
+
+test('CPU decision helper supports counter windows and tactical specials', () => {
+    const { api } = loadGame();
+    const difficulty = {
+        blockReaction: 0.60,
+        approachLong: 0.85,
+        approachMid: 0.60,
+        retreatMid: 0.80,
+        jumpMid: 0.95,
+        punchClose: 0.40,
+        kickMid: 0.24,
+        kickClose: 0.75,
+        blockClose: 0.90,
+        specialChance: 0.18,
+        lowHealthRetreat: 0.70,
+        cornerJump: 0.45,
+        counterChance: 0.45,
+        comebackSpecialChance: 0.28,
+        comebackSpecialGap: 22,
+        patternBlockBonus: 0.16
+    };
+
+    assert.equal(api.chooseAIAction({ dist: 80, health: 80, energy: 0, onGround: true, opponentAttacking: false, canPunch: true, canKick: true, counterTimer: 8, difficulty, rand: 0.3 }), 'punch');
+    assert.equal(api.chooseAIAction({ dist: 125, health: 80, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: true, counterTimer: 8, difficulty, rand: 0.3 }), 'kick');
+    assert.equal(api.chooseAIAction({ dist: 150, health: 40, energy: 100, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, canSpecial: true, opponentHealth: 70, difficulty, rand: 0.2 }), 'special');
+});
+
+test('CPU short memory biases defense against repeated attacks', () => {
+    const { api } = loadGame();
+    const difficulty = {
+        blockReaction: 0.60,
+        approachLong: 0.85,
+        approachMid: 0.60,
+        retreatMid: 0.80,
+        jumpMid: 0.95,
+        punchClose: 0.40,
+        kickMid: 0.24,
+        kickClose: 0.75,
+        blockClose: 0.90,
+        specialChance: 0.18,
+        lowHealthRetreat: 0.70,
+        cornerJump: 0.45,
+        counterChance: 0.45,
+        comebackSpecialChance: 0.28,
+        comebackSpecialGap: 22,
+        patternMemoryGain: 12,
+        patternMemoryDecay: 2,
+        patternBlockBonus: 0.16
+    };
+    const cpu = new api.Fighter(180, false);
+    const opponent = new api.Fighter(100, true);
+
+    opponent.state = 'punch';
+    for (let i = 0; i < 5; i++) cpu.updateAIMemory(opponent, difficulty);
+
+    assert(cpu.aiMemory.attack > 50);
+    assert.equal(api.chooseAIAction({ dist: 130, health: 100, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, opponentAttackBias: cpu.aiMemory.attack / 100, difficulty, rand: 0.65 }), 'block');
+
+    opponent.state = 'idle';
+    cpu.updateAIMemory(opponent, difficulty);
+
+    assert(cpu.aiMemory.attack < 60);
+});
+
+test('CPU counter timer activates when blocking damage', () => {
+    const { api } = loadGame();
+    const cpu = new api.Fighter(180, false);
+    const opponent = new api.Fighter(100, true);
+
+    cpu.state = 'block';
+    opponent.lastAttackType = 'punch';
+    cpu.takeHit(8, opponent);
+
+    assert(cpu.aiCounterTimer > 0);
+    assert.equal(cpu.aiDecisionTimer, 0);
 });
 
 test('CPU stale retreat action stops at arena wall', () => {

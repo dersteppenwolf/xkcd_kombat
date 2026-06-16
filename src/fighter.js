@@ -31,6 +31,8 @@ class Fighter {
         this.prevPunchPressed = false;
         this.prevKickPressed = false;
         this.prevSpecialPressed = false;
+        this.aiCounterTimer = 0;
+        this.aiMemory = { attack: 0, block: 0 };
     }
 
     update(keys, opponent) {
@@ -59,6 +61,10 @@ class Fighter {
 
         if (this.comboFlashTimer > 0) {
             this.comboFlashTimer--;
+        }
+
+        if (this.aiCounterTimer > 0) {
+            this.aiCounterTimer--;
         }
 
         this.velX = 0;
@@ -185,6 +191,7 @@ class Fighter {
         const canSpecial = this.canHitOpponent('special', opponent);
         const nearLeftWall = this.x <= 70;
         const nearRightWall = this.x >= WIDTH - 70;
+        this.updateAIMemory(opponent, difficulty);
         this.aiDecisionTimer--;
 
         if (this.aiDecisionTimer <= 0) {
@@ -205,6 +212,9 @@ class Fighter {
                 opponentX: opponent.x,
                 nearLeftWall,
                 nearRightWall,
+                counterTimer: this.aiCounterTimer,
+                opponentAttackBias: this.aiMemory.attack / 100,
+                opponentBlockBias: this.aiMemory.block / 100,
                 difficulty,
                 rand
             });
@@ -237,6 +247,20 @@ class Fighter {
             this.attack('kick', opponent);
         } else if (this.aiAction === 'special') {
             this.attack('special', opponent);
+        }
+    }
+
+    updateAIMemory(opponent, difficulty) {
+        const decay = difficulty.patternMemoryDecay ?? 2;
+        const gain = difficulty.patternMemoryGain ?? 12;
+        this.aiMemory.attack = Math.max(0, this.aiMemory.attack - decay);
+        this.aiMemory.block = Math.max(0, this.aiMemory.block - decay);
+
+        if (opponent.state === 'punch' || opponent.state === 'kick' || opponent.state === 'special') {
+            this.aiMemory.attack = Math.min(100, this.aiMemory.attack + gain);
+        }
+        if (opponent.state === 'block') {
+            this.aiMemory.block = Math.min(100, this.aiMemory.block + gain);
         }
     }
 
@@ -349,6 +373,11 @@ class Fighter {
             this.health = Math.max(0, this.health - damage);
             this.gainEnergy(ENERGY_GAIN_ON_BLOCK);
             if (this.isPlayer1) recordPlayerBlock();
+            if (!this.isPlayer1) {
+                const difficulty = getDifficultyConfig();
+                this.aiCounterTimer = difficulty.counterWindow ?? 14;
+                this.aiDecisionTimer = 0;
+            }
             const bTexts = ['¡BLOCK!', '*ping*', 'CHIP'];
             floatingTexts.push(new FloatingText(this.x, this.y - 80, bTexts[Math.floor(Math.random() * bTexts.length)], '#33f'));
             showStatusMessage(t('blockStatus'), 28);

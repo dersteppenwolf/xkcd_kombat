@@ -40,7 +40,14 @@ const DIFFICULTIES = {
         blockClose: 0.78,
         specialChance: 0.10,
         lowHealthRetreat: 0.60,
-        cornerJump: 0.30
+        cornerJump: 0.30,
+        counterWindow: 10,
+        counterChance: 0.25,
+        comebackSpecialChance: 0.14,
+        comebackSpecialGap: 28,
+        patternMemoryGain: 10,
+        patternMemoryDecay: 2,
+        patternBlockBonus: 0.10
     },
     normal: {
         decisionMin: 12,
@@ -57,7 +64,14 @@ const DIFFICULTIES = {
         blockClose: 0.90,
         specialChance: 0.18,
         lowHealthRetreat: 0.70,
-        cornerJump: 0.45
+        cornerJump: 0.45,
+        counterWindow: 14,
+        counterChance: 0.45,
+        comebackSpecialChance: 0.28,
+        comebackSpecialGap: 22,
+        patternMemoryGain: 12,
+        patternMemoryDecay: 2,
+        patternBlockBonus: 0.16
     },
     hard: {
         decisionMin: 7,
@@ -74,7 +88,14 @@ const DIFFICULTIES = {
         blockClose: 0.96,
         specialChance: 0.26,
         lowHealthRetreat: 0.78,
-        cornerJump: 0.60
+        cornerJump: 0.60,
+        counterWindow: 18,
+        counterChance: 0.65,
+        comebackSpecialChance: 0.42,
+        comebackSpecialGap: 16,
+        patternMemoryGain: 14,
+        patternMemoryDecay: 2,
+        patternBlockBonus: 0.22
     }
 };
 const ARENAS = {
