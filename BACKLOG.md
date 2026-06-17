@@ -44,25 +44,33 @@ AI improvements should preserve the current lightweight rule-based approach unle
 | 32 | Medium | Lightweight performance telemetry | Tracks FPS, long frames, and gameplay timing locally to guide visual and balance tuning. | Dev tool / performance |
 | 33 | Medium | Input replay test harness | Replays recorded input sequences in tests or debug mode to verify combat, AI, and regression scenarios. | Testing / dev tool |
 | 34 | Medium | AI decision tuning hooks | Moves AI chances such as bait, air attack, crouch, zoning, rushdown, and counter timing into difficulty config with focused unit tests. | Maintenance / AI |
-| 35 | Medium | Share match results | Lets players share wins, medals, streaks, or funny final phrases through the Web Share API. | Retention |
-| 36 | Medium | Spatial audio polish | Positions hit, block, jump, and special sounds according to fighter location. | Audio |
-| 37 | Low | New impact phrases and medals | Expands humor and personality with low technical risk. | Content |
-| 38 | Low | More visual arenas | Adds cosmetic variety without touching balance or hitboxes. | Content / visual |
-| 39 | Low | Additional combos | Adds depth without rebuilding the base combat system. | Gameplay |
-| 40 | Low | Advanced balance | Fine tuning by difficulty, attack, or CPU style. | Balance |
-| 41 | Low | Round-to-round AI adaptation | Carries simple previous-round stats into the next round so the CPU responds to spam, range habits, or win conditions. | Gameplay / AI |
-| 42 | Low | AI action scoring experiment | Scores candidate actions by expected damage, counter risk, positional advantage, timer pressure, and controlled randomness before replacing tactical rules. | Gameplay / R&D |
-| 43 | Low | Short AI lookahead experiment | Tests an 8-12 frame lightweight simulation of physics and hitboxes to avoid suicidal approaches, with cached intersections and reduced use on lower difficulties. | Gameplay / R&D |
-| 44 | Low | Lightweight AI state machine | Introduces clear AI states such as aggressive approach, defensive counter, zoning, and comeback only if tactical rules become hard to manage. | Architecture / AI |
-| 45 | Low | Utility AI experiment | Replaces growing if-else logic with weighted considerations for damage, safety, energy, position, timer, and memory only if action scoring proves useful. | Architecture / R&D |
-| 46 | Low | Ghost and mirror AI experiment | Lets an optional CPU mode imitate stored player action sequences from recent local matches with controlled noise. | Gameplay / R&D |
-| 47 | Low | Persistent AI evolution | Stores a small local preference vector so AI behavior can adapt slightly across matches without becoming opaque or unfair. | Gameplay / R&D |
-| 48 | Low | Difficulty personality visuals | Adds subtle visual tells or glitches for CPU difficulty, counter planning, and special planning without affecting hitboxes. | Visual / AI |
-| 49 | Low | Background organization | Split arena details if `drawBackground()` keeps growing. | Maintenance |
-| 50 | Low | CSS compositing optimization | Uses containment and targeted layer hints to keep menus, HUD, and overlays smooth. | Performance |
-| 51 | Low | Smooth screen transitions | Uses View Transitions API where available, with fallback to current overlays. | Visual |
-| 52 | Low | Export/import local data | Allows saves, stats, or settings to be backed up through JSON files. | Persistence |
-| 53 | Low | Advanced visual effects experiment | Explores optional WebGPU or post-processing effects without replacing the main Canvas 2D renderer. | Visual / R&D |
+| 35 | Medium | Layered arena depth | Adds background, midground, and foreground details to make arenas feel richer without changing hitboxes. | Visual |
+| 36 | Medium | Reactive arena effects | Lets backgrounds respond to hits, combos, special attacks, low health, final seconds, and KO. | Visual / feedback |
+| 37 | Medium | Arena readability pass | Checks every arena for fighter contrast, HUD clarity, corner readability, and reduced-motion behavior. | Accessibility / visual |
+| 38 | Medium | Animated arena previews | Makes the arena selector more attractive with lightweight looping previews. | UI / visual |
+| 39 | Medium | Share match results | Lets players share wins, medals, streaks, or funny final phrases through the Web Share API. | Retention |
+| 40 | Medium | Spatial audio polish | Positions hit, block, jump, and special sounds according to fighter location. | Audio |
+| 41 | Low | New impact phrases and medals | Expands humor and personality with low technical risk. | Content |
+| 42 | Low | More visual arenas | Adds cosmetic variety without touching balance or hitboxes. | Content / visual |
+| 43 | Low | Cosmetic arena variants | Adds day, night, alert, rain, neon, or glitch variants without gameplay effects. | Content / visual |
+| 44 | Low | Foreground arena silhouettes | Adds cables, crowd shapes, machines, columns, or framing objects for depth. | Visual |
+| 45 | Low | Arena-specific intro transitions | Gives each arena a small title card or transition when a round starts. | Visual / polish |
+| 46 | Low | Visual quality preset | Allows low, normal, or high arena effects depending on device capability or player preference. | Performance / UX |
+| 47 | Low | Additional combos | Adds depth without rebuilding the base combat system. | Gameplay |
+| 48 | Low | Advanced balance | Fine tuning by difficulty, attack, or CPU style. | Balance |
+| 49 | Low | Round-to-round AI adaptation | Carries simple previous-round stats into the next round so the CPU responds to spam, range habits, or win conditions. | Gameplay / AI |
+| 50 | Low | AI action scoring experiment | Scores candidate actions by expected damage, counter risk, positional advantage, timer pressure, and controlled randomness before replacing tactical rules. | Gameplay / R&D |
+| 51 | Low | Short AI lookahead experiment | Tests an 8-12 frame lightweight simulation of physics and hitboxes to avoid suicidal approaches, with cached intersections and reduced use on lower difficulties. | Gameplay / R&D |
+| 52 | Low | Lightweight AI state machine | Introduces clear AI states such as aggressive approach, defensive counter, zoning, and comeback only if tactical rules become hard to manage. | Architecture / AI |
+| 53 | Low | Utility AI experiment | Replaces growing if-else logic with weighted considerations for damage, safety, energy, position, timer, and memory only if action scoring proves useful. | Architecture / R&D |
+| 54 | Low | Ghost and mirror AI experiment | Lets an optional CPU mode imitate stored player action sequences from recent local matches with controlled noise. | Gameplay / R&D |
+| 55 | Low | Persistent AI evolution | Stores a small local preference vector so AI behavior can adapt slightly across matches without becoming opaque or unfair. | Gameplay / R&D |
+| 56 | Low | Difficulty personality visuals | Adds subtle visual tells or glitches for CPU difficulty, counter planning, and special planning without affecting hitboxes. | Visual / AI |
+| 57 | Low | Background organization | Split arena details if `drawBackground()` keeps growing. | Maintenance |
+| 58 | Low | CSS compositing optimization | Uses containment and targeted layer hints to keep menus, HUD, and overlays smooth. | Performance |
+| 59 | Low | Smooth screen transitions | Uses View Transitions API where available, with fallback to current overlays. | Visual |
+| 60 | Low | Export/import local data | Allows saves, stats, or settings to be backed up through JSON files. | Persistence |
+| 61 | Low | Advanced visual effects experiment | Explores optional WebGPU or post-processing effects without replacing the main Canvas 2D renderer. | Visual / R&D |
 
 ## Deferred Ideas
 
