@@ -1029,7 +1029,7 @@ function drawEnergyBar(x, y, energy, alignRight, accentColor = '#000') {
 function drawStatusMessage() {
     if (!statusMessage) return;
 
-    const alpha = Math.min(1, Math.max(0.25, statusTimer / 20));
+    const alpha = Math.min(1, Math.max(0.65, statusTimer / 20));
     const accent = getStatusAccent(statusMessage);
     const panelWidth = Math.min(620, Math.max(260, statusMessage.length * 34));
     const panelHeight = 86;
@@ -1060,8 +1060,11 @@ function drawStatusMessage() {
 
     ctx.textAlign = 'center';
     ctx.font = `bold 58px ${GAME_FONT_FAMILY}`;
-    ctx.lineWidth = 8;
+    ctx.lineWidth = 12;
     ctx.strokeStyle = '#000';
+    ctx.strokeText(statusMessage, WIDTH / 2, y + 61);
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#fffdf2';
     ctx.strokeText(statusMessage, WIDTH / 2, y + 61);
     ctx.fillStyle = accent;
     ctx.fillText(statusMessage, WIDTH / 2, y + 61);
@@ -1073,6 +1076,9 @@ function getStatusAccent(text) {
     if (text === t('time')) return '#f59e0b';
     if (text === t('fight')) return '#22c55e';
     if (text === t('blockStatus')) return '#2563eb';
+    if (text === t('roundHuman')) return '#1d4ed8';
+    if (text === t('roundCpu')) return '#b91c1c';
+    if (text.startsWith(t('round'))) return '#7c2d12';
     return '#111';
 }
 
