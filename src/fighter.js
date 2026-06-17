@@ -32,12 +32,28 @@ class Fighter {
         this.prevKickPressed = false;
         this.prevSpecialPressed = false;
         this.aiCounterTimer = 0;
-        this.aiMemory = { attack: 0, block: 0 };
+        this.aiMemory = this.createAIMemory();
         this.airAttackUsed = false;
         this.styleKey = 'balanced';
         this.moveSpeedModifier = 1;
         this.damageModifier = 1;
         this.energyModifier = 1;
+    }
+
+    createAIMemory() {
+        return {
+            attack: 0,
+            block: 0,
+            attacks: { punch: 0, kick: 0, special: 0, air: 0 },
+            zones: {
+                close: { ground: 0, air: 0 },
+                mid: { ground: 0, air: 0 },
+                far: { ground: 0, air: 0 }
+            },
+            repeatedType: '',
+            repeatedCount: 0,
+            observingAttack: false
+        };
     }
 
     applyStyle(styleKey) {
@@ -240,6 +256,7 @@ class Fighter {
                 counterTimer: this.aiCounterTimer,
                 opponentAttackBias: this.aiMemory.attack / 100,
                 opponentBlockBias: this.aiMemory.block / 100,
+                ...this.getAIMemoryBiases(dist, opponent),
                 difficulty,
                 rand
             });
@@ -280,13 +297,79 @@ class Fighter {
         const gain = difficulty.patternMemoryGain ?? 12;
         this.aiMemory.attack = Math.max(0, this.aiMemory.attack - decay);
         this.aiMemory.block = Math.max(0, this.aiMemory.block - decay);
+        Object.keys(this.aiMemory.attacks).forEach((type) => {
+            this.aiMemory.attacks[type] = Math.max(0, this.aiMemory.attacks[type] - decay);
+        });
+        Object.keys(this.aiMemory.zones).forEach((zone) => {
+            Object.keys(this.aiMemory.zones[zone]).forEach((state) => {
+                this.aiMemory.zones[zone][state] = Math.max(0, this.aiMemory.zones[zone][state] - decay);
+            });
+        });
 
-        if (opponent.state === 'punch' || opponent.state === 'kick' || opponent.state === 'special') {
+        const attackType = this.getObservedAttackType(opponent);
+        if (attackType) {
             this.aiMemory.attack = Math.min(100, this.aiMemory.attack + gain);
+            if (!this.aiMemory.observingAttack) {
+                this.recordObservedAttack(opponent, attackType, gain);
+                this.aiMemory.observingAttack = true;
+            }
+        } else {
+            this.aiMemory.observingAttack = false;
         }
         if (opponent.state === 'block') {
             this.aiMemory.block = Math.min(100, this.aiMemory.block + gain);
         }
+    }
+
+    getObservedAttackType(opponent) {
+        const attackingStates = ['punch', 'kick', 'special', 'airPunch', 'airKick'];
+        if (!attackingStates.includes(opponent.state)) return null;
+
+        const type = opponent.lastAttackType || opponent.state;
+        if (type === 'special') return 'special';
+        if (type === 'airPunch' || type === 'airKick') return 'air';
+        if (type === 'punch' || type === 'comboPunch') return 'punch';
+        if (type === 'kick' || type === 'comboKick' || type === 'backKick') return 'kick';
+        return null;
+    }
+
+    getAIDistanceZone(dist) {
+        if (dist <= 110) return 'close';
+        if (dist <= 250) return 'mid';
+        return 'far';
+    }
+
+    getAIOpponentState(opponent) {
+        return opponent.onGround ? 'ground' : 'air';
+    }
+
+    recordObservedAttack(opponent, attackType, gain) {
+        const dist = Math.abs(this.x - opponent.x);
+        const zone = this.getAIDistanceZone(dist);
+        const opponentState = this.getAIOpponentState(opponent);
+
+        this.aiMemory.attacks[attackType] = Math.min(100, this.aiMemory.attacks[attackType] + gain * 2);
+        this.aiMemory.zones[zone][opponentState] = Math.min(100, this.aiMemory.zones[zone][opponentState] + gain * 2);
+
+        if (this.aiMemory.repeatedType === attackType) {
+            this.aiMemory.repeatedCount = Math.min(6, this.aiMemory.repeatedCount + 1);
+        } else {
+            this.aiMemory.repeatedType = attackType;
+            this.aiMemory.repeatedCount = 1;
+        }
+    }
+
+    getAIMemoryBiases(dist, opponent) {
+        const zone = this.getAIDistanceZone(dist);
+        const opponentState = this.getAIOpponentState(opponent);
+        return {
+            opponentPunchBias: this.aiMemory.attacks.punch / 100,
+            opponentKickBias: this.aiMemory.attacks.kick / 100,
+            opponentSpecialBias: this.aiMemory.attacks.special / 100,
+            opponentAirBias: this.aiMemory.attacks.air / 100,
+            zoneAttackBias: this.aiMemory.zones[zone][opponentState] / 100,
+            repeatedAttackBias: Math.max(0, this.aiMemory.repeatedCount - 2) / 4
+        };
     }
 
     gainEnergy(amount) {
@@ -309,13 +392,22 @@ class Fighter {
         }
     }
 
-    getBodyBox() {
+    getHurtBox() {
         if (this.state === 'crouch') {
             return {
                 x: this.x - 28,
                 y: this.y - 28,
                 width: 56,
                 height: 63
+            };
+        }
+
+        if (!this.onGround || this.state === 'airPunch' || this.state === 'airKick' || this.state === 'jump') {
+            return {
+                x: this.x - 24,
+                y: this.y - 96,
+                width: 48,
+                height: 108
             };
         }
 
@@ -327,7 +419,29 @@ class Fighter {
         };
     }
 
-    getAttackBox(type) {
+    getBodyBox() {
+        return this.getHurtBox();
+    }
+
+    getPushBox() {
+        if (this.state === 'crouch') {
+            return {
+                x: this.x - 28,
+                y: this.y - 48,
+                width: 56,
+                height: 48
+            };
+        }
+
+        return {
+            x: this.x - 28,
+            y: this.y - 96,
+            width: 56,
+            height: 96
+        };
+    }
+
+    getHitBox(type) {
         const attack = ATTACKS[type];
         if (!attack) return null;
 
@@ -352,6 +466,10 @@ class Fighter {
         return null;
     }
 
+    getAttackBox(type) {
+        return this.getHitBox(type);
+    }
+
     intersects(a, b) {
         return a.x < b.x + b.width &&
             a.x + a.width > b.x &&
@@ -361,7 +479,7 @@ class Fighter {
 
     canHitOpponent(type, opponent) {
         const attackBox = this.getAttackBox(type);
-        return !!attackBox && this.intersects(attackBox, opponent.getBodyBox());
+        return !!attackBox && this.intersects(attackBox, opponent.getHurtBox());
     }
 
     attack(type, opponent) {
@@ -383,7 +501,7 @@ class Fighter {
         playAttackSound(type);
 
         const attackBox = this.getAttackBox(type);
-        const opponentBox = opponent.getBodyBox();
+        const opponentBox = opponent.getHurtBox();
 
         if (attackBox && this.intersects(attackBox, opponentBox)) {
             opponent.takeHit(Math.round(attack.damage * this.damageModifier), this);

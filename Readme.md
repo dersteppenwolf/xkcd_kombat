@@ -178,14 +178,14 @@ Arenas are visual only. They do not modify damage, speed, AI, hitboxes, or victo
 - Best-of-3 rounds.
 - 60-second timer per round.
 - `FACIL`, `NORMAL`, and `DIFICIL` difficulty.
-- Logical hitboxes for body, punch, kick, combos, and special.
+- Separated hitboxes, hurtboxes, and pushbox helpers for attack tuning and posture-aware collisions.
 - Blocking with chip damage.
 - Crouch with low hitbox.
 - Air punch and air kick, limited to one air attack per jump.
 - `J,J`, `J,K`, and `K,K` combos.
 - Special attack on `L` with full energy and stronger visual feedback.
 - Fighter styles: balanced, fast, heavy, and technical.
-- AI with difficulty-based reactions, range-aware attacks, tactical specials, counter windows, short memory, and wall-aware defense.
+- AI with difficulty-based reactions, range-aware attacks, tactical specials, counter windows, attack-type spam memory, zone-aware pattern memory, and wall-aware defense.
 
 ### UI/UX
 
@@ -470,6 +470,7 @@ Test limitations:
 | Air attacks and fighter styles | `J`/`K` in the air, style selector, and style-aware victory phrases. |
 | CPU AI tuning | Difficulty-based block reactions, range-aware attacks, cooldown checks, and wall-aware retreats. |
 | Tactical CPU AI | Counter windows after blocking, comeback specials, and short memory for repeated player attacks. |
+| Combat collision and AI memory | Posture-aware hurtboxes, pushbox helpers, attack-type spam memory, and zone-aware CPU pattern tracking. |
 | Special feedback | Flash, trail, and `SPECIAL!` text when using the full bar. |
 | Special ready indicator | Text and aura above the character when energy is full. |
 | Enriched final screen | Score, difficulty, arena, streak, medal, and humorous phrase at match end. |

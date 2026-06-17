@@ -613,6 +613,29 @@ test('crouch lowers body box under punches but remains vulnerable to kicks', () 
     assert.equal(defender.health, 86);
 });
 
+test('fighters expose distinct hurtboxes and pushboxes by posture', () => {
+    const { api } = loadGame();
+    const fighter = new api.Fighter(160, true);
+
+    const standingHurtBox = fighter.getHurtBox();
+    const standingPushBox = fighter.getPushBox();
+
+    fighter.state = 'crouch';
+    const crouchHurtBox = fighter.getHurtBox();
+    const crouchPushBox = fighter.getPushBox();
+
+    fighter.state = 'jump';
+    fighter.onGround = false;
+    fighter.y = 320;
+    const airHurtBox = fighter.getHurtBox();
+
+    assert.deepEqual(fighter.getBodyBox(), airHurtBox);
+    assert(crouchHurtBox.height < standingHurtBox.height);
+    assert(crouchHurtBox.y > standingHurtBox.y);
+    assert(crouchPushBox.height < standingPushBox.height);
+    assert(airHurtBox.height < standingHurtBox.height);
+});
+
 test('special attack consumes full energy and deals heavy damage', () => {
     const { api } = loadGame();
     const { player, opponent } = createFighters(api, 100, 220);
@@ -1046,6 +1069,67 @@ test('CPU short memory biases defense against repeated attacks', () => {
     cpu.updateAIMemory(opponent, difficulty);
 
     assert(cpu.aiMemory.attack < 60);
+});
+
+test('CPU memory tracks attack type spam separately from aggregate attack bias', () => {
+    const { api } = loadGame();
+    const difficulty = {
+        patternMemoryGain: 12,
+        patternMemoryDecay: 2,
+        patternBlockBonus: 0.16,
+        patternTypeBlockBonus: 0.08,
+        spamBlockBonus: 0.50,
+        zoneBlockBonus: 0.08,
+        blockReaction: 0.60,
+        approachMid: 1,
+        retreatMid: 0,
+        jumpMid: 0
+    };
+    const cpu = new api.Fighter(180, false);
+    const opponent = new api.Fighter(100, true);
+
+    for (let i = 0; i < 3; i++) {
+        opponent.state = 'punch';
+        opponent.lastAttackType = 'punch';
+        cpu.updateAIMemory(opponent, difficulty);
+        opponent.state = 'idle';
+        cpu.updateAIMemory(opponent, difficulty);
+    }
+
+    const biases = cpu.getAIMemoryBiases(Math.abs(cpu.x - opponent.x), opponent);
+
+    assert(cpu.aiMemory.attacks.punch > cpu.aiMemory.attacks.kick);
+    assert.equal(cpu.aiMemory.repeatedType, 'punch');
+    assert.equal(cpu.aiMemory.repeatedCount, 3);
+    assert(biases.repeatedAttackBias > 0);
+    assert.equal(api.chooseAIAction({ dist: 130, health: 100, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: false, repeatedAttackBias: 0.75, difficulty, rand: 0.9 }), 'block');
+});
+
+test('CPU memory tracks attack patterns by distance zone and air state', () => {
+    const { api } = loadGame();
+    const difficulty = {
+        patternMemoryGain: 14,
+        patternMemoryDecay: 2,
+        blockReaction: 0.82,
+        patternTypeBlockBonus: 0.12,
+        zoneBlockBonus: 0.12,
+        airPatternKick: 0.48
+    };
+    const cpu = new api.Fighter(420, false);
+    const opponent = new api.Fighter(140, true);
+    opponent.onGround = false;
+    opponent.state = 'airKick';
+    opponent.lastAttackType = 'airKick';
+
+    cpu.updateAIMemory(opponent, difficulty);
+
+    const biases = cpu.getAIMemoryBiases(Math.abs(cpu.x - opponent.x), opponent);
+
+    assert(cpu.aiMemory.zones.far.air > 0);
+    assert.equal(cpu.aiMemory.zones.close.ground, 0);
+    assert(biases.opponentAirBias > 0);
+    assert(biases.zoneAttackBias > 0);
+    assert.equal(api.chooseAIAction({ dist: 150, health: 100, energy: 0, onGround: true, opponentAttacking: false, canPunch: false, canKick: true, opponentAirBias: 0.6, zoneAttackBias: 0.6, difficulty, rand: 0.3 }), 'kick');
 });
 
 test('CPU counter timer activates when blocking damage', () => {

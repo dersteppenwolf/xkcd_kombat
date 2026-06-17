@@ -55,7 +55,11 @@ const DIFFICULTIES = {
         comebackSpecialGap: 28,
         patternMemoryGain: 10,
         patternMemoryDecay: 2,
-        patternBlockBonus: 0.10
+        patternBlockBonus: 0.10,
+        patternTypeBlockBonus: 0.04,
+        spamBlockBonus: 0.06,
+        zoneBlockBonus: 0.04,
+        airPatternKick: 0.18
     },
     normal: {
         decisionMin: 12,
@@ -79,7 +83,11 @@ const DIFFICULTIES = {
         comebackSpecialGap: 22,
         patternMemoryGain: 12,
         patternMemoryDecay: 2,
-        patternBlockBonus: 0.16
+        patternBlockBonus: 0.16,
+        patternTypeBlockBonus: 0.08,
+        spamBlockBonus: 0.14,
+        zoneBlockBonus: 0.08,
+        airPatternKick: 0.32
     },
     hard: {
         decisionMin: 7,
@@ -103,7 +111,11 @@ const DIFFICULTIES = {
         comebackSpecialGap: 16,
         patternMemoryGain: 14,
         patternMemoryDecay: 2,
-        patternBlockBonus: 0.22
+        patternBlockBonus: 0.22,
+        patternTypeBlockBonus: 0.12,
+        spamBlockBonus: 0.24,
+        zoneBlockBonus: 0.12,
+        airPatternKick: 0.48
     }
 };
 const ARENAS = {

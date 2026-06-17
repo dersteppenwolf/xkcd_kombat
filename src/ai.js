@@ -16,6 +16,12 @@ function chooseAIAction({
     counterTimer = 0,
     opponentAttackBias = 0,
     opponentBlockBias = 0,
+    opponentPunchBias = 0,
+    opponentKickBias = 0,
+    opponentSpecialBias = 0,
+    opponentAirBias = 0,
+    zoneAttackBias = 0,
+    repeatedAttackBias = 0,
     difficulty,
     rand
 }) {
@@ -24,7 +30,15 @@ function chooseAIAction({
     const kickReady = canAttack && canKick;
     const specialReady = canAttack && canSpecial && energy >= SPECIAL_ENERGY_COST;
     const retreatBlocked = (x < opponentX && nearLeftWall) || (x > opponentX && nearRightWall);
-    const blockReaction = Math.min(0.96, (difficulty.blockReaction ?? 1) + opponentAttackBias * (difficulty.patternBlockBonus ?? 0));
+    const typeAttackBias = Math.max(opponentPunchBias, opponentKickBias, opponentSpecialBias, opponentAirBias);
+    const blockReaction = Math.min(
+        0.96,
+        (difficulty.blockReaction ?? 1) +
+            opponentAttackBias * (difficulty.patternBlockBonus ?? 0) +
+            typeAttackBias * (difficulty.patternTypeBlockBonus ?? 0) +
+            repeatedAttackBias * (difficulty.spamBlockBonus ?? 0) +
+            zoneAttackBias * (difficulty.zoneBlockBonus ?? 0)
+    );
 
     if (opponentAttacking && dist < 170 && onGround && rand < blockReaction) {
         return 'block';
@@ -48,6 +62,12 @@ function chooseAIAction({
     }
 
     if (opponentAttackBias > 0.5 && dist < 170 && onGround && rand < blockReaction) return 'block';
+
+    if (opponentAirBias > 0.45 && zoneAttackBias > 0.35 && dist < 180 && onGround && kickReady && rand < (difficulty.airPatternKick ?? 0)) {
+        return 'kick';
+    }
+
+    if (repeatedAttackBias > 0.5 && dist < 180 && onGround && rand < blockReaction) return 'block';
 
     if (dist > 250) {
         return rand < difficulty.approachLong ? 'approach' : 'idle';
