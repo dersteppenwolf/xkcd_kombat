@@ -1,6 +1,6 @@
 # GLITCH DUEL
 
-May the glitch be with you.
+**May the glitch be with you.**
 
 Line-art arcade fighting web game built with plain HTML, CSS, and JavaScript on Canvas. The human player fights a CPU in best-of-3 rounds with combos, air attacks, fighter styles, blocking, a special attack, themed arenas, touch controls, and a Spanish/English interface.
 
@@ -28,37 +28,38 @@ Note: this application has been generated and evolved with assistance from OpenC
 
 ## Table Of Contents
 
-- [Summary](#summary)
-- [Quick Start](#quick-start)
-- [How To Play](#how-to-play)
-- [Controls](#controls)
-- [Languages](#languages)
-- [Arenas](#arenas)
-- [Fighter Styles](#fighter-styles)
-- [Features](#features)
-- [Features: Combat](#combat)
-- [Features: UI/UX](#uiux)
-- [Features: Visual And Audio](#visual-and-audio)
-- [Features: Technical](#technical)
-- [Run](#run)
-- [Run: Requirements](#requirements)
-- [Run: Direct Option](#direct-option)
-- [Run: Recommended Option](#recommended-option)
-- [Online Publishing](#online-publishing)
-- [Validation](#validation)
-- [Validation: Automated Validation](#automated-validation)
-- [Validation: Basic Smoke](#basic-smoke)
-- [Validation: Combat Smoke](#combat-smoke)
-- [Validation: Visual And Accessibility Smoke](#visual-and-accessibility-smoke)
-- [Architecture](#architecture)
-- [Architecture: Main Files](#main-files)
-- [Architecture: Script Order](#script-order)
-- [Architecture: Game States](#game-states)
-- [Tests](#tests)
-- [Troubleshooting](#troubleshooting)
-- [Technical Decisions](#technical-decisions)
-- [Prioritized Backlog](BACKLOG.md)
-- [Completed Backlog](#completed-backlog)
+- [GLITCH DUEL](#glitch-duel)
+  - [Summary](#summary)
+  - [Table Of Contents](#table-of-contents)
+  - [Quick Start](#quick-start)
+  - [How To Play](#how-to-play)
+  - [Controls](#controls)
+  - [Fighter Styles](#fighter-styles)
+  - [Languages](#languages)
+  - [Arenas](#arenas)
+  - [Features](#features)
+    - [Combat](#combat)
+    - [UI/UX](#uiux)
+    - [Visual And Audio](#visual-and-audio)
+    - [Technical](#technical)
+  - [Run](#run)
+    - [Requirements](#requirements)
+    - [Direct Option](#direct-option)
+    - [Recommended Option](#recommended-option)
+  - [Online Publishing](#online-publishing)
+  - [Validation](#validation)
+    - [Automated Validation](#automated-validation)
+    - [Basic Smoke](#basic-smoke)
+    - [Combat Smoke](#combat-smoke)
+    - [Visual And Accessibility Smoke](#visual-and-accessibility-smoke)
+  - [Architecture](#architecture)
+    - [Main Files](#main-files)
+    - [Script Order](#script-order)
+    - [Game States](#game-states)
+  - [Tests](#tests)
+  - [Troubleshooting](#troubleshooting)
+  - [Technical Decisions](#technical-decisions)
+  - [Completed Backlog](#completed-backlog)
 
 ## Quick Start
 
